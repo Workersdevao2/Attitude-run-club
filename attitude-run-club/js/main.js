@@ -136,6 +136,12 @@ setLanguage(currentLang);
 const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
 
+function closeMobileMenu() {
+  if (hamburger) hamburger.classList.remove('active');
+  if (mobileMenu) mobileMenu.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
 if (hamburger && mobileMenu) {
   hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
@@ -143,12 +149,14 @@ if (hamburger && mobileMenu) {
     document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
   });
 
-  // Close menu when a link is clicked
+  // Close when a link is clicked
   mobileMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      hamburger.classList.remove('active');
-      mobileMenu.classList.remove('open');
-      document.body.style.overflow = '';
-    });
+    link.addEventListener('click', closeMobileMenu);
   });
+
+  // Close when X button is clicked
+  const mobileClose = document.getElementById('mobileClose');
+  if (mobileClose) {
+    mobileClose.addEventListener('click', closeMobileMenu);
+  }
 }
