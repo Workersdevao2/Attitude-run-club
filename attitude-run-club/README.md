@@ -70,6 +70,18 @@ A visible X appears in the top-right of the mobile menu. Clicking it (or any lin
 
 **Result:** Clean black / white / gray premium look. No red remaining.
 
+### 2026-09-25 — Pillar Images
+**Request:** Use 5 real photos for the 5 pillars.
+
+**Files changed:**
+- `images/pillar-01-corrida.jpg` — group run (Corrida)
+- `images/pillar-02-lifestyle.jpg` — three women athletic (Lifestyle)
+- `images/pillar-03-moda.jpg` — Attitude brand booth / flex (Moda)
+- `images/pillar-04-educacao.jpg` — coach / circle talk (Educação)
+- `images/pillar-05-pertencimento.jpg` — crowd energy (Pertencimento)
+- `css/style.css` — pillar cards now use photo backgrounds + gradient overlay
+- `index.html` — pillars section updated with the 5 images
+
 ---
 
 ## Membership Plans (Option A)
