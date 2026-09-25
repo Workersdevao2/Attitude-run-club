@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attitude Run Club — Corre Com Atitude</title>
+  <meta name="description" content="A maior comunidade lusófona de corrida ligada a uma marca africana. Não é só treino — é tribo, identidade e movimento.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="images/logo.jpg" type="image/jpeg">
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo.jpg" alt="Attitude Run Club" style="height:32px; border-radius:4px;">
+      ATTITUDE <span>RUN</span> CLUB
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#pilares" data-i18n="nav.pilares">Pilares</a></li>
+      <li><a href="pages/planos.html" data-i18n="nav.planos">Planos</a></li>
+      <li><a href="pages/eventos.html" data-i18n="nav.eventos">Eventos</a></li>
+      <li><a href="pages/roadmap.html" data-i18n="nav.roadmap">Roadmap</a></li>
+      <li><a href="pages/contacto.html" data-i18n="nav.contacto">Contacto</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-toggle">
+        <button data-lang="pt" class="active">PT</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="nav-cta" data-i18n="nav.cta" target="_blank" rel="noopener">Juntar ao Clube</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg" style="background-image: url('images/night-run-01.jpg');"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-number">KM</div>
+    <div class="hero-content">
+      <p class="hero-eyebrow" data-i18n="hero.eyebrow">Luanda · Lisboa · Maputo · Cape Town</p>
+      <h1 class="hero-title">
+        <span data-i18n="hero.title1">Corre Com</span><br>
+        <em data-i18n="hero.title2">Atitude.</em>
+      </h1>
+      <div class="hero-bottom">
+        <p class="hero-sub" data-i18n="hero.sub">
+          A maior comunidade lusófona de corrida ligada a uma <strong>marca africana</strong>. 
+          Não é só treino — é tribo, identidade e movimento.
+        </p>
+        <div class="hero-actions">
+          <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="btn-primary" data-i18n="hero.cta1" target="_blank" rel="noopener">Quero Entrar</a>
+          <a href="pages/eventos.html" class="btn-secondary" data-i18n="hero.cta2">Ver Eventos</a>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-bar"></div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">Corrida</span><span class="marquee-item marquee-sep">✦</span>
+      <span class="marquee-item">Lifestyle</span><span class="marquee-item marquee-sep">✦</span>
+      <span class="marquee-item">Moda</span><span class="marquee-item marquee-sep">✦</span>
+      <span class="marquee-item">Educação</span><span class="marquee-item marquee-sep">✦</span>
+      <span class="marquee-item">Pertencimento</span><span class="marquee-item marquee-sep">✦</span>
+      <span class="marquee-item">Night Runs</span><span class="marquee-item marquee-sep">✦</span>
+      <span class="marquee-item">Comunidade</span><span class="marquee-item marquee-sep">✦</span>
+      <span class="marquee-item">Corrida</span><span class="marquee-item marquee-sep">✦</span>
+      <span class="marquee-item">Lifestyle</span><span class="marquee-item marquee-sep">✦</span>
+      <span class="marquee-item">Moda</span><span class="marquee-item marquee-sep">✦</span>
+      <span class="marquee-item">Educação</span><span class="marquee-item marquee-sep">✦</span>
+      <span class="marquee-item">Pertencimento</span><span class="marquee-item marquee-sep">✦</span>
+      <span class="marquee-item">Night Runs</span><span class="marquee-item marquee-sep">✦</span>
+      <span class="marquee-item">Comunidade</span><span class="marquee-item marquee-sep">✦</span>
+    </div>
+  </div>
+
+  <!-- PILLARS -->
+  <section id="pilares">
+    <p class="section-label reveal" data-i18n="pillars.label">Os Cinco Pilares</p>
+    <h2 class="section-title reveal reveal-delay-1" data-i18n="pillars.title">O clube<br>é mais que<br>a corrida.</h2>
+    <div class="pillars-grid">
+      <div class="pillar reveal">
+        <span class="pillar-num">01</span>
+        <span class="pillar-icon">🏃</span>
+        <h3 class="pillar-title">Corrida</h3>
+        <p class="pillar-desc">Treinos semanais para todos os níveis. Pace groups, longões, night runs e treinos técnicos que te tornam melhor a cada semana.</p>
+      </div>
+      <div class="pillar reveal reveal-delay-1">
+        <span class="pillar-num">02</span>
+        <span class="pillar-icon">☀️</span>
+        <h3 class="pillar-title">Lifestyle</h3>
+        <p class="pillar-desc">Brunch pós-corrida, sunset runs, run + música, run + fotografia. O treino é só o começo da experiência.</p>
+      </div>
+      <div class="pillar reveal reveal-delay-2">
+        <span class="pillar-num">03</span>
+        <span class="pillar-icon">👕</span>
+        <h3 class="pillar-title">Moda</h3>
+        <p class="pillar-desc">Drops exclusivos para membros, edições limitadas por cidade, coleções Night Run. A roupa é identidade, não apenas tecido.</p>
+      </div>
+      <div class="pillar reveal reveal-delay-3">
+        <span class="pillar-num">04</span>
+        <span class="pillar-icon">📖</span>
+        <h3 class="pillar-title">Educação</h3>
+        <p class="pillar-desc">Técnicas, mobilidade, nutrição, mindset e preparação para provas. Workshops e conteúdos para evoluíres dentro e fora da pista.</p>
+      </div>
+      <div class="pillar reveal reveal-delay-3">
+        <span class="pillar-num">05</span>
+        <span class="pillar-icon">🤝</span>
+        <h3 class="pillar-title">Pertencimento</h3>
+        <p class="pillar-desc">O verdadeiro valor: sentires que fazes parte de algo maior. É isso que cria retenção. É isso que cria lealdade. É a tribo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-strip">
+    <div class="stat reveal">
+      <div class="stat-num">5</div>
+      <div class="stat-label">Pilares</div>
+    </div>
+    <div class="stat reveal reveal-delay-1">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Cidades</div>
+    </div>
+    <div class="stat reveal reveal-delay-2">
+      <div class="stat-num">90</div>
+      <div class="stat-label">Dias para lançar</div>
+    </div>
+    <div class="stat reveal reveal-delay-3">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Impacto</div>
+    </div>
+  </div>
+
+  <!-- COMMUNITY GALLERY -->
+  <section>
+    <p class="section-label reveal">A Tribo</p>
+    <h2 class="section-title reveal reveal-delay-1">Isto não é<br>só corrida.<br>É família.</h2>
+    <div class="gallery-grid">
+      <div class="gallery-item reveal"><img src="images/run-01.jpg" alt="Attitude Run Club" loading="lazy"></div>
+      <div class="gallery-item reveal reveal-delay-1"><img src="images/smile-01.jpg" alt="Attitude Run Club" loading="lazy"></div>
+      <div class="gallery-item reveal reveal-delay-2"><img src="images/community-01.jpg" alt="Attitude Run Club" loading="lazy"></div>
+      <div class="gallery-item reveal reveal-delay-3"><img src="images/flag.jpg" alt="Attitude Run Club" loading="lazy"></div>
+      <div class="gallery-item reveal"><img src="images/start-01.jpg" alt="Attitude Run Club" loading="lazy"></div>
+      <div class="gallery-item reveal reveal-delay-1"><img src="images/arms-up.jpg" alt="Attitude Run Club" loading="lazy"></div>
+      <div class="gallery-item reveal reveal-delay-2"><img src="images/joy-01.jpg" alt="Attitude Run Club" loading="lazy"></div>
+      <div class="gallery-item reveal reveal-delay-3"><img src="images/group.jpg" alt="Attitude Run Club" loading="lazy"></div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="cta-section">
+    <div class="cta-bg-text">ATTITUDE RUN CLUB</div>
+    <p class="cta-eyebrow" data-i18n="cta.eyebrow">Junta-te à Tribo</p>
+    <h2 class="cta-title">
+      <span data-i18n="cta.title1">A tribo está</span><br>
+      <em data-i18n="cta.title2">a correr.</em>
+    </h2>
+    <p class="cta-sub" data-i18n="cta.sub">
+      O maior ativo não será a roupa. Será a tribo Attitude. A roupa vira símbolo. O treino vira ritual. A comunidade vira movimento.
+    </p>
+    <div class="cta-actions">
+      <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="btn-large" data-i18n="cta.btn1" target="_blank" rel="noopener">Entrar Agora</a>
+      <a href="pages/planos.html" class="btn-large-outline" data-i18n="cta.btn2">Saber Mais</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">ATTITUDE <span>RUN</span> CLUB</div>
+        <p class="footer-tagline">Move With Purpose · Corre Com Atitude</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Navegação</h4>
+          <a href="index.html">Home</a>
+          <a href="pages/planos.html">Planos</a>
+          <a href="pages/eventos.html">Eventos</a>
+          <a href="pages/roadmap.html">Roadmap</a>
+          <a href="pages/contacto.html">Contacto</a>
+        </div>
+        <div class="footer-col">
+          <h4>Cidades</h4>
+          <p>Fase 1 — Luanda</p>
+          <p>Fase 2 — Lisboa · Maputo</p>
+          <p>Fase 3 — Cape Town · Benguela · Porto</p>
+        </div>
+        <div class="footer-col">
+          <h4>Contacto</h4>
+          <a href="mailto:attituderunclub@gmail.com">attituderunclub@gmail.com</a>
+          <a href="https://wa.me/244933953989" target="_blank" rel="noopener">WhatsApp: 933 953 989</a>
+          <a href="https://www.instagram.com/attituderunclub" target="_blank" rel="noopener">Instagram</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2025 Attitude Run Club · Attitude Sportwear</p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/attituderunclub" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://wa.me/244933953989" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="mailto:attituderunclub@gmail.com">Email</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
