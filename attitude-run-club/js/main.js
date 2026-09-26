@@ -179,7 +179,7 @@ const translations = {
     // Eventos page
     'eventos.label': 'Eventos',
     'eventos.title': 'Histórico<br>& próximos.',
-    'eventos.sub': 'Passados à esquerda, próximos à direita. Cada corrida deixa marca — e a próxima já está marcada.',
+    'eventos.sub': 'O que já vivemos e o que vem a seguir. Cada corrida deixa marca — e a próxima já está marcada.',
     'eventos.past.title': 'Eventos passados',
     'eventos.upcoming.title': 'Próximos eventos',
     'eventos.past.1.date': 'Agosto 2025 · Luanda',
@@ -389,7 +389,7 @@ const translations = {
     // Eventos
     'eventos.label': 'Events',
     'eventos.title': 'History<br>& upcoming.',
-    'eventos.sub': 'Past on the left, upcoming on the right. Every run leaves a mark — and the next one is already set.',
+    'eventos.sub': 'What we\'ve already lived and what\'s coming next. Every run leaves a mark — and the next one is already set.',
     'eventos.past.title': 'Past events',
     'eventos.upcoming.title': 'Upcoming events',
     'eventos.past.1.date': 'August 2025 · Luanda',
