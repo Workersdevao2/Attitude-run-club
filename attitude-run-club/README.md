@@ -129,6 +129,18 @@ A visible X appears in the top-right of the mobile menu. Clicking it (or any lin
 
 ---
 
+### 2026-09-26 — Typography: Sora Bold + Sora Light
+**Request:** Sora Bold for titles · Sora Light for body text.
+
+**Files changed:**
+- All HTML pages — Google Fonts link switched from Bebas Neue / Barlow to Sora (weights 300–800)
+- `css/style.css` — font variables updated; body defaults to weight 300 (Light); all major titles/display elements set to weight 700 (Bold)
+- `README.md` — changelog
+
+**Result:** Clean modern typography. Titles = Sora Bold · Texts = Sora Light.
+
+---
+
 ## Membership Plans (Option A)
 - Inscrição: **10.000 Kz** (one-time)
 - Normal: **20.000 Kz/mês**
