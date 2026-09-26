@@ -2,7 +2,7 @@
 
 Official multi-page website for **Attitude Run Club**.
 
-**Live:** https://attitude-run-club.workers.dev (or your Cloudflare URL)
+**Live:** https://attitude-run-club.workersdevao.workers.dev/
 
 ---
 
