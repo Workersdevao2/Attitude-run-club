@@ -849,6 +849,22 @@ section { padding: 120px 48px; }
   position: relative;
   overflow: hidden;
 }
+.cta-section.has-bg {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.cta-section.has-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10,10,10,0.94) 0%, rgba(10,10,10,0.6) 45%, rgba(10,10,10,0.45) 100%);
+  z-index: 0;
+}
+.cta-section.has-bg > * {
+  position: relative;
+  z-index: 1;
+}
 .cta-bg-text {
   position: absolute;
   font-family: var(--font-display);
@@ -858,6 +874,7 @@ section { padding: 120px 48px; }
   user-select: none;
   pointer-events: none;
   white-space: nowrap;
+  z-index: 0;
 }
 .cta-eyebrow {
   font-family: var(--font-cond);
@@ -888,6 +905,9 @@ section { padding: 120px 48px; }
   max-width: 480px;
   line-height: 1.7;
   margin-bottom: 48px;
+}
+.cta-section.has-bg .cta-sub {
+  color: rgba(245,245,245,0.85);
   position: relative;
 }
 .cta-actions {
