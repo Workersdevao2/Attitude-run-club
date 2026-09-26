@@ -141,6 +141,20 @@ A visible X appears in the top-right of the mobile menu. Clicking it (or any lin
 
 ---
 
+### 2026-09-26 — Eventos page: Past | Upcoming + formats
+**Request:** “Ver Eventos” should show past events (left, with short recap) and upcoming events (right). Keep format cards. Mobile-friendly.
+
+**Files changed:**
+- `pages/eventos.html` — full redesign: two-column split (past left / upcoming right), 30 Oct “Attituders Let’s Go” as featured upcoming with poster + ticket.ao + WhatsApp; 3 placeholder past events with recaps; original 6 format cards kept below as “Formatos de eventos”
+- `images/event-lets-go.jpg` — event poster from owner
+- `css/style.css` — `.events-split`, `.calendar-card`, `.formats-section`; on ≤900px columns stack with **upcoming first**, then past
+- `js/main.js` — new PT/EN keys for past, upcoming, formats section
+- `README.md` — changelog
+
+**Note:** Past event recaps are placeholders — replace when owner sends real history.
+
+---
+
 ## Membership Plans (Option A)
 - Inscrição: **10.000 Kz** (one-time)
 - Normal: **20.000 Kz/mês**
