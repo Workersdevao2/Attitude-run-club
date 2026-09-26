@@ -113,6 +113,22 @@ A visible X appears in the top-right of the mobile menu. Clicking it (or any lin
 
 ---
 
+### 2026-09-26 — Full PT/EN translation coverage
+**Request:** Translate all page content on language toggle click.
+
+**Files changed:**
+- `js/main.js` — full translation dictionaries (~160 keys each for PT and EN)
+- `index.html` — data-i18n on hero, pillars, stats, gallery, marquee, CTA, footer, nav
+- `pages/planos.html` — plans, features, CTA, nav, footer
+- `pages/eventos.html` — events, tags, CTA, nav, footer
+- `pages/roadmap.html` — phases, items, CTA, nav, footer
+- `pages/contacto.html` — contact labels, form, nav, footer
+- `README.md` — changelog
+
+**How it works:** Click PT or EN in the header. Preference is saved in localStorage (`arc-lang`).
+
+---
+
 ## Membership Plans (Option A)
 - Inscrição: **10.000 Kz** (one-time)
 - Normal: **20.000 Kz/mês**
