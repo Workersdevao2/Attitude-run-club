@@ -57,59 +57,109 @@
   </div>
 
   <section class="page-hero has-bg" style="background-image: url('../images/start-02.jpg');">
-    <p class="section-label reveal" data-i18n="eventos.label">Eventos Temáticos</p>
-    <h1 class="section-title reveal reveal-delay-1" data-i18n="eventos.title">Aqui está<br>o diferencial.</h1>
-    <p class="page-hero-sub reveal reveal-delay-2" data-i18n="eventos.sub">Night Runs, Fancy Runs, Story Runs e muito mais. Cada evento é uma experiência, não só um treino.</p>
+    <p class="section-label reveal" data-i18n="eventos.label">Eventos</p>
+    <h1 class="section-title reveal reveal-delay-1" data-i18n="eventos.title">Histórico<br>&amp; próximos.</h1>
+    <p class="page-hero-sub reveal reveal-delay-2" data-i18n="eventos.sub">Passados à esquerda, próximos à direita. Cada corrida deixa marca — e a próxima já está marcada.</p>
   </section>
 
   <section style="padding-top:0;">
-    <div class="events-grid">
-      <div class="event-card reveal">
-        <img src="../images/night-run-01.jpg" alt="Night Run">
-        <div class="event-content">
-          <span class="event-tag">Mensal</span>
-          <div class="event-name" data-i18n="event.1.name">Night Run</div>
-          <p class="event-desc">LED Run · Neon Night · Glow Gear · DJ no ponto final · Prémio best outfit</p>
+    <div class="events-split">
+      <!-- PAST EVENTS (left) -->
+      <div class="col-past reveal">
+        <h2 class="events-col-title" data-i18n="eventos.past.title">Eventos passados</h2>
+        <div class="calendar-list">
+          <article class="calendar-card">
+            <p class="calendar-date" data-i18n="eventos.past.1.date">Agosto 2025 · Luanda</p>
+            <h3 class="calendar-name" data-i18n="eventos.past.1.name">Night Run — Neon Edition</h3>
+            <p class="calendar-meta" data-i18n="eventos.past.1.meta">LED Run · DJ no ponto final · Best outfit</p>
+            <p class="calendar-recap" data-i18n="eventos.past.1.recap">Noite cheia de energia. Dezenas de Attituders em neon, percurso iluminado e vibe de tribo do início ao fim. Resumo: comunidade a 100%.</p>
+          </article>
+          <article class="calendar-card">
+            <p class="calendar-date" data-i18n="eventos.past.2.date">Julho 2025 · Luanda</p>
+            <h3 class="calendar-name" data-i18n="eventos.past.2.name">Sunset Run + Networking</h3>
+            <p class="calendar-meta" data-i18n="eventos.past.2.meta">Pace social · Vista · Música</p>
+            <p class="calendar-recap" data-i18n="eventos.past.2.recap">O pôr do sol mais bonito da semana. Corrida leve, conversas fortes e novas amizades no clube. Ideal para quem estava a começar.</p>
+          </article>
+          <article class="calendar-card">
+            <p class="calendar-date" data-i18n="eventos.past.3.date">Junho 2025 · Luanda</p>
+            <h3 class="calendar-name" data-i18n="eventos.past.3.name">Run + Brunch</h3>
+            <p class="calendar-meta" data-i18n="eventos.past.3.meta">5 km · Recovery · Café</p>
+            <p class="calendar-recap" data-i18n="eventos.past.3.recap">Treino + mesa partilhada. Smoothies, café e networking depois dos 5 km. Formato que a tribo pediu para voltar.</p>
+          </article>
         </div>
       </div>
-      <div class="event-card reveal reveal-delay-1">
-        <img src="../images/run-02.jpg" alt="Fancy Run">
-        <div class="event-content">
-          <span class="event-tag" data-i18n="event.tag.especial">Especial</span>
-          <div class="event-name" data-i18n="event.2.name">Fancy Run</div>
-          <p class="event-desc" data-i18n="event.2.desc">Superheroes · Wakanda · Angola Heritage · White Party · Black & Gold</p>
+
+      <!-- UPCOMING EVENTS (right) -->
+      <div class="col-upcoming reveal reveal-delay-1">
+        <h2 class="events-col-title" data-i18n="eventos.upcoming.title">Próximos eventos</h2>
+        <div class="calendar-list">
+          <article class="calendar-card featured">
+            <img src="../images/event-lets-go.jpg" alt="Attituders Let's Go" class="calendar-poster">
+            <p class="calendar-date" data-i18n="eventos.up.1.date">Sexta · 30 Outubro · 19h</p>
+            <h3 class="calendar-name" data-i18n="eventos.up.1.name">Attituders Let's Go</h3>
+            <p class="calendar-meta" data-i18n="eventos.up.1.meta">Save the date · Ingressos disponíveis · ticket.ao</p>
+            <p class="calendar-recap" data-i18n="eventos.up.1.recap">O próximo grande encontro da tribo. Energia, corrida e atitude. Não fiques de fora.</p>
+            <div class="calendar-actions">
+              <a href="https://ticket.ao" class="primary" target="_blank" rel="noopener" data-i18n="eventos.up.1.btn">Comprar ingresso</a>
+              <a href="https://wa.me/244933953989" target="_blank" rel="noopener">WhatsApp</a>
+            </div>
+          </article>
         </div>
       </div>
-      <div class="event-card reveal reveal-delay-2">
-        <img src="../images/community-01.jpg" alt="Run + Brunch">
-        <div class="event-content">
-          <span class="event-tag" data-i18n="event.tag.quinzenal">Quinzenal</span>
-          <div class="event-name" data-i18n="event.3.name">Run + Brunch</div>
-          <p class="event-desc" data-i18n="event.3.desc">5km · Recovery · Smoothie bar · Café · Networking · Boa energia</p>
+    </div>
+
+    <!-- FORMATOS (kept below) -->
+    <div class="formats-section">
+      <p class="section-label reveal" data-i18n="eventos.formats.label">Experiências</p>
+      <h2 class="section-title reveal reveal-delay-1" data-i18n="eventos.formats.title">Formatos<br>de eventos.</h2>
+      <div class="events-grid">
+        <div class="event-card reveal">
+          <img src="../images/night-run-01.jpg" alt="Night Run">
+          <div class="event-content">
+            <span class="event-tag">Mensal</span>
+            <div class="event-name" data-i18n="event.1.name">Night Run</div>
+            <p class="event-desc" data-i18n="event.1.desc">LED Run · Neon Night · Glow Gear · DJ no ponto final · Prémio best outfit</p>
+          </div>
         </div>
-      </div>
-      <div class="event-card reveal">
-        <img src="../images/start-01.jpg" alt="Story Run">
-        <div class="event-content">
-          <span class="event-tag" data-i18n="event.tag.cultural">Cultural</span>
-          <div class="event-name" data-i18n="event.4.name">Story Run</div>
-          <p class="event-desc" data-i18n="event.4.desc">Percurso com storytelling · Arte · Frases motivacionais · Fotos cinematográficas</p>
+        <div class="event-card reveal reveal-delay-1">
+          <img src="../images/run-02.jpg" alt="Fancy Run">
+          <div class="event-content">
+            <span class="event-tag" data-i18n="event.tag.especial">Especial</span>
+            <div class="event-name" data-i18n="event.2.name">Fancy Run</div>
+            <p class="event-desc" data-i18n="event.2.desc">Superheroes · Wakanda · Angola Heritage · White Party · Black &amp; Gold</p>
+          </div>
         </div>
-      </div>
-      <div class="event-card reveal reveal-delay-1">
-        <img src="../images/run-01.jpg" alt="Sunset Run">
-        <div class="event-content">
-          <span class="event-tag" data-i18n="event.tag.semanal">Semanal</span>
-          <div class="event-name" data-i18n="event.5.name">Sunset Run</div>
-          <p class="event-desc" data-i18n="event.5.desc">O treino mais bonito da semana. Pace social, vista, música e tribo.</p>
+        <div class="event-card reveal reveal-delay-2">
+          <img src="../images/community-01.jpg" alt="Run + Brunch">
+          <div class="event-content">
+            <span class="event-tag" data-i18n="event.tag.quinzenal">Quinzenal</span>
+            <div class="event-name" data-i18n="event.3.name">Run + Brunch</div>
+            <p class="event-desc" data-i18n="event.3.desc">5km · Recovery · Smoothie bar · Café · Networking · Boa energia</p>
+          </div>
         </div>
-      </div>
-      <div class="event-card reveal reveal-delay-2">
-        <img src="../images/fireworks.jpg" alt="Prova Interna">
-        <div class="event-content">
-          <span class="event-tag" data-i18n="event.tag.trimestral">Trimestral</span>
-          <div class="event-name" data-i18n="event.6.name">Prova Interna</div>
-          <p class="event-desc" data-i18n="event.6.desc">Ranking oficial · Medalhas · Badges de milestone · 100km Club</p>
+        <div class="event-card reveal">
+          <img src="../images/start-01.jpg" alt="Story Run">
+          <div class="event-content">
+            <span class="event-tag" data-i18n="event.tag.cultural">Cultural</span>
+            <div class="event-name" data-i18n="event.4.name">Story Run</div>
+            <p class="event-desc" data-i18n="event.4.desc">Percurso com storytelling · Arte · Frases motivacionais · Fotos cinematográficas</p>
+          </div>
+        </div>
+        <div class="event-card reveal reveal-delay-1">
+          <img src="../images/run-01.jpg" alt="Sunset Run">
+          <div class="event-content">
+            <span class="event-tag" data-i18n="event.tag.semanal">Semanal</span>
+            <div class="event-name" data-i18n="event.5.name">Sunset Run</div>
+            <p class="event-desc" data-i18n="event.5.desc">O treino mais bonito da semana. Pace social, vista, música e tribo.</p>
+          </div>
+        </div>
+        <div class="event-card reveal reveal-delay-2">
+          <img src="../images/fireworks.jpg" alt="Prova Interna">
+          <div class="event-content">
+            <span class="event-tag" data-i18n="event.tag.trimestral">Trimestral</span>
+            <div class="event-name" data-i18n="event.6.name">Prova Interna</div>
+            <p class="event-desc" data-i18n="event.6.desc">Ranking oficial · Medalhas · Badges de milestone · 100km Club</p>
+          </div>
         </div>
       </div>
     </div>
