@@ -82,6 +82,17 @@ A visible X appears in the top-right of the mobile menu. Clicking it (or any lin
 - `css/style.css` — pillar cards now use photo backgrounds + gradient overlay
 - `index.html` — pillars section updated with the 5 images
 
+### 2026-09-26 — Contact Hero Image
+**Request:** Use coach-with-megaphone photo as Contact page hero; fit cleanly.
+
+**Files changed:**
+- `images/contacto-hero.jpg` (new)
+- `css/style.css` — `.page-hero.has-bg` with cover + gradient for text readability
+- `pages/contacto.html` — hero uses the new image
+- `README.md` — changelog
+
+**Fit notes:** `background-position: center 30%` keeps the subject (coach) framed; dark gradient ensures title stays readable.
+
 ---
 
 ## Membership Plans (Option A)
