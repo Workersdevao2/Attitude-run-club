@@ -7,9 +7,10 @@
   --muted: #777777;
   --accent: #ffffff;
   --accent-soft: #c8c8c8;
-  --font-display: 'Bebas Neue', sans-serif;
-  --font-cond: 'Barlow Condensed', sans-serif;
-  --font-body: 'Barlow', sans-serif;
+  /* Sora Bold (titles) · Sora Light (body) — owner request */
+  --font-display: 'Sora', sans-serif;
+  --font-cond: 'Sora', sans-serif;
+  --font-body: 'Sora', sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -18,6 +19,7 @@ body {
   background: var(--black);
   color: var(--white);
   font-family: var(--font-body);
+  font-weight: 300; /* Sora Light for texts */
   overflow-x: hidden;
   cursor: none;
 }
@@ -73,6 +75,7 @@ nav.scrolled {
 .nav-logo {
   font-family: var(--font-display);
   font-size: 22px;
+  font-weight: 700; /* Sora Bold */
   letter-spacing: 0.12em;
   color: var(--white);
   text-decoration: none;
@@ -193,6 +196,7 @@ nav.scrolled {
 .mobile-menu a {
   font-family: var(--font-display);
   font-size: 32px;
+  font-weight: 700; /* Sora Bold */
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--white);
@@ -275,6 +279,7 @@ nav.scrolled {
   transform: translateY(-55%);
   font-family: var(--font-display);
   font-size: clamp(200px, 28vw, 400px);
+  font-weight: 700;
   line-height: 0.85;
   color: transparent;
   -webkit-text-stroke: 1px rgba(255,255,255,0.06);
@@ -296,6 +301,7 @@ nav.scrolled {
 .hero-title {
   font-family: var(--font-display);
   font-size: clamp(72px, 12vw, 160px);
+  font-weight: 700; /* Sora Bold — titles */
   line-height: 0.88;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -448,6 +454,7 @@ nav.scrolled {
 .marquee-item {
   font-family: var(--font-display);
   font-size: 15px;
+  font-weight: 700;
   letter-spacing: 0.25em;
   color: var(--black);
   padding: 0 40px;
@@ -469,6 +476,7 @@ section { padding: 120px 48px; }
 .section-title {
   font-family: var(--font-display);
   font-size: clamp(48px, 7vw, 90px);
+  font-weight: 700; /* Sora Bold — titles */
   line-height: 0.9;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -523,6 +531,7 @@ section { padding: 120px 48px; }
 .pillar-num {
   font-family: var(--font-display);
   font-size: 48px;
+  font-weight: 700;
   color: rgba(255,255,255,0.15);
   line-height: 1;
   margin-bottom: 8px;
@@ -563,6 +572,7 @@ section { padding: 120px 48px; }
 .stat-num {
   font-family: var(--font-display);
   font-size: clamp(52px, 6vw, 80px);
+  font-weight: 700;
   color: var(--black);
   line-height: 1;
   margin-bottom: 8px;
@@ -610,6 +620,7 @@ section { padding: 120px 48px; }
 .plan-tier {
   font-family: var(--font-display);
   font-size: 36px;
+  font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   margin-bottom: 8px;
@@ -731,6 +742,7 @@ section { padding: 120px 48px; }
 .event-name {
   font-family: var(--font-display);
   font-size: 28px;
+  font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
   line-height: 1;
@@ -771,6 +783,7 @@ section { padding: 120px 48px; }
 .phase-month {
   font-family: var(--font-display);
   font-size: 90px;
+  font-weight: 700;
   color: rgba(255,255,255,0.03);
   line-height: 0.8;
   position: absolute;
@@ -789,6 +802,7 @@ section { padding: 120px 48px; }
 .phase-title {
   font-family: var(--font-display);
   font-size: 32px;
+  font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   margin-bottom: 24px;
@@ -869,6 +883,7 @@ section { padding: 120px 48px; }
   position: absolute;
   font-family: var(--font-display);
   font-size: clamp(100px, 18vw, 220px);
+  font-weight: 700;
   color: transparent;
   -webkit-text-stroke: 1px rgba(255,255,255,0.04);
   user-select: none;
@@ -889,6 +904,7 @@ section { padding: 120px 48px; }
 .cta-title {
   font-family: var(--font-display);
   font-size: clamp(56px, 9vw, 120px);
+  font-weight: 700; /* Sora Bold — titles */
   line-height: 0.88;
   text-transform: uppercase;
   margin-bottom: 28px;
@@ -1045,6 +1061,7 @@ footer {
 .contact-info h3 {
   font-family: var(--font-display);
   font-size: 28px;
+  font-weight: 700;
   letter-spacing: 0.05em;
   margin-bottom: 24px;
 }
