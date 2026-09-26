@@ -95,6 +95,24 @@ A visible X appears in the top-right of the mobile menu. Clicking it (or any lin
 
 ---
 
+### 2026-09-26 — Photo heroes on Planos / Roadmap / Eventos + all CTAs
+**Request:** Add photo backgrounds to remaining heroes and CTA sections.
+
+**Files changed:**
+- `images/planos-hero.jpg` — smiling member in Attitude kit
+- `images/roadmap-hero.jpg` — night run motion (headlamp)
+- `images/cta-energy.jpg` — women group energy
+- `images/cta-run.jpg` — motion blur runners
+- `images/cta-community.jpg` — two members posing
+- `css/style.css` — `.cta-section.has-bg` overlay support
+- `pages/planos.html` — hero + CTA photos
+- `pages/roadmap.html` — hero + CTA photos
+- `pages/eventos.html` — hero + CTA photos
+- `index.html` — final CTA photo
+- `README.md` — changelog
+
+---
+
 ## Membership Plans (Option A)
 - Inscrição: **10.000 Kz** (one-time)
 - Normal: **20.000 Kz/mês**
