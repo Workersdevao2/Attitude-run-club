@@ -62,6 +62,7 @@ if (nav) {
 // Language Toggle (simple PT/EN)
 const translations = {
   pt: {
+    'nav.home': 'Home',
     'nav.pilares': 'Pilares',
     'nav.planos': 'Planos',
     'nav.eventos': 'Eventos',
@@ -84,6 +85,7 @@ const translations = {
     'cta.btn2': 'Saber Mais'
   },
   en: {
+    'nav.home': 'Home',
     'nav.pilares': 'Pillars',
     'nav.planos': 'Plans',
     'nav.eventos': 'Events',
