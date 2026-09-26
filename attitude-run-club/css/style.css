@@ -979,6 +979,28 @@ footer {
 .page-hero {
   padding: 160px 48px 80px;
   position: relative;
+  overflow: hidden;
+}
+.page-hero.has-bg {
+  min-height: 52vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 64px;
+  background-size: cover;
+  background-position: center 30%;
+  background-repeat: no-repeat;
+}
+.page-hero.has-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10,10,10,0.97) 0%, rgba(10,10,10,0.55) 50%, rgba(10,10,10,0.35) 100%);
+  z-index: 0;
+}
+.page-hero.has-bg > * {
+  position: relative;
+  z-index: 1;
 }
 .page-hero .section-label { margin-bottom: 12px; }
 .page-hero .section-title { margin-bottom: 20px; }
@@ -988,6 +1010,9 @@ footer {
   color: var(--muted);
   max-width: 520px;
   line-height: 1.7;
+}
+.page-hero.has-bg .page-hero-sub {
+  color: rgba(245,245,245,0.8);
 }
 
 /* CONTACT */
