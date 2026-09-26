@@ -63,7 +63,7 @@ if (nav) {
 const translations = {
   pt: {
     // Nav
-    'nav.home': 'Home',
+    'nav.home': 'Início',
     'nav.pilares': 'Pilares',
     'nav.planos': 'Planos',
     'nav.eventos': 'Eventos',
