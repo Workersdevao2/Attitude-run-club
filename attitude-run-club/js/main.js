@@ -541,3 +541,95 @@ if (hamburger && mobileMenu) {
     mobileClose.addEventListener('click', closeMobileMenu);
   }
 }
+
+// ─── PAST EVENTS CAROUSEL ───────────────────────────────────────────────────
+(function () {
+  const track = document.getElementById('pastTrack');
+  const prevBtn = document.getElementById('pastPrev');
+  const nextBtn = document.getElementById('pastNext');
+  const dotsWrap = document.getElementById('pastDots');
+  if (!track) return;
+
+  const slides = track.querySelectorAll('.past-slide');
+  const total = slides.length;
+  let index = 0;
+  let startX = 0;
+  let isDragging = false;
+
+  function slidesPerView() {
+    if (window.innerWidth <= 600) return 1;
+    if (window.innerWidth <= 900) return 1;
+    if (window.innerWidth <= 1100) return 2;
+    return 3;
+  }
+
+  function maxIndex() {
+    return Math.max(0, total - slidesPerView());
+  }
+
+  function update() {
+    const spv = slidesPerView();
+    const slideWidth = slides[0].offsetWidth;
+    const gap = 20;
+    const offset = index * (slideWidth + gap);
+    track.style.transform = `translateX(-${offset}px)`;
+
+    // dots
+    if (dotsWrap) {
+      dotsWrap.innerHTML = '';
+      const pages = maxIndex() + 1;
+      for (let i = 0; i < pages; i++) {
+        const dot = document.createElement('button');
+        dot.className = 'carousel-dot' + (i === index ? ' active' : '');
+        dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+        dot.addEventListener('click', () => {
+          index = i;
+          update();
+        });
+        dotsWrap.appendChild(dot);
+      }
+    }
+
+    if (prevBtn) prevBtn.style.opacity = index === 0 ? '0.35' : '1';
+    if (nextBtn) nextBtn.style.opacity = index >= maxIndex() ? '0.35' : '1';
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      index = Math.max(0, index - 1);
+      update();
+    });
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      index = Math.min(maxIndex(), index + 1);
+      update();
+    });
+  }
+
+  // Touch / swipe
+  track.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+  }, { passive: true });
+
+  track.addEventListener('touchend', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) index = Math.min(maxIndex(), index + 1);
+      else index = Math.max(0, index - 1);
+      update();
+    }
+  }, { passive: true });
+
+  window.addEventListener('resize', () => {
+    index = Math.min(index, maxIndex());
+    update();
+  });
+
+  // Init after images/layout
+  window.addEventListener('load', update);
+  update();
+})();
