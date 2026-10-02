@@ -63,34 +63,92 @@
   </section>
 
   <section style="padding-top:0;">
-    <div class="events-split">
-      <!-- PAST EVENTS (left) -->
-      <div class="col-past reveal">
+    <!-- PAST EVENTS CAROUSEL -->
+    <div class="past-events-wrap reveal">
+      <div class="past-events-header">
         <h2 class="events-col-title" data-i18n="eventos.past.title">Eventos passados</h2>
-        <div class="calendar-list">
-          <article class="calendar-card">
-            <p class="calendar-date" data-i18n="eventos.past.1.date">Agosto 2025 · Luanda</p>
-            <h3 class="calendar-name" data-i18n="eventos.past.1.name">Night Run — Neon Edition</h3>
-            <p class="calendar-meta" data-i18n="eventos.past.1.meta">LED Run · DJ no ponto final · Best outfit</p>
-            <p class="calendar-recap" data-i18n="eventos.past.1.recap">Noite cheia de energia. Dezenas de Attituders em neon, percurso iluminado e vibe de tribo do início ao fim. Resumo: comunidade a 100%.</p>
-          </article>
-          <article class="calendar-card">
-            <p class="calendar-date" data-i18n="eventos.past.2.date">Julho 2025 · Luanda</p>
-            <h3 class="calendar-name" data-i18n="eventos.past.2.name">Sunset Run + Networking</h3>
-            <p class="calendar-meta" data-i18n="eventos.past.2.meta">Pace social · Vista · Música</p>
-            <p class="calendar-recap" data-i18n="eventos.past.2.recap">O pôr do sol mais bonito da semana. Corrida leve, conversas fortes e novas amizades no clube. Ideal para quem estava a começar.</p>
-          </article>
-          <article class="calendar-card">
-            <p class="calendar-date" data-i18n="eventos.past.3.date">Junho 2025 · Luanda</p>
-            <h3 class="calendar-name" data-i18n="eventos.past.3.name">Run + Brunch</h3>
-            <p class="calendar-meta" data-i18n="eventos.past.3.meta">5 km · Recovery · Café</p>
-            <p class="calendar-recap" data-i18n="eventos.past.3.recap">Treino + mesa partilhada. Smoothies, café e networking depois dos 5 km. Formato que a tribo pediu para voltar.</p>
-          </article>
+        <div class="carousel-nav">
+          <button class="carousel-btn" id="pastPrev" aria-label="Anterior">
+            <span></span>
+          </button>
+          <button class="carousel-btn" id="pastNext" aria-label="Seguinte">
+            <span></span>
+          </button>
         </div>
       </div>
 
-      <!-- UPCOMING EVENTS (right) -->
-      <div class="col-upcoming reveal reveal-delay-1">
+      <div class="past-carousel" id="pastCarousel">
+        <div class="past-track" id="pastTrack">
+
+          <article class="past-slide">
+            <div class="past-slide-img">
+              <img src="../images/night-run-01.jpg" alt="Night Run — Neon Edition">
+            </div>
+            <div class="past-slide-body">
+              <p class="calendar-date" data-i18n="eventos.past.1.date">Agosto 2025 · Luanda</p>
+              <h3 class="calendar-name" data-i18n="eventos.past.1.name">Night Run — Neon Edition</h3>
+              <p class="calendar-meta" data-i18n="eventos.past.1.meta">LED Run · DJ no ponto final · Best outfit</p>
+              <p class="calendar-recap" data-i18n="eventos.past.1.recap">Noite cheia de energia. Dezenas de Attituders em neon, percurso iluminado e vibe de tribo do início ao fim. Resumo: comunidade a 100%.</p>
+            </div>
+          </article>
+
+          <article class="past-slide">
+            <div class="past-slide-img">
+              <img src="../images/run-02.jpg" alt="Sunset Run + Networking">
+            </div>
+            <div class="past-slide-body">
+              <p class="calendar-date" data-i18n="eventos.past.2.date">Julho 2025 · Luanda</p>
+              <h3 class="calendar-name" data-i18n="eventos.past.2.name">Sunset Run + Networking</h3>
+              <p class="calendar-meta" data-i18n="eventos.past.2.meta">Pace social · Vista · Música</p>
+              <p class="calendar-recap" data-i18n="eventos.past.2.recap">O pôr do sol mais bonito da semana. Corrida leve, conversas fortes e novas amizades no clube. Ideal para quem estava a começar.</p>
+            </div>
+          </article>
+
+          <article class="past-slide">
+            <div class="past-slide-img">
+              <img src="../images/community-01.jpg" alt="Run + Brunch">
+            </div>
+            <div class="past-slide-body">
+              <p class="calendar-date" data-i18n="eventos.past.3.date">Junho 2025 · Luanda</p>
+              <h3 class="calendar-name" data-i18n="eventos.past.3.name">Run + Brunch</h3>
+              <p class="calendar-meta" data-i18n="eventos.past.3.meta">5 km · Recovery · Café</p>
+              <p class="calendar-recap" data-i18n="eventos.past.3.recap">Treino + mesa partilhada. Smoothies, café e networking depois dos 5 km. Formato que a tribo pediu para voltar.</p>
+            </div>
+          </article>
+
+          <article class="past-slide">
+            <div class="past-slide-img">
+              <img src="../images/start-01.jpg" alt="Night Run atmosphere">
+            </div>
+            <div class="past-slide-body">
+              <p class="calendar-date">Maio 2025 · Luanda</p>
+              <h3 class="calendar-name">First Night Run</h3>
+              <p class="calendar-meta">LED · Comunidade · Energia</p>
+              <p class="calendar-recap">O início de tudo. A primeira noite em que a tribo correu junta sob as luzes da cidade.</p>
+            </div>
+          </article>
+
+          <article class="past-slide">
+            <div class="past-slide-img">
+              <img src="../images/run-01.jpg" alt="Sunset Run">
+            </div>
+            <div class="past-slide-body">
+              <p class="calendar-date">Abril 2025 · Luanda</p>
+              <h3 class="calendar-name">Sunset Run</h3>
+              <p class="calendar-meta">Pace social · Vista · Música</p>
+              <p class="calendar-recap">Treinos ao pôr do sol que se tornaram o ritual semanal da comunidade.</p>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <div class="carousel-dots" id="pastDots"></div>
+    </div>
+
+    <!-- UPCOMING EVENTS -->
+    <div class="events-split" style="margin-top: 64px;">
+      <div class="col-upcoming reveal" style="grid-column: 1 / -1; max-width: 520px; margin: 0 auto;">
         <h2 class="events-col-title" data-i18n="eventos.upcoming.title">Próximos eventos</h2>
         <div class="calendar-list">
           <article class="calendar-card featured">
