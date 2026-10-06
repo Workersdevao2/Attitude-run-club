@@ -155,6 +155,14 @@ A visible X appears in the top-right of the mobile menu. Clicking it (or any lin
 
 ---
 
+### 2026-10-06 — Pilares card 04 mobile cutoff fix
+**Problem:** Pillar card 04 (Educação) text was cut off on mobile/tablet.
+
+**Files changed:**
+- `css/style.css` — higher `min-height` and tuned padding/type sizes for pillars at ≤1100px, ≤900px (2-col), and ≤600px (1-col) so long descriptions stay fully visible
+
+---
+
 ## Membership Plans (Option A)
 - Inscrição: **10.000 Kz** (one-time)
 - Normal: **20.000 Kz/mês**
