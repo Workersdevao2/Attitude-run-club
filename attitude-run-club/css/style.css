@@ -504,6 +504,10 @@ section { padding: 120px 48px; }
   background-position: center;
   transition: transform 0.4s ease;
 }
+/* Card 04 (Educação): keep coach's face in frame */
+.pillar:nth-child(4) {
+  background-position: center 22%;
+}
 .pillar::after {
   content: '';
   position: absolute;
@@ -1421,6 +1425,10 @@ footer {
     padding: 36px 20px 28px;
     overflow: hidden;
   }
+  /* Face sits high in the photo — bias crop upward on short cards */
+  .pillar:nth-child(4) {
+    background-position: center 12%;
+  }
   .pillar-num { font-size: 36px; }
   .pillar-title { font-size: 16px; }
   .pillar-desc {
@@ -1463,6 +1471,9 @@ footer {
   .pillar {
     min-height: 340px;
     padding: 40px 24px 32px;
+  }
+  .pillar:nth-child(4) {
+    background-position: center 18%;
   }
   .pillar-num { font-size: 40px; }
   .pillar-title { font-size: 17px; }

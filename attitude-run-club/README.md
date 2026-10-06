@@ -161,6 +161,12 @@ A visible X appears in the top-right of the mobile menu. Clicking it (or any lin
 **Files changed:**
 - `css/style.css` — higher `min-height` and tuned padding/type sizes for pillars at ≤1100px, ≤900px (2-col), and ≤600px (1-col) so long descriptions stay fully visible
 
+### 2026-10-06 — Pillar 04 face visible on mobile
+**Problem:** Coach's face on card 04 cropped out on mobile (background-position: center).
+
+**Files changed:**
+- `css/style.css` — `.pillar:nth-child(4)` uses `background-position: center 22%` (desktop), `12%` (≤900px), `18%` (≤600px) so the face stays in frame
+
 ---
 
 ## Membership Plans (Option A)
