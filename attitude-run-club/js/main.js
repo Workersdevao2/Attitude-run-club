@@ -247,6 +247,8 @@ const translations = {
     // Roadmap page
     'roadmap.label': 'Roadmap',
     'roadmap.title': '90 dias para<br>mudar tudo.',
+    'roadmap.title.mid': 'dias para',
+    'roadmap.title.end': 'mudar tudo.',
     'roadmap.sub': 'Do zero à tribo. O plano de lançamento em três meses.',
     'roadmap.m1.label': 'Mês Um',
     'roadmap.m1.title': 'Fundação',
@@ -479,6 +481,8 @@ const translations = {
     // Roadmap
     'roadmap.label': 'Roadmap',
     'roadmap.title': '90 days to<br>change everything.',
+    'roadmap.title.mid': 'days to',
+    'roadmap.title.end': 'change everything.',
     'roadmap.sub': 'From zero to tribe. The three-month launch plan.',
     'roadmap.m1.label': 'Month One',
     'roadmap.m1.title': 'Foundation',
@@ -561,17 +565,15 @@ setLanguage(currentLang);
 
 // Days until Attituders Let's Go (30 Oct 2026, 19:00 WAT)
 (function updateDaysToEvent() {
-  const el = document.getElementById('daysToEvent');
-  if (!el) return;
   const eventDate = new Date('2026-10-30T19:00:00+01:00');
   const now = new Date();
   const msLeft = eventDate - now;
-  if (msLeft <= 0) {
-    el.textContent = '0';
-    return;
-  }
-  const days = Math.ceil(msLeft / (1000 * 60 * 60 * 24));
-  el.textContent = String(days);
+  const days = msLeft <= 0 ? 0 : Math.ceil(msLeft / (1000 * 60 * 60 * 24));
+  const value = String(days);
+  const homeEl = document.getElementById('daysToEvent');
+  const roadmapEl = document.getElementById('roadmapDays');
+  if (homeEl) homeEl.textContent = value;
+  if (roadmapEl) roadmapEl.textContent = value;
 })();
 
 // Hamburger / Mobile menu
