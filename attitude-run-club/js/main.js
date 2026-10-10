@@ -574,6 +574,9 @@ setLanguage(currentLang);
   const roadmapEl = document.getElementById('roadmapDays');
   if (homeEl) homeEl.textContent = value;
   if (roadmapEl) roadmapEl.textContent = value;
+  document.querySelectorAll('.js-days-to-event').forEach(el => {
+    el.textContent = value;
+  });
 })();
 
 // Hamburger / Mobile menu

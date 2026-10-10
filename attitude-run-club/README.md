@@ -216,6 +216,22 @@ PT / EN toggle is present (basic implementation). Expand translations in `js/mai
 
 ---
 
+### 2026-10-10 — Live days-to-event + stats + ticket link
+**Request:** Show remaining days to Attituders Let’s Go (30 Oct 2026, 19h); fix ticket URL; update impact stat.
+
+**Files changed:**
+- `js/main.js` — Live countdown to `2026-10-30T19:00:00+01:00` (updates `#daysToEvent`, `#roadmapDays`, and all `.js-days-to-event`); i18n for “Dias para o evento” / “Days to the event” and “Pessoas” / “People”
+- `index.html` — Stats: live days count + **1000 Pessoas** (was ∞ Impacto)
+- `pages/roadmap.html` — Hero title uses live day count (“X dias para mudar tudo”)
+- `pages/eventos.html` — Days badge on upcoming event card; ticket link → `https://ticket.ao/event/attituders-lets-go/`
+- `pages/planos.html` — Days badge under hero
+- `pages/contacto.html` — Days badge under hero
+- `css/style.css` — `.days-badge` styles
+
+**Event target:** Attituders Let’s Go · Friday 30 October 2026 · 19h · ticket.ao
+
+---
+
 ## Deploy
 Push this entire folder to GitHub → connect to Cloudflare Pages / Workers.  
 After any change, make sure **HTML + CSS + JS** are all updated on the live site.
