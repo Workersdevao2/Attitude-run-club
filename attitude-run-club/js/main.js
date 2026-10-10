@@ -106,7 +106,7 @@ const translations = {
     // Stats
     'stat.pilares': 'Pilares',
     'stat.cidades': 'Cidades',
-    'stat.dias': 'Dias para lançar',
+    'stat.dias': 'Dias para o evento',
     'stat.impacto': 'Impacto',
 
     // Gallery
@@ -338,7 +338,7 @@ const translations = {
     // Stats
     'stat.pilares': 'Pillars',
     'stat.cidades': 'Cities',
-    'stat.dias': 'Days to launch',
+    'stat.dias': 'Days to the event',
     'stat.impacto': 'Impact',
 
     // Gallery
@@ -558,6 +558,21 @@ document.querySelectorAll('.lang-toggle button').forEach(btn => {
 });
 
 setLanguage(currentLang);
+
+// Days until Attituders Let's Go (30 Oct 2026, 19:00 WAT)
+(function updateDaysToEvent() {
+  const el = document.getElementById('daysToEvent');
+  if (!el) return;
+  const eventDate = new Date('2026-10-30T19:00:00+01:00');
+  const now = new Date();
+  const msLeft = eventDate - now;
+  if (msLeft <= 0) {
+    el.textContent = '0';
+    return;
+  }
+  const days = Math.ceil(msLeft / (1000 * 60 * 60 * 24));
+  el.textContent = String(days);
+})();
 
 // Hamburger / Mobile menu
 const hamburger = document.getElementById('hamburger');
