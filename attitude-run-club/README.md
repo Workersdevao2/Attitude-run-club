@@ -19,7 +19,7 @@ attitude-run-club/
 ├── css/
 │   └── style.css           → Global styles
 ├── js/
-│   └── main.js             → Cursor, language toggle, mobile menu
+│   └── main.js             → Cursor, language toggle, mobile menu, past-events carousel
 ├── images/                 → Photos + logo
 └── README.md
 ```
@@ -166,6 +166,25 @@ A visible X appears in the top-right of the mobile menu. Clicking it (or any lin
 
 **Files changed:**
 - `css/style.css` — `.pillar:nth-child(4)` uses `background-position: center 22%` (desktop), `12%` (≤900px), `18%` (≤600px) so the face stays in frame
+
+---
+
+### 2026-10-02 — Eventos: past events carousel + formats removed
+**Request:** Owner asked for past events as a visual carousel (especially for mobile) that tells the story of each event. Formats section no longer needed.
+
+**Files changed:**
+- `pages/eventos.html` — replaced past-events list with horizontal carousel (5 slides); removed “Experiências / Formatos de eventos” block; upcoming event kept below
+- `css/style.css` — carousel styles (track, slides, thin arrow buttons, dots); responsive: 3 slides desktop → 2 tablet → 1 mobile with swipe
+- `js/main.js` — pure JS carousel (prev/next, dots, touch swipe)
+
+**Images used (already in repo):** `start-01.jpg`, `run-02.jpg`, `community-01.jpg`, `run-01.jpg`
+
+### 2026-10-10 — Missing night-run-01.jpg fallback
+**Problem:** `images/night-run-01.jpg` was missing from the repo, so the home hero and first carousel slide showed a blank background.
+
+**Files changed:**
+- `index.html` — home hero background → `images/start-01.jpg`
+- `pages/eventos.html` — first past-event slide → `../images/start-01.jpg`
 
 ---
 
