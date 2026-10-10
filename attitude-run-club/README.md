@@ -203,6 +203,19 @@ PT / EN toggle is present (basic implementation). Expand translations in `js/mai
 
 ---
 
+### 2026-10-10 — How to become a member (Regibox)
+**Request:** Coach confirmed membership is through Regibox. Add a clear “how to become a member” flow.
+
+**Files changed:**
+- `pages/planos.html` — Full 4-step section above the plans grid + Regibox CTA
+- `index.html` — Short 3-step teaser before the final CTA, linking to Planos
+- `css/style.css` — `.how-section`, `.how-grid`, `.how-step`, `.how-teaser` styles + mobile grid
+- `js/main.js` — Full PT/EN i18n keys for all how-to strings
+
+**Flow:** Choose plan → Register on Regibox → Pay inscription + monthly → Join the tribe.
+
+---
+
 ## Deploy
 Push this entire folder to GitHub → connect to Cloudflare Pages / Workers.  
 After any change, make sure **HTML + CSS + JS** are all updated on the live site.
