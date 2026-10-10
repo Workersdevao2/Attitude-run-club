@@ -107,7 +107,7 @@ const translations = {
     'stat.pilares': 'Pilares',
     'stat.cidades': 'Cidades',
     'stat.dias': 'Dias para o evento',
-    'stat.impacto': 'Impacto',
+    'stat.impacto': 'Pessoas',
 
     // Gallery
     'gallery.label': 'A Tribo',
@@ -339,7 +339,7 @@ const translations = {
     'stat.pilares': 'Pillars',
     'stat.cidades': 'Cities',
     'stat.dias': 'Days to the event',
-    'stat.impacto': 'Impact',
+    'stat.impacto': 'People',
 
     // Gallery
     'gallery.label': 'The Tribe',
