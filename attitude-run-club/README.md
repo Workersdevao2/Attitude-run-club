@@ -235,3 +235,19 @@ PT / EN toggle is present (basic implementation). Expand translations in `js/mai
 ## Deploy
 Push this entire folder to GitHub → connect to Cloudflare Pages / Workers.  
 After any change, make sure **HTML + CSS + JS** are all updated on the live site.
+
+---
+
+### 2026-10-17 — Loja (Attitude Sportwear shop)
+**Request:** Add physical products shop with WhatsApp checkout.
+
+**Files added/changed:**
+- `pages/loja.html` — product grid (7 items) + cart summary + WhatsApp checkout form
+- `images/product-*.jpg` — tank, socks, black shorts, white shorts, visor, jacket, 2-in-1 shorts
+- `css/style.css` — product cards, thin borders, checkout layout (mobile-first)
+- `js/main.js` — cart logic, PT/EN i18n for Loja, WhatsApp pre-filled order message
+- All pages — **Loja** link in desktop nav, mobile menu and footer
+
+**Checkout flow:** Add products (size + qty) → fill name / phone / city → “Enviar pedido no WhatsApp” opens `wa.me/244933953989` with order + client data pre-filled.
+
+**Note:** Prices are indicative (Kz). Adjust in `data-price` attributes on each product card when final retail prices are confirmed. Member discounts (10/20/30%) remain as stated on Planos.

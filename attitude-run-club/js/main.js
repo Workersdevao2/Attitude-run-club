@@ -66,6 +66,7 @@ const translations = {
     'nav.home': 'Início',
     'nav.pilares': 'Pilares',
     'nav.planos': 'Planos',
+    'nav.loja': 'Loja',
     'nav.eventos': 'Eventos',
     'nav.roadmap': 'Roadmap',
     'nav.contacto': 'Contacto',
@@ -292,7 +293,49 @@ const translations = {
     'contacto.form.note': 'Ou fala connosco diretamente no WhatsApp para resposta mais rápida.',
     'contacto.ph.name': 'O teu nome',
     'contacto.ph.email': 'O teu email',
-    'contacto.ph.msg': 'A tua mensagem...'
+    'contacto.ph.msg': 'A tua mensagem...',
+
+    // Loja
+    'loja.label': 'Attitude Sportwear',
+    'loja.title': 'Corre com<br>estilo.',
+    'loja.sub': 'Peças oficiais de performance. Encomenda via WhatsApp — confirmamos stock, tamanho e pagamento contigo.',
+    'loja.size': 'Tamanho',
+    'loja.qty': 'Qtd',
+    'loja.add': 'Adicionar',
+    'loja.oneSize': 'Único',
+    'loja.tank.desc': 'Singlet leve com gradiente e logo Attitude. Ideal para treino e prova.',
+    'loja.socks.name': 'Meias Attitude',
+    'loja.socks.desc': 'Meias de performance com logo Attitude. Conforto e suporte no treino.',
+    'loja.shortsBlack.name': 'Shorts Run Preto',
+    'loja.shortsBlack.desc': 'Shorts leves com cordão e logo Attitude. Movimento livre.',
+    'loja.shortsWhite.name': 'Shorts Run Branco',
+    'loja.shortsWhite.desc': 'Shorts brancos com detalhe Attitude. Look limpo para o dia a dia e treino.',
+    'loja.visor.desc': 'Visor perfurado com bordado ATTITUDE. Proteção e estilo em corrida.',
+    'loja.jacket.name': 'Casaco Wind Attitude',
+    'loja.jacket.desc': 'Casaco leve com capuz e fecho. Proteção contra vento e chuva ligeira.',
+    'loja.shorts2.name': 'Shorts 2-in-1',
+    'loja.shorts2.desc': 'Shorts com compression laranja integrada. Performance e suporte.',
+    'loja.cart.label': 'O teu pedido',
+    'loja.cart.title': 'Resumo',
+    'loja.cart.empty': 'Nenhum produto adicionado.',
+    'loja.cart.total': 'Total estimado',
+    'loja.cart.note': 'Preços indicativos. Confirmamos stock e valor final no WhatsApp.',
+    'loja.form.label': 'Checkout',
+    'loja.form.title': 'Encomendar via WhatsApp',
+    'loja.form.name': 'Nome completo',
+    'loja.form.phone': 'Telefone / WhatsApp',
+    'loja.form.city': 'Cidade / Local de entrega',
+    'loja.form.notes': 'Notas (opcional)',
+    'loja.form.btn': 'Enviar pedido no WhatsApp',
+    'loja.form.hint': 'Abre o WhatsApp com o teu pedido pré-preenchido. Respondemos para confirmar.',
+    'loja.ph.name': 'O teu nome',
+    'loja.ph.phone': '+244 9XX XXX XXX',
+    'loja.ph.city': 'Ex: Luanda, Talatona',
+    'loja.ph.notes': 'Cor, preferência de entrega, etc.',
+    'loja.cta.eyebrow': 'Membros Attitude',
+    'loja.cta.title': 'Descontos exclusivos<br>nos planos.',
+    'loja.cta.sub': 'Normal 10% · Plus 20% · VIP 30% em produtos Attitude Sportwear.',
+    'loja.cta.btn': 'Ver Planos'
   },
 
   en: {
@@ -300,6 +343,7 @@ const translations = {
     'nav.home': 'Home',
     'nav.pilares': 'Pillars',
     'nav.planos': 'Plans',
+    'nav.loja': 'Shop',
     'nav.eventos': 'Events',
     'nav.roadmap': 'Roadmap',
     'nav.contacto': 'Contact',
@@ -526,7 +570,49 @@ const translations = {
     'contacto.form.note': 'Or message us on WhatsApp for a faster reply.',
     'contacto.ph.name': 'Your name',
     'contacto.ph.email': 'Your email',
-    'contacto.ph.msg': 'Your message...'
+    'contacto.ph.msg': 'Your message...',
+
+    // Shop
+    'loja.label': 'Attitude Sportwear',
+    'loja.title': 'Run with<br>style.',
+    'loja.sub': 'Official performance pieces. Order via WhatsApp — we confirm stock, size and payment with you.',
+    'loja.size': 'Size',
+    'loja.qty': 'Qty',
+    'loja.add': 'Add',
+    'loja.oneSize': 'One size',
+    'loja.tank.desc': 'Lightweight singlet with gradient and Attitude logo. Built for training and race day.',
+    'loja.socks.name': 'Attitude Socks',
+    'loja.socks.desc': 'Performance socks with Attitude logo. Comfort and support on every run.',
+    'loja.shortsBlack.name': 'Black Run Shorts',
+    'loja.shortsBlack.desc': 'Light shorts with drawcord and Attitude logo. Free movement.',
+    'loja.shortsWhite.name': 'White Run Shorts',
+    'loja.shortsWhite.desc': 'White shorts with Attitude detail. Clean look for training and everyday.',
+    'loja.visor.desc': 'Perforated visor with ATTITUDE embroidery. Protection and style on the run.',
+    'loja.jacket.name': 'Attitude Wind Jacket',
+    'loja.jacket.desc': 'Lightweight hooded jacket with zip. Protection from wind and light rain.',
+    'loja.shorts2.name': '2-in-1 Shorts',
+    'loja.shorts2.desc': 'Shorts with integrated orange compression. Performance and support.',
+    'loja.cart.label': 'Your order',
+    'loja.cart.title': 'Summary',
+    'loja.cart.empty': 'No products added.',
+    'loja.cart.total': 'Estimated total',
+    'loja.cart.note': 'Indicative prices. We confirm stock and final amount on WhatsApp.',
+    'loja.form.label': 'Checkout',
+    'loja.form.title': 'Order via WhatsApp',
+    'loja.form.name': 'Full name',
+    'loja.form.phone': 'Phone / WhatsApp',
+    'loja.form.city': 'City / Delivery area',
+    'loja.form.notes': 'Notes (optional)',
+    'loja.form.btn': 'Send order on WhatsApp',
+    'loja.form.hint': 'Opens WhatsApp with your order pre-filled. We reply to confirm.',
+    'loja.ph.name': 'Your name',
+    'loja.ph.phone': '+244 9XX XXX XXX',
+    'loja.ph.city': 'e.g. Luanda, Talatona',
+    'loja.ph.notes': 'Colour, delivery preference, etc.',
+    'loja.cta.eyebrow': 'Attitude members',
+    'loja.cta.title': 'Exclusive discounts<br>on plans.',
+    'loja.cta.sub': 'Normal 10% · Plus 20% · VIP 30% on Attitude Sportwear products.',
+    'loja.cta.btn': 'View Plans'
   }
 };
 
@@ -696,4 +782,146 @@ if (hamburger && mobileMenu) {
   // Init after images/layout
   window.addEventListener('load', update);
   update();
+})();
+
+// ─── LOJA CART + WHATSAPP CHECKOUT ─────────────────────────────────────────
+(function () {
+  const grid = document.getElementById('productsGrid');
+  if (!grid) return;
+
+  const cartList = document.getElementById('cartList');
+  const cartTotal = document.getElementById('cartTotal');
+  const waBtn = document.getElementById('checkoutWhatsApp');
+  const WA_NUMBER = '244933953989';
+
+  /** @type {{ id: string, name: string, size: string, qty: number, price: number }[]} */
+  let cart = [];
+
+  function formatKz(n) {
+    return n.toLocaleString('pt-AO') + ' Kz';
+  }
+
+  function productName(card) {
+    const lang = currentLang || 'pt';
+    return lang === 'en'
+      ? (card.dataset.nameEn || card.dataset.namePt || '')
+      : (card.dataset.namePt || card.dataset.nameEn || '');
+  }
+
+  function renderCart() {
+    if (!cartList) return;
+    if (cart.length === 0) {
+      const emptyKey = 'loja.cart.empty';
+      const emptyText = (translations[currentLang] && translations[currentLang][emptyKey]) || 'Nenhum produto adicionado.';
+      cartList.innerHTML = '<li class="cart-empty">' + emptyText + '</li>';
+      if (cartTotal) cartTotal.textContent = '0 Kz';
+      return;
+    }
+
+    cartList.innerHTML = '';
+    let total = 0;
+    cart.forEach((item, idx) => {
+      total += item.price * item.qty;
+      const li = document.createElement('li');
+      li.innerHTML =
+        '<div class="cart-item-info">' +
+          '<span class="cart-item-name">' + item.name + '</span>' +
+          '<span class="cart-item-meta">' + item.size + ' · ×' + item.qty + '</span>' +
+        '</div>' +
+        '<span class="cart-item-price">' + formatKz(item.price * item.qty) + '</span>' +
+        '<button type="button" class="cart-item-remove" data-idx="' + idx + '" aria-label="Remover">×</button>';
+      cartList.appendChild(li);
+    });
+    if (cartTotal) cartTotal.textContent = formatKz(total);
+
+    cartList.querySelectorAll('.cart-item-remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const i = parseInt(btn.getAttribute('data-idx'), 10);
+        cart.splice(i, 1);
+        renderCart();
+      });
+    });
+  }
+
+  grid.querySelectorAll('.product-card').forEach(card => {
+    const addBtn = card.querySelector('.product-add');
+    if (!addBtn) return;
+    addBtn.addEventListener('click', () => {
+      const id = card.dataset.id;
+      const price = parseInt(card.dataset.price, 10) || 0;
+      const sizeEl = card.querySelector('.product-size');
+      const qtyEl = card.querySelector('.product-qty');
+      const size = sizeEl ? sizeEl.value : '—';
+      let qty = qtyEl ? parseInt(qtyEl.value, 10) : 1;
+      if (isNaN(qty) || qty < 1) qty = 1;
+      if (qty > 10) qty = 10;
+
+      const name = productName(card);
+      const existing = cart.find(c => c.id === id && c.size === size);
+      if (existing) {
+        existing.qty = Math.min(10, existing.qty + qty);
+      } else {
+        cart.push({ id, name, size, qty, price });
+      }
+
+      addBtn.classList.add('added');
+      const prev = addBtn.innerHTML;
+      addBtn.innerHTML = currentLang === 'en' ? 'Added' : 'Adicionado';
+      setTimeout(() => {
+        addBtn.classList.remove('added');
+        addBtn.innerHTML = prev;
+        // re-apply i18n if language keys exist
+        if (addBtn.hasAttribute('data-i18n') && translations[currentLang]) {
+          const key = addBtn.getAttribute('data-i18n');
+          if (translations[currentLang][key]) addBtn.innerHTML = translations[currentLang][key];
+        }
+      }, 1200);
+
+      renderCart();
+      const section = document.getElementById('checkoutSection');
+      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  if (waBtn) {
+    waBtn.addEventListener('click', () => {
+      if (cart.length === 0) {
+        alert(currentLang === 'en' ? 'Add at least one product.' : 'Adiciona pelo menos um produto.');
+        return;
+      }
+      const name = (document.getElementById('checkoutName') || {}).value || '';
+      const phone = (document.getElementById('checkoutPhone') || {}).value || '';
+      const city = (document.getElementById('checkoutCity') || {}).value || '';
+      const notes = (document.getElementById('checkoutNotes') || {}).value || '';
+
+      if (!name.trim() || !phone.trim()) {
+        alert(currentLang === 'en'
+          ? 'Please fill in your name and phone number.'
+          : 'Preenche o nome e o telefone.');
+        return;
+      }
+
+      let total = 0;
+      const lines = cart.map(item => {
+        total += item.price * item.qty;
+        return '• ' + item.name + ' | ' + item.size + ' | x' + item.qty + ' | ' + formatKz(item.price * item.qty);
+      });
+
+      const header = currentLang === 'en'
+        ? 'Hello! I would like to order from Attitude Sportwear:'
+        : 'Olá! Gostaria de encomendar na Attitude Sportwear:';
+      const totalLine = (currentLang === 'en' ? 'Estimated total: ' : 'Total estimado: ') + formatKz(total);
+      const clientBlock =
+        (currentLang === 'en' ? 'Name: ' : 'Nome: ') + name.trim() + '\n' +
+        (currentLang === 'en' ? 'Phone: ' : 'Telefone: ') + phone.trim() + '\n' +
+        (city.trim() ? ((currentLang === 'en' ? 'City: ' : 'Cidade: ') + city.trim() + '\n') : '') +
+        (notes.trim() ? ((currentLang === 'en' ? 'Notes: ' : 'Notas: ') + notes.trim() + '\n') : '');
+
+      const message = header + '\n\n' + lines.join('\n') + '\n\n' + totalLine + '\n\n' + clientBlock;
+      const url = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message);
+      window.open(url, '_blank', 'noopener');
+    });
+  }
+
+  renderCart();
 })();

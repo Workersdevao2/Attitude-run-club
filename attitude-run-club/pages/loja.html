@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loja — Attitude Run Club</title>
+  <meta name="description" content="Attitude Sportwear oficial. Peças de performance para correr com atitude.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="../images/logo.jpg" type="image/jpeg">
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav>
+    <a href="../index.html" class="nav-logo">
+      <img src="../images/logo.jpg" alt="Attitude Run Club" style="height:32px; border-radius:4px;">
+      ATTITUDE <span>RUN</span> CLUB
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html" data-i18n="nav.home">Início</a></li>
+      <li><a href="../index.html#pilares" data-i18n="nav.pilares">Pilares</a></li>
+      <li><a href="planos.html" data-i18n="nav.planos">Planos</a></li>
+      <li><a href="loja.html" class="active" data-i18n="nav.loja">Loja</a></li>
+      <li><a href="eventos.html" data-i18n="nav.eventos">Eventos</a></li>
+      <li><a href="roadmap.html" data-i18n="nav.roadmap">Roadmap</a></li>
+      <li><a href="contacto.html" data-i18n="nav.contacto">Contacto</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-toggle">
+        <button data-lang="pt" class="active">PT</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="nav-cta" data-i18n="nav.cta" target="_blank" rel="noopener">Juntar ao Clube</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" id="mobileClose" aria-label="Fechar menu">
+      <span></span>
+      <span></span>
+    </button>
+    <a href="../index.html" data-i18n="nav.home">Início</a>
+    <a href="../index.html#pilares" data-i18n="nav.pilares">Pilares</a>
+    <a href="planos.html" data-i18n="nav.planos">Planos</a>
+    <a href="loja.html" data-i18n="nav.loja">Loja</a>
+    <a href="eventos.html" data-i18n="nav.eventos">Eventos</a>
+    <a href="roadmap.html" data-i18n="nav.roadmap">Roadmap</a>
+    <a href="contacto.html" data-i18n="nav.contacto">Contacto</a>
+    <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="mobile-cta" data-i18n="nav.cta" target="_blank" rel="noopener">Juntar ao Clube</a>
+  </div>
+
+  <section class="page-hero">
+    <p class="section-label reveal" data-i18n="loja.label">Attitude Sportwear</p>
+    <h1 class="section-title reveal reveal-delay-1" data-i18n="loja.title">Corre com<br>estilo.</h1>
+    <p class="page-hero-sub reveal reveal-delay-2" data-i18n="loja.sub">Peças oficiais de performance. Encomenda via WhatsApp — confirmamos stock, tamanho e pagamento contigo.</p>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section class="loja-section">
+    <div class="products-grid" id="productsGrid">
+
+      <article class="product-card reveal" data-id="tank" data-name-pt="Attitude Race Tank" data-name-en="Attitude Race Tank" data-price="18000">
+        <div class="product-img-wrap">
+          <img src="../images/product-tank.jpg" alt="Attitude Race Tank" loading="lazy">
+        </div>
+        <div class="product-body">
+          <h3 class="product-name">Attitude Race Tank</h3>
+          <p class="product-desc" data-i18n="loja.tank.desc">Singlet leve com gradiente e logo Attitude. Ideal para treino e prova.</p>
+          <p class="product-price">18.000 <span>Kz</span></p>
+          <div class="product-meta">
+            <label class="size-label" data-i18n="loja.size">Tamanho</label>
+            <select class="product-size" aria-label="Tamanho">
+              <option value="S">S</option>
+              <option value="M" selected>M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+            </select>
+            <label class="qty-label" data-i18n="loja.qty">Qtd</label>
+            <input type="number" class="product-qty" min="1" max="10" value="1" aria-label="Quantidade">
+          </div>
+          <button type="button" class="product-add btn-outline-thin" data-i18n="loja.add">Adicionar</button>
+        </div>
+      </article>
+
+      <article class="product-card reveal reveal-delay-1" data-id="socks" data-name-pt="Meias Attitude" data-name-en="Attitude Socks" data-price="4500">
+        <div class="product-img-wrap">
+          <img src="../images/product-socks.jpg" alt="Meias Attitude" loading="lazy">
+        </div>
+        <div class="product-body">
+          <h3 class="product-name" data-i18n="loja.socks.name">Meias Attitude</h3>
+          <p class="product-desc" data-i18n="loja.socks.desc">Meias de performance com logo Attitude. Conforto e suporte no treino.</p>
+          <p class="product-price">4.500 <span>Kz</span></p>
+          <div class="product-meta">
+            <label class="size-label" data-i18n="loja.size">Tamanho</label>
+            <select class="product-size" aria-label="Tamanho">
+              <option value="35-38">35–38</option>
+              <option value="39-42" selected>39–42</option>
+              <option value="43-46">43–46</option>
+            </select>
+            <label class="qty-label" data-i18n="loja.qty">Qtd</label>
+            <input type="number" class="product-qty" min="1" max="10" value="1" aria-label="Quantidade">
+          </div>
+          <button type="button" class="product-add btn-outline-thin" data-i18n="loja.add">Adicionar</button>
+        </div>
+      </article>
+
+      <article class="product-card reveal reveal-delay-2" data-id="shorts-black" data-name-pt="Shorts Run Preto" data-name-en="Black Run Shorts" data-price="15000">
+        <div class="product-img-wrap">
+          <img src="../images/product-shorts-black.jpg" alt="Shorts Run Preto" loading="lazy">
+        </div>
+        <div class="product-body">
+          <h3 class="product-name" data-i18n="loja.shortsBlack.name">Shorts Run Preto</h3>
+          <p class="product-desc" data-i18n="loja.shortsBlack.desc">Shorts leves com cordão e logo Attitude. Movimento livre.</p>
+          <p class="product-price">15.000 <span>Kz</span></p>
+          <div class="product-meta">
+            <label class="size-label" data-i18n="loja.size">Tamanho</label>
+            <select class="product-size" aria-label="Tamanho">
+              <option value="S">S</option>
+              <option value="M" selected>M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+            </select>
+            <label class="qty-label" data-i18n="loja.qty">Qtd</label>
+            <input type="number" class="product-qty" min="1" max="10" value="1" aria-label="Quantidade">
+          </div>
+          <button type="button" class="product-add btn-outline-thin" data-i18n="loja.add">Adicionar</button>
+        </div>
+      </article>
+
+      <article class="product-card reveal" data-id="shorts-white" data-name-pt="Shorts Run Branco" data-name-en="White Run Shorts" data-price="15000">
+        <div class="product-img-wrap">
+          <img src="../images/product-shorts-white.jpg" alt="Shorts Run Branco" loading="lazy">
+        </div>
+        <div class="product-body">
+          <h3 class="product-name" data-i18n="loja.shortsWhite.name">Shorts Run Branco</h3>
+          <p class="product-desc" data-i18n="loja.shortsWhite.desc">Shorts brancos com detalhe Attitude. Look limpo para o dia a dia e treino.</p>
+          <p class="product-price">15.000 <span>Kz</span></p>
+          <div class="product-meta">
+            <label class="size-label" data-i18n="loja.size">Tamanho</label>
+            <select class="product-size" aria-label="Tamanho">
+              <option value="S">S</option>
+              <option value="M" selected>M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+            </select>
+            <label class="qty-label" data-i18n="loja.qty">Qtd</label>
+            <input type="number" class="product-qty" min="1" max="10" value="1" aria-label="Quantidade">
+          </div>
+          <button type="button" class="product-add btn-outline-thin" data-i18n="loja.add">Adicionar</button>
+        </div>
+      </article>
+
+      <article class="product-card reveal reveal-delay-1" data-id="visor" data-name-pt="Visor Attitude" data-name-en="Attitude Visor" data-price="8500">
+        <div class="product-img-wrap">
+          <img src="../images/product-visor.jpg" alt="Visor Attitude" loading="lazy">
+        </div>
+        <div class="product-body">
+          <h3 class="product-name">Visor Attitude</h3>
+          <p class="product-desc" data-i18n="loja.visor.desc">Visor perfurado com bordado ATTITUDE. Proteção e estilo em corrida.</p>
+          <p class="product-price">8.500 <span>Kz</span></p>
+          <div class="product-meta">
+            <label class="size-label" data-i18n="loja.size">Tamanho</label>
+            <select class="product-size" aria-label="Tamanho">
+              <option value="Único" selected data-i18n="loja.oneSize">Único</option>
+            </select>
+            <label class="qty-label" data-i18n="loja.qty">Qtd</label>
+            <input type="number" class="product-qty" min="1" max="10" value="1" aria-label="Quantidade">
+          </div>
+          <button type="button" class="product-add btn-outline-thin" data-i18n="loja.add">Adicionar</button>
+        </div>
+      </article>
+
+      <article class="product-card reveal reveal-delay-2" data-id="jacket" data-name-pt="Casaco Wind Attitude" data-name-en="Attitude Wind Jacket" data-price="32000">
+        <div class="product-img-wrap">
+          <img src="../images/product-jacket.jpg" alt="Casaco Wind Attitude" loading="lazy">
+        </div>
+        <div class="product-body">
+          <h3 class="product-name" data-i18n="loja.jacket.name">Casaco Wind Attitude</h3>
+          <p class="product-desc" data-i18n="loja.jacket.desc">Casaco leve com capuz e fecho. Proteção contra vento e chuva ligeira.</p>
+          <p class="product-price">32.000 <span>Kz</span></p>
+          <div class="product-meta">
+            <label class="size-label" data-i18n="loja.size">Tamanho</label>
+            <select class="product-size" aria-label="Tamanho">
+              <option value="S">S</option>
+              <option value="M" selected>M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+            </select>
+            <label class="qty-label" data-i18n="loja.qty">Qtd</label>
+            <input type="number" class="product-qty" min="1" max="10" value="1" aria-label="Quantidade">
+          </div>
+          <button type="button" class="product-add btn-outline-thin" data-i18n="loja.add">Adicionar</button>
+        </div>
+      </article>
+
+      <article class="product-card reveal" data-id="shorts-2in1" data-name-pt="Shorts 2-in-1 Preto/Laranja" data-name-en="2-in-1 Shorts Black/Orange" data-price="18500">
+        <div class="product-img-wrap">
+          <img src="../images/product-shorts-2in1.jpg" alt="Shorts 2-in-1" loading="lazy">
+        </div>
+        <div class="product-body">
+          <h3 class="product-name" data-i18n="loja.shorts2.name">Shorts 2-in-1</h3>
+          <p class="product-desc" data-i18n="loja.shorts2.desc">Shorts com compression laranja integrada. Performance e suporte.</p>
+          <p class="product-price">18.500 <span>Kz</span></p>
+          <div class="product-meta">
+            <label class="size-label" data-i18n="loja.size">Tamanho</label>
+            <select class="product-size" aria-label="Tamanho">
+              <option value="S">S</option>
+              <option value="M" selected>M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+            </select>
+            <label class="qty-label" data-i18n="loja.qty">Qtd</label>
+            <input type="number" class="product-qty" min="1" max="10" value="1" aria-label="Quantidade">
+          </div>
+          <button type="button" class="product-add btn-outline-thin" data-i18n="loja.add">Adicionar</button>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- CHECKOUT -->
+  <section class="checkout-section" id="checkoutSection">
+    <div class="checkout-grid">
+      <div class="checkout-cart reveal">
+        <p class="section-label" data-i18n="loja.cart.label">O teu pedido</p>
+        <h2 class="checkout-title" data-i18n="loja.cart.title">Resumo</h2>
+        <ul class="cart-list" id="cartList">
+          <li class="cart-empty" data-i18n="loja.cart.empty">Nenhum produto adicionado.</li>
+        </ul>
+        <div class="cart-total-row">
+          <span data-i18n="loja.cart.total">Total estimado</span>
+          <strong id="cartTotal">0 Kz</strong>
+        </div>
+        <p class="cart-note" data-i18n="loja.cart.note">Preços indicativos. Confirmamos stock e valor final no WhatsApp.</p>
+      </div>
+
+      <div class="checkout-form reveal reveal-delay-1">
+        <p class="section-label" data-i18n="loja.form.label">Checkout</p>
+        <h2 class="checkout-title" data-i18n="loja.form.title">Encomendar via WhatsApp</h2>
+        <div class="form-group">
+          <label data-i18n="loja.form.name">Nome completo</label>
+          <input type="text" id="checkoutName" placeholder="O teu nome" data-i18n-placeholder="loja.ph.name" autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label data-i18n="loja.form.phone">Telefone / WhatsApp</label>
+          <input type="tel" id="checkoutPhone" placeholder="+244 9XX XXX XXX" data-i18n-placeholder="loja.ph.phone" autocomplete="tel">
+        </div>
+        <div class="form-group">
+          <label data-i18n="loja.form.city">Cidade / Local de entrega</label>
+          <input type="text" id="checkoutCity" placeholder="Ex: Luanda, Talatona" data-i18n-placeholder="loja.ph.city">
+        </div>
+        <div class="form-group">
+          <label data-i18n="loja.form.notes">Notas (opcional)</label>
+          <textarea id="checkoutNotes" placeholder="Cor, preferência de entrega, etc." data-i18n-placeholder="loja.ph.notes"></textarea>
+        </div>
+        <button type="button" class="btn-primary checkout-wa-btn" id="checkoutWhatsApp" data-i18n="loja.form.btn">
+          Enviar pedido no WhatsApp
+        </button>
+        <p class="form-hint" data-i18n="loja.form.hint">Abre o WhatsApp com o teu pedido pré-preenchido. Respondemos para confirmar.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <p class="cta-eyebrow" data-i18n="loja.cta.eyebrow">Membros Attitude</p>
+    <h2 class="cta-title" data-i18n="loja.cta.title">Descontos exclusivos<br>nos planos.</h2>
+    <p class="cta-sub" data-i18n="loja.cta.sub">Normal 10% · Plus 20% · VIP 30% em produtos Attitude Sportwear.</p>
+    <div class="cta-actions">
+      <a href="planos.html" class="btn-large" data-i18n="loja.cta.btn">Ver Planos</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">ATTITUDE <span>RUN</span> CLUB</div>
+        <p class="footer-tagline" data-i18n="footer.tagline">Move With Purpose · Corre Com Atitude</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4 data-i18n="footer.nav">Navegação</h4>
+          <a href="../index.html" data-i18n="nav.home">Início</a>
+          <a href="planos.html" data-i18n="nav.planos">Planos</a>
+          <a href="loja.html" data-i18n="nav.loja">Loja</a>
+          <a href="eventos.html" data-i18n="nav.eventos">Eventos</a>
+          <a href="roadmap.html" data-i18n="nav.roadmap">Roadmap</a>
+          <a href="contacto.html" data-i18n="nav.contacto">Contacto</a>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="footer.contacto">Contacto</h4>
+          <a href="mailto:attituderunclub@gmail.com">attituderunclub@gmail.com</a>
+          <a href="https://wa.me/244933953989" target="_blank" rel="noopener">WhatsApp: 933 953 989</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy"><span data-i18n="footer.rights">© 2025 Attitude Run Club · Attitude Sportwear</span></p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/attituderunclub" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://wa.me/244933953989" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
