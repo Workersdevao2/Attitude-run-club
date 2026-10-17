@@ -85,7 +85,11 @@
               <option value="XL">XL</option>
             </select>
             <label class="qty-label" data-i18n="loja.qty">Qtd</label>
-            <input type="number" class="product-qty" min="1" max="10" value="1" aria-label="Quantidade">
+            <div class="qty-stepper" role="group" aria-label="Quantidade">
+              <button type="button" class="qty-btn qty-minus" aria-label="Diminuir">−</button>
+              <input type="number" class="product-qty" min="1" max="10" value="1" readonly inputmode="numeric" aria-label="Quantidade">
+              <button type="button" class="qty-btn qty-plus" aria-label="Aumentar">+</button>
+            </div>
           </div>
           <button type="button" class="product-add btn-outline-thin" data-i18n="loja.add">Adicionar</button>
         </div>
@@ -107,7 +111,11 @@
               <option value="43-46">43–46</option>
             </select>
             <label class="qty-label" data-i18n="loja.qty">Qtd</label>
-            <input type="number" class="product-qty" min="1" max="10" value="1" aria-label="Quantidade">
+            <div class="qty-stepper" role="group" aria-label="Quantidade">
+              <button type="button" class="qty-btn qty-minus" aria-label="Diminuir">−</button>
+              <input type="number" class="product-qty" min="1" max="10" value="1" readonly inputmode="numeric" aria-label="Quantidade">
+              <button type="button" class="qty-btn qty-plus" aria-label="Aumentar">+</button>
+            </div>
           </div>
           <button type="button" class="product-add btn-outline-thin" data-i18n="loja.add">Adicionar</button>
         </div>
@@ -130,7 +138,11 @@
               <option value="XL">XL</option>
             </select>
             <label class="qty-label" data-i18n="loja.qty">Qtd</label>
-            <input type="number" class="product-qty" min="1" max="10" value="1" aria-label="Quantidade">
+            <div class="qty-stepper" role="group" aria-label="Quantidade">
+              <button type="button" class="qty-btn qty-minus" aria-label="Diminuir">−</button>
+              <input type="number" class="product-qty" min="1" max="10" value="1" readonly inputmode="numeric" aria-label="Quantidade">
+              <button type="button" class="qty-btn qty-plus" aria-label="Aumentar">+</button>
+            </div>
           </div>
           <button type="button" class="product-add btn-outline-thin" data-i18n="loja.add">Adicionar</button>
         </div>
@@ -153,7 +165,11 @@
               <option value="XL">XL</option>
             </select>
             <label class="qty-label" data-i18n="loja.qty">Qtd</label>
-            <input type="number" class="product-qty" min="1" max="10" value="1" aria-label="Quantidade">
+            <div class="qty-stepper" role="group" aria-label="Quantidade">
+              <button type="button" class="qty-btn qty-minus" aria-label="Diminuir">−</button>
+              <input type="number" class="product-qty" min="1" max="10" value="1" readonly inputmode="numeric" aria-label="Quantidade">
+              <button type="button" class="qty-btn qty-plus" aria-label="Aumentar">+</button>
+            </div>
           </div>
           <button type="button" class="product-add btn-outline-thin" data-i18n="loja.add">Adicionar</button>
         </div>
@@ -173,7 +189,11 @@
               <option value="Único" selected data-i18n="loja.oneSize">Único</option>
             </select>
             <label class="qty-label" data-i18n="loja.qty">Qtd</label>
-            <input type="number" class="product-qty" min="1" max="10" value="1" aria-label="Quantidade">
+            <div class="qty-stepper" role="group" aria-label="Quantidade">
+              <button type="button" class="qty-btn qty-minus" aria-label="Diminuir">−</button>
+              <input type="number" class="product-qty" min="1" max="10" value="1" readonly inputmode="numeric" aria-label="Quantidade">
+              <button type="button" class="qty-btn qty-plus" aria-label="Aumentar">+</button>
+            </div>
           </div>
           <button type="button" class="product-add btn-outline-thin" data-i18n="loja.add">Adicionar</button>
         </div>
@@ -196,7 +216,11 @@
               <option value="XL">XL</option>
             </select>
             <label class="qty-label" data-i18n="loja.qty">Qtd</label>
-            <input type="number" class="product-qty" min="1" max="10" value="1" aria-label="Quantidade">
+            <div class="qty-stepper" role="group" aria-label="Quantidade">
+              <button type="button" class="qty-btn qty-minus" aria-label="Diminuir">−</button>
+              <input type="number" class="product-qty" min="1" max="10" value="1" readonly inputmode="numeric" aria-label="Quantidade">
+              <button type="button" class="qty-btn qty-plus" aria-label="Aumentar">+</button>
+            </div>
           </div>
           <button type="button" class="product-add btn-outline-thin" data-i18n="loja.add">Adicionar</button>
         </div>
@@ -219,55 +243,16 @@
               <option value="XL">XL</option>
             </select>
             <label class="qty-label" data-i18n="loja.qty">Qtd</label>
-            <input type="number" class="product-qty" min="1" max="10" value="1" aria-label="Quantidade">
+            <div class="qty-stepper" role="group" aria-label="Quantidade">
+              <button type="button" class="qty-btn qty-minus" aria-label="Diminuir">−</button>
+              <input type="number" class="product-qty" min="1" max="10" value="1" readonly inputmode="numeric" aria-label="Quantidade">
+              <button type="button" class="qty-btn qty-plus" aria-label="Aumentar">+</button>
+            </div>
           </div>
           <button type="button" class="product-add btn-outline-thin" data-i18n="loja.add">Adicionar</button>
         </div>
       </article>
 
-    </div>
-  </section>
-
-  <!-- CHECKOUT -->
-  <section class="checkout-section" id="checkoutSection">
-    <div class="checkout-grid">
-      <div class="checkout-cart reveal">
-        <p class="section-label" data-i18n="loja.cart.label">O teu pedido</p>
-        <h2 class="checkout-title" data-i18n="loja.cart.title">Resumo</h2>
-        <ul class="cart-list" id="cartList">
-          <li class="cart-empty" data-i18n="loja.cart.empty">Nenhum produto adicionado.</li>
-        </ul>
-        <div class="cart-total-row">
-          <span data-i18n="loja.cart.total">Total estimado</span>
-          <strong id="cartTotal">0 Kz</strong>
-        </div>
-        <p class="cart-note" data-i18n="loja.cart.note">Preços indicativos. Confirmamos stock e valor final no WhatsApp.</p>
-      </div>
-
-      <div class="checkout-form reveal reveal-delay-1">
-        <p class="section-label" data-i18n="loja.form.label">Checkout</p>
-        <h2 class="checkout-title" data-i18n="loja.form.title">Encomendar via WhatsApp</h2>
-        <div class="form-group">
-          <label data-i18n="loja.form.name">Nome completo</label>
-          <input type="text" id="checkoutName" placeholder="O teu nome" data-i18n-placeholder="loja.ph.name" autocomplete="name">
-        </div>
-        <div class="form-group">
-          <label data-i18n="loja.form.phone">Telefone / WhatsApp</label>
-          <input type="tel" id="checkoutPhone" placeholder="+244 9XX XXX XXX" data-i18n-placeholder="loja.ph.phone" autocomplete="tel">
-        </div>
-        <div class="form-group">
-          <label data-i18n="loja.form.city">Cidade / Local de entrega</label>
-          <input type="text" id="checkoutCity" placeholder="Ex: Luanda, Talatona" data-i18n-placeholder="loja.ph.city">
-        </div>
-        <div class="form-group">
-          <label data-i18n="loja.form.notes">Notas (opcional)</label>
-          <textarea id="checkoutNotes" placeholder="Cor, preferência de entrega, etc." data-i18n-placeholder="loja.ph.notes"></textarea>
-        </div>
-        <button type="button" class="btn-primary checkout-wa-btn" id="checkoutWhatsApp" data-i18n="loja.form.btn">
-          Enviar pedido no WhatsApp
-        </button>
-        <p class="form-hint" data-i18n="loja.form.hint">Abre o WhatsApp com o teu pedido pré-preenchido. Respondemos para confirmar.</p>
-      </div>
     </div>
   </section>
 
@@ -280,13 +265,37 @@
     </div>
   </section>
 
+
+  <!-- Cart panel (drawer) -->
+  <div class="cart-overlay" id="cartOverlay" hidden></div>
+  <aside class="cart-panel" id="cartPanel" aria-hidden="true" aria-label="Carrinho">
+    <div class="cart-panel-header">
+      <h2 class="cart-panel-title" data-i18n="loja.panel.title">Carrinho</h2>
+      <button type="button" class="cart-panel-close" id="cartPanelClose" aria-label="Fechar">
+        <span></span><span></span>
+      </button>
+    </div>
+    <ul class="cart-panel-list" id="cartPanelList">
+      <li class="cart-empty" data-i18n="loja.cart.empty">Nenhum produto adicionado.</li>
+    </ul>
+    <div class="cart-panel-footer">
+      <div class="cart-total-row">
+        <span data-i18n="loja.cart.total">Total estimado</span>
+        <strong id="cartPanelTotal">0 Kz</strong>
+      </div>
+      <p class="cart-note" data-i18n="loja.cart.note">Preços indicativos. Confirmamos stock e valor final no WhatsApp.</p>
+      <a href="checkout.html" class="btn-primary cart-panel-checkout" id="cartPanelCheckout" data-i18n="loja.panel.checkout">Ir para checkout</a>
+      <button type="button" class="btn-outline-thin cart-panel-continue" id="cartPanelContinue" data-i18n="loja.panel.continue">Continuar a comprar</button>
+    </div>
+  </aside>
+
   <!-- Sticky mobile cart bar -->
   <div class="mobile-cart-bar" id="mobileCartBar" aria-live="polite">
     <div class="mobile-cart-info">
       <span class="mobile-cart-count" id="mobileCartCount">0 itens</span>
       <span class="mobile-cart-total" id="mobileCartTotal">0 Kz</span>
     </div>
-    <a href="#checkoutSection" class="mobile-cart-btn" data-i18n="loja.mobile.checkout">Ver pedido</a>
+    <button type="button" class="mobile-cart-btn" id="openCartPanel" data-i18n="loja.mobile.cart">Ver carrinho</button>
   </div>
 
   <footer>

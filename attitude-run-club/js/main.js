@@ -338,7 +338,14 @@ const translations = {
     'loja.cta.btn': 'Ver Planos',
     'loja.mobile.checkout': 'Ver pedido',
     'loja.mobile.items': 'itens',
-    'loja.mobile.item': 'item'
+    'loja.mobile.item': 'item',
+    'loja.mobile.cart': 'Ver carrinho',
+    'loja.panel.title': 'Carrinho',
+    'loja.panel.checkout': 'Ir para checkout',
+    'loja.panel.continue': 'Continuar a comprar',
+    'checkout.title': 'Finaliza<br>o pedido.',
+    'checkout.sub': 'Revisa os produtos e envia a encomenda pelo WhatsApp. Confirmamos stock, tamanho e pagamento contigo.',
+    'checkout.back': '← Voltar à loja'
   },
 
   en: {
@@ -618,7 +625,14 @@ const translations = {
     'loja.cta.btn': 'View Plans',
     'loja.mobile.checkout': 'View order',
     'loja.mobile.items': 'items',
-    'loja.mobile.item': 'item'
+    'loja.mobile.item': 'item',
+    'loja.mobile.cart': 'View cart',
+    'loja.panel.title': 'Cart',
+    'loja.panel.checkout': 'Go to checkout',
+    'loja.panel.continue': 'Continue shopping',
+    'checkout.title': 'Complete<br>your order.',
+    'checkout.sub': 'Review your products and send the order via WhatsApp. We confirm stock, size and payment with you.',
+    'checkout.back': '← Back to shop'
   }
 };
 
@@ -790,24 +804,56 @@ if (hamburger && mobileMenu) {
   update();
 })();
 
-// ─── LOJA CART + WHATSAPP CHECKOUT ─────────────────────────────────────────
+// ─── LOJA CART + PANEL + CHECKOUT (localStorage) ───────────────────────────
 (function () {
+  const CART_KEY = 'arc-cart';
+  const WA_NUMBER = '244933953989';
   const grid = document.getElementById('productsGrid');
-  if (!grid) return;
+  const isShop = !!grid;
+  const isCheckout = !!document.getElementById('checkoutCartList');
+  if (!isShop && !isCheckout) return;
 
-  const cartList = document.getElementById('cartList');
-  const cartTotal = document.getElementById('cartTotal');
-  const waBtn = document.getElementById('checkoutWhatsApp');
   const mobileBar = document.getElementById('mobileCartBar');
   const mobileCount = document.getElementById('mobileCartCount');
   const mobileTotal = document.getElementById('mobileCartTotal');
-  const WA_NUMBER = '244933953989';
+  const panel = document.getElementById('cartPanel');
+  const overlay = document.getElementById('cartOverlay');
+  const panelList = document.getElementById('cartPanelList');
+  const panelTotal = document.getElementById('cartPanelTotal');
+  const checkoutList = document.getElementById('checkoutCartList');
+  const checkoutTotal = document.getElementById('checkoutCartTotal');
+  const waBtn = document.getElementById('checkoutWhatsApp');
 
-  /** @type {{ id: string, name: string, size: string, qty: number, price: number }[]} */
-  let cart = [];
+  function loadCart() {
+    try {
+      const raw = localStorage.getItem(CART_KEY);
+      const data = raw ? JSON.parse(raw) : [];
+      return Array.isArray(data) ? data : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveCart(cart) {
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  }
+
+  let cart = loadCart();
 
   function formatKz(n) {
     return n.toLocaleString('pt-AO') + ' Kz';
+  }
+
+  function t(key, fallback) {
+    return (translations[currentLang] && translations[currentLang][key]) || fallback;
+  }
+
+  function cartQty() {
+    return cart.reduce((s, i) => s + i.qty, 0);
+  }
+
+  function cartSum() {
+    return cart.reduce((s, i) => s + i.price * i.qty, 0);
   }
 
   function productName(card) {
@@ -817,12 +863,26 @@ if (hamburger && mobileMenu) {
       : (card.dataset.namePt || card.dataset.nameEn || '');
   }
 
-  function cartQty() {
-    return cart.reduce((s, i) => s + i.qty, 0);
+  function openPanel() {
+    if (!panel) return;
+    panel.classList.add('open');
+    panel.setAttribute('aria-hidden', 'false');
+    if (overlay) {
+      overlay.hidden = false;
+      overlay.classList.add('visible');
+    }
+    document.body.style.overflow = 'hidden';
   }
 
-  function cartSum() {
-    return cart.reduce((s, i) => s + i.price * i.qty, 0);
+  function closePanel() {
+    if (!panel) return;
+    panel.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+    if (overlay) {
+      overlay.classList.remove('visible');
+      overlay.hidden = true;
+    }
+    document.body.style.overflow = '';
   }
 
   function updateMobileBar() {
@@ -838,96 +898,175 @@ if (hamburger && mobileMenu) {
       }
     }
     if (mobileCount) {
-      const unit = qty === 1
-        ? ((translations[currentLang] && translations[currentLang]['loja.mobile.item']) || 'item')
-        : ((translations[currentLang] && translations[currentLang]['loja.mobile.items']) || 'itens');
+      const unit = qty === 1 ? t('loja.mobile.item', 'item') : t('loja.mobile.items', 'itens');
       mobileCount.textContent = qty + ' ' + unit;
     }
     if (mobileTotal) mobileTotal.textContent = formatKz(total);
   }
 
-  function renderCart() {
-    if (!cartList) return;
+  function renderList(listEl, totalEl, options) {
+    if (!listEl) return;
+    const opts = options || {};
+    const emptyText = t('loja.cart.empty', 'Nenhum produto adicionado.');
+
     if (cart.length === 0) {
-      const emptyKey = 'loja.cart.empty';
-      const emptyText = (translations[currentLang] && translations[currentLang][emptyKey]) || 'Nenhum produto adicionado.';
-      cartList.innerHTML = '<li class="cart-empty">' + emptyText + '</li>';
-      if (cartTotal) cartTotal.textContent = '0 Kz';
-      updateMobileBar();
+      listEl.innerHTML = '<li class="cart-empty">' + emptyText + '</li>';
+      if (totalEl) totalEl.textContent = '0 Kz';
       return;
     }
 
-    cartList.innerHTML = '';
-    let total = 0;
+    listEl.innerHTML = '';
     cart.forEach((item, idx) => {
-      total += item.price * item.qty;
       const li = document.createElement('li');
-      li.innerHTML =
-        '<div class="cart-item-info">' +
-          '<span class="cart-item-name">' + item.name + '</span>' +
-          '<span class="cart-item-meta">' + item.size + ' · ×' + item.qty + '</span>' +
-        '</div>' +
-        '<span class="cart-item-price">' + formatKz(item.price * item.qty) + '</span>' +
-        '<button type="button" class="cart-item-remove" data-idx="' + idx + '" aria-label="Remover">×</button>';
-      cartList.appendChild(li);
-    });
-    if (cartTotal) cartTotal.textContent = formatKz(total);
-    updateMobileBar();
+      li.className = 'cart-line';
+      const lineTotal = formatKz(item.price * item.qty);
 
-    cartList.querySelectorAll('.cart-item-remove').forEach(btn => {
+      if (opts.editable) {
+        li.innerHTML =
+          '<div class="cart-item-info">' +
+            '<span class="cart-item-name">' + item.name + '</span>' +
+            '<span class="cart-item-meta">' + item.size + '</span>' +
+            '<div class="qty-stepper cart-qty-stepper" data-idx="' + idx + '">' +
+              '<button type="button" class="qty-btn qty-minus" aria-label="Diminuir">−</button>' +
+              '<span class="qty-value">' + item.qty + '</span>' +
+              '<button type="button" class="qty-btn qty-plus" aria-label="Aumentar">+</button>' +
+            '</div>' +
+          '</div>' +
+          '<span class="cart-item-price">' + lineTotal + '</span>' +
+          '<button type="button" class="cart-item-remove" data-idx="' + idx + '" aria-label="Remover">×</button>';
+      } else {
+        li.innerHTML =
+          '<div class="cart-item-info">' +
+            '<span class="cart-item-name">' + item.name + '</span>' +
+            '<span class="cart-item-meta">' + item.size + ' · ×' + item.qty + '</span>' +
+          '</div>' +
+          '<span class="cart-item-price">' + lineTotal + '</span>' +
+          '<button type="button" class="cart-item-remove" data-idx="' + idx + '" aria-label="Remover">×</button>';
+      }
+      listEl.appendChild(li);
+    });
+
+    if (totalEl) totalEl.textContent = formatKz(cartSum());
+
+    listEl.querySelectorAll('.cart-item-remove').forEach(btn => {
       btn.addEventListener('click', () => {
         const i = parseInt(btn.getAttribute('data-idx'), 10);
         cart.splice(i, 1);
-        renderCart();
+        saveCart(cart);
+        renderAll();
+      });
+    });
+
+    listEl.querySelectorAll('.cart-qty-stepper').forEach(stepper => {
+      const idx = parseInt(stepper.getAttribute('data-idx'), 10);
+      const minus = stepper.querySelector('.qty-minus');
+      const plus = stepper.querySelector('.qty-plus');
+      if (minus) {
+        minus.addEventListener('click', () => {
+          if (cart[idx].qty > 1) {
+            cart[idx].qty -= 1;
+          } else {
+            cart.splice(idx, 1);
+          }
+          saveCart(cart);
+          renderAll();
+        });
+      }
+      if (plus) {
+        plus.addEventListener('click', () => {
+          if (cart[idx] && cart[idx].qty < 10) {
+            cart[idx].qty += 1;
+            saveCart(cart);
+            renderAll();
+          }
+        });
+      }
+    });
+  }
+
+  function renderAll() {
+    renderList(panelList, panelTotal, { editable: true });
+    renderList(checkoutList, checkoutTotal, { editable: true });
+    updateMobileBar();
+  }
+
+  // Quantity steppers on product cards
+  if (isShop) {
+    grid.querySelectorAll('.qty-stepper').forEach(stepper => {
+      const input = stepper.querySelector('.product-qty');
+      const minus = stepper.querySelector('.qty-minus');
+      const plus = stepper.querySelector('.qty-plus');
+      if (!input) return;
+
+      function setQty(n) {
+        n = Math.max(1, Math.min(10, n));
+        input.value = String(n);
+      }
+
+      if (minus) {
+        minus.addEventListener('click', () => setQty(parseInt(input.value, 10) - 1));
+      }
+      if (plus) {
+        plus.addEventListener('click', () => setQty(parseInt(input.value, 10) + 1));
+      }
+    });
+
+    grid.querySelectorAll('.product-card').forEach(card => {
+      const addBtn = card.querySelector('.product-add');
+      if (!addBtn) return;
+      addBtn.addEventListener('click', () => {
+        const id = card.dataset.id;
+        const price = parseInt(card.dataset.price, 10) || 0;
+        const sizeEl = card.querySelector('.product-size');
+        const qtyEl = card.querySelector('.product-qty');
+        const size = sizeEl ? sizeEl.value : '—';
+        let qty = qtyEl ? parseInt(qtyEl.value, 10) : 1;
+        if (isNaN(qty) || qty < 1) qty = 1;
+        if (qty > 10) qty = 10;
+
+        const name = productName(card);
+        const existing = cart.find(c => c.id === id && c.size === size);
+        if (existing) {
+          existing.qty = Math.min(10, existing.qty + qty);
+        } else {
+          cart.push({ id, name, size, qty, price });
+        }
+        saveCart(cart);
+
+        addBtn.classList.add('added');
+        const prev = addBtn.innerHTML;
+        addBtn.innerHTML = currentLang === 'en' ? 'Added' : 'Adicionado';
+        setTimeout(() => {
+          addBtn.classList.remove('added');
+          addBtn.innerHTML = prev;
+          if (addBtn.hasAttribute('data-i18n') && translations[currentLang]) {
+            const key = addBtn.getAttribute('data-i18n');
+            if (translations[currentLang][key]) addBtn.innerHTML = translations[currentLang][key];
+          }
+        }, 1000);
+
+        renderAll();
+        openPanel();
       });
     });
   }
 
-  grid.querySelectorAll('.product-card').forEach(card => {
-    const addBtn = card.querySelector('.product-add');
-    if (!addBtn) return;
-    addBtn.addEventListener('click', () => {
-      const id = card.dataset.id;
-      const price = parseInt(card.dataset.price, 10) || 0;
-      const sizeEl = card.querySelector('.product-size');
-      const qtyEl = card.querySelector('.product-qty');
-      const size = sizeEl ? sizeEl.value : '—';
-      let qty = qtyEl ? parseInt(qtyEl.value, 10) : 1;
-      if (isNaN(qty) || qty < 1) qty = 1;
-      if (qty > 10) qty = 10;
-
-      const name = productName(card);
-      const existing = cart.find(c => c.id === id && c.size === size);
-      if (existing) {
-        existing.qty = Math.min(10, existing.qty + qty);
-      } else {
-        cart.push({ id, name, size, qty, price });
-      }
-
-      addBtn.classList.add('added');
-      const prev = addBtn.innerHTML;
-      addBtn.innerHTML = currentLang === 'en' ? 'Added' : 'Adicionado';
-      setTimeout(() => {
-        addBtn.classList.remove('added');
-        addBtn.innerHTML = prev;
-        // re-apply i18n if language keys exist
-        if (addBtn.hasAttribute('data-i18n') && translations[currentLang]) {
-          const key = addBtn.getAttribute('data-i18n');
-          if (translations[currentLang][key]) addBtn.innerHTML = translations[currentLang][key];
-        }
-      }, 1200);
-
-      renderCart();
-      // On desktop, guide to checkout; on mobile the sticky bar is enough
-      if (window.innerWidth > 900) {
-        const section = document.getElementById('checkoutSection');
-        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
+  // Panel open / close
+  const openBtn = document.getElementById('openCartPanel');
+  if (openBtn) openBtn.addEventListener('click', openPanel);
+  const closeBtn = document.getElementById('cartPanelClose');
+  if (closeBtn) closeBtn.addEventListener('click', closePanel);
+  const continueBtn = document.getElementById('cartPanelContinue');
+  if (continueBtn) continueBtn.addEventListener('click', closePanel);
+  if (overlay) overlay.addEventListener('click', closePanel);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closePanel();
   });
 
+  // WhatsApp checkout
   if (waBtn) {
     waBtn.addEventListener('click', () => {
+      cart = loadCart();
       if (cart.length === 0) {
         alert(currentLang === 'en' ? 'Add at least one product.' : 'Adiciona pelo menos um produto.');
         return;
@@ -966,5 +1105,5 @@ if (hamburger && mobileMenu) {
     });
   }
 
-  renderCart();
+  renderAll();
 })();
