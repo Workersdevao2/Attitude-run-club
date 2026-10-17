@@ -926,6 +926,71 @@ if (hamburger && mobileMenu) {
     if (mobileTotal) mobileTotal.textContent = formatKz(total);
   }
 
+  function updateTotalsOnly() {
+    if (panelTotal) panelTotal.textContent = formatKz(cartSum());
+    if (checkoutTotal) checkoutTotal.textContent = formatKz(cartSum());
+    updateMobileBar();
+  }
+
+  /** Update qty + line price in existing DOM — keeps <img> in place (no reload). */
+  function patchLineQty(idx) {
+    const item = cart[idx];
+    if (!item) return;
+    const lineTotal = formatKz(item.price * item.qty);
+    document.querySelectorAll('.cart-line').forEach(li => {
+      const stepper = li.querySelector('.cart-qty-stepper');
+      if (!stepper) return;
+      if (parseInt(stepper.getAttribute('data-idx'), 10) !== idx) return;
+      const val = stepper.querySelector('.qty-value');
+      if (val) val.textContent = String(item.qty);
+      const priceEl = li.querySelector('.cart-item-price');
+      if (priceEl) priceEl.textContent = lineTotal;
+    });
+    updateTotalsOnly();
+  }
+
+  function bindListActions(listEl) {
+    if (!listEl) return;
+
+    listEl.querySelectorAll('.cart-item-remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const i = parseInt(btn.getAttribute('data-idx'), 10);
+        cart.splice(i, 1);
+        saveCart(cart);
+        renderAll(); // structure changed — full re-render
+      });
+    });
+
+    listEl.querySelectorAll('.cart-qty-stepper').forEach(stepper => {
+      const idx = parseInt(stepper.getAttribute('data-idx'), 10);
+      const minus = stepper.querySelector('.qty-minus');
+      const plus = stepper.querySelector('.qty-plus');
+      if (minus) {
+        minus.addEventListener('click', () => {
+          if (!cart[idx]) return;
+          if (cart[idx].qty > 1) {
+            cart[idx].qty -= 1;
+            saveCart(cart);
+            patchLineQty(idx); // in-place — images stay
+          } else {
+            cart.splice(idx, 1);
+            saveCart(cart);
+            renderAll();
+          }
+        });
+      }
+      if (plus) {
+        plus.addEventListener('click', () => {
+          if (cart[idx] && cart[idx].qty < 10) {
+            cart[idx].qty += 1;
+            saveCart(cart);
+            patchLineQty(idx); // in-place — images stay
+          }
+        });
+      }
+    });
+  }
+
   function renderList(listEl, totalEl, options) {
     if (!listEl) return;
     const opts = options || {};
@@ -945,7 +1010,7 @@ if (hamburger && mobileMenu) {
       const imgSrc = itemImage(item);
       const thumb =
         '<div class="cart-item-thumb">' +
-          '<img src="' + imgSrc + '" alt="' + (item.name || '') + '" loading="lazy">' +
+          '<img src="' + imgSrc + '" alt="' + (item.name || '') + '" loading="lazy" decoding="async">' +
         '</div>';
 
       if (opts.editable) {
@@ -976,41 +1041,7 @@ if (hamburger && mobileMenu) {
     });
 
     if (totalEl) totalEl.textContent = formatKz(cartSum());
-
-    listEl.querySelectorAll('.cart-item-remove').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const i = parseInt(btn.getAttribute('data-idx'), 10);
-        cart.splice(i, 1);
-        saveCart(cart);
-        renderAll();
-      });
-    });
-
-    listEl.querySelectorAll('.cart-qty-stepper').forEach(stepper => {
-      const idx = parseInt(stepper.getAttribute('data-idx'), 10);
-      const minus = stepper.querySelector('.qty-minus');
-      const plus = stepper.querySelector('.qty-plus');
-      if (minus) {
-        minus.addEventListener('click', () => {
-          if (cart[idx].qty > 1) {
-            cart[idx].qty -= 1;
-          } else {
-            cart.splice(idx, 1);
-          }
-          saveCart(cart);
-          renderAll();
-        });
-      }
-      if (plus) {
-        plus.addEventListener('click', () => {
-          if (cart[idx] && cart[idx].qty < 10) {
-            cart[idx].qty += 1;
-            saveCart(cart);
-            renderAll();
-          }
-        });
-      }
-    });
+    bindListActions(listEl);
   }
 
   function renderAll() {
