@@ -335,7 +335,10 @@ const translations = {
     'loja.cta.eyebrow': 'Membros Attitude',
     'loja.cta.title': 'Descontos exclusivos<br>nos planos.',
     'loja.cta.sub': 'Normal 10% · Plus 20% · VIP 30% em produtos Attitude Sportwear.',
-    'loja.cta.btn': 'Ver Planos'
+    'loja.cta.btn': 'Ver Planos',
+    'loja.mobile.checkout': 'Ver pedido',
+    'loja.mobile.items': 'itens',
+    'loja.mobile.item': 'item'
   },
 
   en: {
@@ -612,7 +615,10 @@ const translations = {
     'loja.cta.eyebrow': 'Attitude members',
     'loja.cta.title': 'Exclusive discounts<br>on plans.',
     'loja.cta.sub': 'Normal 10% · Plus 20% · VIP 30% on Attitude Sportwear products.',
-    'loja.cta.btn': 'View Plans'
+    'loja.cta.btn': 'View Plans',
+    'loja.mobile.checkout': 'View order',
+    'loja.mobile.items': 'items',
+    'loja.mobile.item': 'item'
   }
 };
 
@@ -792,6 +798,9 @@ if (hamburger && mobileMenu) {
   const cartList = document.getElementById('cartList');
   const cartTotal = document.getElementById('cartTotal');
   const waBtn = document.getElementById('checkoutWhatsApp');
+  const mobileBar = document.getElementById('mobileCartBar');
+  const mobileCount = document.getElementById('mobileCartCount');
+  const mobileTotal = document.getElementById('mobileCartTotal');
   const WA_NUMBER = '244933953989';
 
   /** @type {{ id: string, name: string, size: string, qty: number, price: number }[]} */
@@ -808,6 +817,35 @@ if (hamburger && mobileMenu) {
       : (card.dataset.namePt || card.dataset.nameEn || '');
   }
 
+  function cartQty() {
+    return cart.reduce((s, i) => s + i.qty, 0);
+  }
+
+  function cartSum() {
+    return cart.reduce((s, i) => s + i.price * i.qty, 0);
+  }
+
+  function updateMobileBar() {
+    const qty = cartQty();
+    const total = cartSum();
+    if (mobileBar) {
+      if (qty > 0) {
+        mobileBar.classList.add('visible');
+        document.body.classList.add('has-mobile-cart');
+      } else {
+        mobileBar.classList.remove('visible');
+        document.body.classList.remove('has-mobile-cart');
+      }
+    }
+    if (mobileCount) {
+      const unit = qty === 1
+        ? ((translations[currentLang] && translations[currentLang]['loja.mobile.item']) || 'item')
+        : ((translations[currentLang] && translations[currentLang]['loja.mobile.items']) || 'itens');
+      mobileCount.textContent = qty + ' ' + unit;
+    }
+    if (mobileTotal) mobileTotal.textContent = formatKz(total);
+  }
+
   function renderCart() {
     if (!cartList) return;
     if (cart.length === 0) {
@@ -815,6 +853,7 @@ if (hamburger && mobileMenu) {
       const emptyText = (translations[currentLang] && translations[currentLang][emptyKey]) || 'Nenhum produto adicionado.';
       cartList.innerHTML = '<li class="cart-empty">' + emptyText + '</li>';
       if (cartTotal) cartTotal.textContent = '0 Kz';
+      updateMobileBar();
       return;
     }
 
@@ -833,6 +872,7 @@ if (hamburger && mobileMenu) {
       cartList.appendChild(li);
     });
     if (cartTotal) cartTotal.textContent = formatKz(total);
+    updateMobileBar();
 
     cartList.querySelectorAll('.cart-item-remove').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -878,8 +918,11 @@ if (hamburger && mobileMenu) {
       }, 1200);
 
       renderCart();
-      const section = document.getElementById('checkoutSection');
-      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // On desktop, guide to checkout; on mobile the sticky bar is enough
+      if (window.innerWidth > 900) {
+        const section = document.getElementById('checkoutSection');
+        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
   });
 
