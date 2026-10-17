@@ -808,6 +808,15 @@ if (hamburger && mobileMenu) {
 (function () {
   const CART_KEY = 'arc-cart';
   const WA_NUMBER = '244933953989';
+  const PRODUCT_IMAGES = {
+    tank: '../images/product-tank.jpg',
+    socks: '../images/product-socks.jpg',
+    'shorts-black': '../images/product-shorts-black.jpg',
+    'shorts-white': '../images/product-shorts-white.jpg',
+    visor: '../images/product-visor.jpg',
+    jacket: '../images/product-jacket.jpg',
+    'shorts-2in1': '../images/product-shorts-2in1.jpg'
+  };
   const grid = document.getElementById('productsGrid');
   const isShop = !!grid;
   const isCheckout = !!document.getElementById('checkoutCartList');
@@ -828,10 +837,23 @@ if (hamburger && mobileMenu) {
     try {
       const raw = localStorage.getItem(CART_KEY);
       const data = raw ? JSON.parse(raw) : [];
-      return Array.isArray(data) ? data : [];
+      if (!Array.isArray(data)) return [];
+      // Backfill image for items saved before this feature
+      return data.map(item => {
+        if (!item.image && item.id && PRODUCT_IMAGES[item.id]) {
+          item.image = PRODUCT_IMAGES[item.id];
+        }
+        return item;
+      });
     } catch (e) {
       return [];
     }
+  }
+
+  function itemImage(item) {
+    if (item.image) return item.image;
+    if (item.id && PRODUCT_IMAGES[item.id]) return PRODUCT_IMAGES[item.id];
+    return '../images/logo.jpg';
   }
 
   function saveCart(cart) {
@@ -920,9 +942,15 @@ if (hamburger && mobileMenu) {
       const li = document.createElement('li');
       li.className = 'cart-line';
       const lineTotal = formatKz(item.price * item.qty);
+      const imgSrc = itemImage(item);
+      const thumb =
+        '<div class="cart-item-thumb">' +
+          '<img src="' + imgSrc + '" alt="' + (item.name || '') + '" loading="lazy">' +
+        '</div>';
 
       if (opts.editable) {
         li.innerHTML =
+          thumb +
           '<div class="cart-item-info">' +
             '<span class="cart-item-name">' + item.name + '</span>' +
             '<span class="cart-item-meta">' + item.size + '</span>' +
@@ -936,6 +964,7 @@ if (hamburger && mobileMenu) {
           '<button type="button" class="cart-item-remove" data-idx="' + idx + '" aria-label="Remover">×</button>';
       } else {
         li.innerHTML =
+          thumb +
           '<div class="cart-item-info">' +
             '<span class="cart-item-name">' + item.name + '</span>' +
             '<span class="cart-item-meta">' + item.size + ' · ×' + item.qty + '</span>' +
@@ -1025,11 +1054,17 @@ if (hamburger && mobileMenu) {
         if (qty > 10) qty = 10;
 
         const name = productName(card);
+        const imgEl = card.querySelector('.product-img-wrap img');
+        let image = PRODUCT_IMAGES[id] || '';
+        if (imgEl && imgEl.getAttribute('src')) {
+          image = imgEl.getAttribute('src');
+        }
         const existing = cart.find(c => c.id === id && c.size === size);
         if (existing) {
           existing.qty = Math.min(10, existing.qty + qty);
+          if (!existing.image && image) existing.image = image;
         } else {
-          cart.push({ id, name, size, qty, price });
+          cart.push({ id, name, size, qty, price, image });
         }
         saveCart(cart);
 
