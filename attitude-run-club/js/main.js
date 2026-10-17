@@ -1016,26 +1016,34 @@ if (hamburger && mobileMenu) {
       if (opts.editable) {
         li.innerHTML =
           thumb +
-          '<div class="cart-item-info">' +
-            '<span class="cart-item-name">' + item.name + '</span>' +
-            '<span class="cart-item-meta">' + item.size + '</span>' +
+          '<div class="cart-item-body">' +
+            '<div class="cart-item-top">' +
+              '<div class="cart-item-info">' +
+                '<span class="cart-item-name">' + item.name + '</span>' +
+                '<span class="cart-item-meta">' + item.size + '</span>' +
+              '</div>' +
+              '<span class="cart-item-price">' + lineTotal + '</span>' +
+              '<button type="button" class="cart-item-remove" data-idx="' + idx + '" aria-label="Remover">×</button>' +
+            '</div>' +
             '<div class="qty-stepper cart-qty-stepper" data-idx="' + idx + '">' +
               '<button type="button" class="qty-btn qty-minus" aria-label="Diminuir">−</button>' +
               '<span class="qty-value">' + item.qty + '</span>' +
               '<button type="button" class="qty-btn qty-plus" aria-label="Aumentar">+</button>' +
             '</div>' +
-          '</div>' +
-          '<span class="cart-item-price">' + lineTotal + '</span>' +
-          '<button type="button" class="cart-item-remove" data-idx="' + idx + '" aria-label="Remover">×</button>';
+          '</div>';
       } else {
         li.innerHTML =
           thumb +
-          '<div class="cart-item-info">' +
-            '<span class="cart-item-name">' + item.name + '</span>' +
-            '<span class="cart-item-meta">' + item.size + ' · ×' + item.qty + '</span>' +
-          '</div>' +
-          '<span class="cart-item-price">' + lineTotal + '</span>' +
-          '<button type="button" class="cart-item-remove" data-idx="' + idx + '" aria-label="Remover">×</button>';
+          '<div class="cart-item-body">' +
+            '<div class="cart-item-top">' +
+              '<div class="cart-item-info">' +
+                '<span class="cart-item-name">' + item.name + '</span>' +
+                '<span class="cart-item-meta">' + item.size + ' · ×' + item.qty + '</span>' +
+              '</div>' +
+              '<span class="cart-item-price">' + lineTotal + '</span>' +
+              '<button type="button" class="cart-item-remove" data-idx="' + idx + '" aria-label="Remover">×</button>' +
+            '</div>' +
+          '</div>';
       }
       listEl.appendChild(li);
     });
