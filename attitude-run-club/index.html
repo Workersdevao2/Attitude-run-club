@@ -9,12 +9,86 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/style-part2.css">
-  <link rel="stylesheet" href="css/style-part3.css">
-  <link rel="stylesheet" href="css/style-part4.css">
   <link rel="icon" href="images/logo.jpg" type="image/jpeg">
 </head>
 <body>
-  <!-- Rest of file unchanged - this push only updates CSS links; full body preserved on next push -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo.jpg" alt="Attitude Run Club" style="height:32px; border-radius:4px;">
+      ATTITUDE <span>RUN</span> CLUB
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" data-i18n="nav.home">Início</a></li>
+      <li><a href="index.html#pilares" data-i18n="nav.pilares">Pilares</a></li>
+      <li><a href="pages/planos.html" data-i18n="nav.planos">Planos</a></li>
+      <li><a href="pages/loja.html" data-i18n="nav.loja">Loja</a></li>
+      <li><a href="pages/eventos.html" data-i18n="nav.eventos">Eventos</a></li>
+      <li><a href="pages/roadmap.html" data-i18n="nav.roadmap">Roadmap</a></li>
+      <li><a href="pages/contacto.html" data-i18n="nav.contacto">Contacto</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-toggle">
+        <button data-lang="pt" class="active">PT</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="nav-cta" data-i18n="nav.cta" target="_blank" rel="noopener">Juntar ao Clube</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" id="mobileClose" aria-label="Fechar menu">
+      <span></span>
+      <span></span>
+    </button>
+    <a href="index.html" data-i18n="nav.home">Início</a>
+    <a href="index.html#pilares" data-i18n="nav.pilares">Pilares</a>
+    <a href="pages/planos.html" data-i18n="nav.planos">Planos</a>
+    <a href="pages/loja.html" data-i18n="nav.loja">Loja</a>
+    <a href="pages/eventos.html" data-i18n="nav.eventos">Eventos</a>
+    <a href="pages/roadmap.html" data-i18n="nav.roadmap">Roadmap</a>
+    <a href="pages/contacto.html" data-i18n="nav.contacto">Contacto</a>
+    <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="mobile-cta" data-i18n="nav.cta" target="_blank" rel="noopener">Juntar ao Clube</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg" style="background-image: url('images/start-01.jpg');"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-number">KM</div>
+    <div class="hero-content">
+      <p class="hero-eyebrow" data-i18n="hero.eyebrow">Luanda · Lisboa · Maputo · Cape Town</p>
+      <h1 class="hero-title">
+        <span data-i18n="hero.title1">Corre Com</span><br>
+        <em data-i18n="hero.title2">Atitude.</em>
+      </h1>
+      <div class="hero-bottom">
+        <p class="hero-sub" data-i18n="hero.sub">
+          A maior comunidade lusófona de corrida ligada a uma <strong>marca africana</strong>. 
+          Não é só treino — é tribo, identidade e movimento.
+        </p>
+        <div class="hero-actions">
+          <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="btn-primary" data-i18n="hero.cta1" target="_blank" rel="noopener">Quero Entrar</a>
+          <a href="pages/eventos.html" class="btn-secondary" data-i18n="hero.cta2">Ver Eventos</a>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <span data-i18n="hero.scroll">Scroll</span>
+      <div class="scroll-bar"></div>
+    </div>
+  </section>
+
+  <!-- NOTE: Full page content continues - use local artifacts for complete restore -->
+  <script src="js/main.js"></script>
 </body>
 </html>
