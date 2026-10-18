@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin — Attitude Run Club</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="icon" href="images/logo.jpg" type="image/jpeg">
+</head>
+<body class="no-sticky-pad">
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- LOGIN -->
+  <div class="login-wrap" id="loginScreen">
+    <form class="login-card" id="loginForm" autocomplete="on">
+      <h1>Attitude Admin</h1>
+      <p>Painel da equipa — produtos, textos, imagens e publicação.</p>
+      <label for="adminPassword">Password</label>
+      <input type="password" id="adminPassword" name="password" required autocomplete="current-password" inputmode="text">
+      <div class="login-error" id="loginError"></div>
+      <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:0.85rem;margin-bottom:16px;cursor:pointer;">
+        <input type="checkbox" id="rememberMe" style="width:auto;margin:0;"> Manter sessão neste dispositivo
+      </label>
+      <button type="submit" class="btn btn-primary" style="width:100%;">Entrar</button>
+    </form>
+  </div>
+
+  <!-- APP -->
+  <div id="adminApp" hidden>
+    <header class="admin-header">
+      <div>
+        <h1>Attitude Admin</h1>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="badge" id="statPublishBadge">Staff</span>
+        <button type="button" class="logout-btn" id="logoutBtn">Sair</button>
+      </div>
+    </header>
+
+    <nav class="admin-nav" aria-label="Secções">
+      <button type="button" data-panel="dashboard" class="active">Painel</button>
+      <button type="button" data-panel="products">Produtos</button>
+      <button type="button" data-panel="zones">Zonas</button>
+      <button type="button" data-panel="texts">Textos</button>
+      <button type="button" data-panel="images">Imagens</button>
+      <button type="button" data-panel="media">Média</button>
+    </nav>
+
+    <main class="admin-main">
+      <!-- DASHBOARD -->
+      <section class="panel active" id="panel-dashboard">
+        <div class="panel-head">
+          <div>
+            <h2>Painel</h2>
+            <p>Resumo e guia rápido para a equipa.</p>
+          </div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="num" id="statProducts">0</div><div class="lbl">Produtos ativos</div></div>
+          <div class="stat-card"><div class="num" id="statZones">0</div><div class="lbl">Zonas</div></div>
+          <div class="stat-card"><div class="num" id="statMedia">0</div><div class="lbl">Média</div></div>
+          <div class="stat-card"><div class="num" id="statPublish" style="font-size:0.85rem;">—</div><div class="lbl">Última publicação</div></div>
+        </div>
+        <div class="guide">
+          <h3>Como trabalhar</h3>
+          <ol>
+            <li><strong>Edita</strong> produtos, zonas, textos ou imagens do site.</li>
+            <li><strong>Guardar rascunho</strong> — só neste telemóvel/computador (podes pré-visualizar a loja no mesmo browser).</li>
+            <li><strong>Publicar na loja</strong> — envia o catálogo para todos os visitantes (via Worker → Cloudinary).</li>
+          </ol>
+          <h3>Dicas mobile</h3>
+          <ol>
+            <li>Os botões Guardar / Publicar ficam fixos em baixo.</li>
+            <li>Usa “Carregar” ou “Escolher da média” — não precisas de colar URLs.</li>
+            <li>Se algo falhar após publicar, contacta o programador.</li>
+          </ol>
+          <p style="margin-top:16px;">
+            <button type="button" class="btn btn-ghost btn-sm" id="btnChangePw">Alterar password</button>
+            <a class="btn btn-ghost btn-sm" href="pages/loja.html" target="_blank" rel="noopener">Abrir loja ↗</a>
+          </p>
+        </div>
+      </section>
+
+      <!-- PRODUCTS -->
+      <section class="panel" id="panel-products">
+        <div class="panel-head">
+          <div>
+            <h2>Produtos</h2>
+            <p>Catálogo da Attitude Sportwear. Preços em Kz.</p>
+          </div>
+          <button type="button" class="btn btn-primary" id="btnAddProduct">+ Produto</button>
+        </div>
+        <div class="product-list" id="productList"></div>
+        <div class="product-table-wrap">
+          <table class="product-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Nome</th>
+                <th>Preço</th>
+                <th>Tamanhos</th>
+                <th>Estado</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="productTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ZONES -->
+      <section class="panel" id="panel-zones">
+        <div class="panel-head">
+          <div>
+            <h2>Zonas de entrega</h2>
+            <p>Opcional. Preço 0 = a combinar / levantamento.</p>
+          </div>
+          <button type="button" class="btn btn-primary" id="btnAddZone">+ Zona</button>
+        </div>
+        <div class="zone-list" id="zoneList"></div>
+      </section>
+
+      <!-- TEXTS -->
+      <section class="panel" id="panel-texts">
+        <div class="panel-head">
+          <div>
+            <h2>Textos do site</h2>
+            <p>Frases principais PT / EN. Após publicar, a loja e o hero usam estes valores.</p>
+          </div>
+        </div>
+        <div class="texts-grid" id="textsGrid"></div>
+      </section>
+
+      <!-- SITE IMAGES -->
+      <section class="panel" id="panel-images">
+        <div class="panel-head">
+          <div>
+            <h2>Imagens do site</h2>
+            <p>Slots com pré-visualização. Carrega ou escolhe da biblioteca de média.</p>
+          </div>
+        </div>
+        <div class="slots-grid" id="slotsGrid"></div>
+      </section>
+
+      <!-- MEDIA -->
+      <section class="panel" id="panel-media">
+        <div class="panel-head">
+          <div>
+            <h2>Biblioteca de média</h2>
+            <p>Upload para Cloudinary (preset unsigned). Apagar aqui só remove da lista local.</p>
+          </div>
+        </div>
+        <div class="upload-zone" id="uploadZone">
+          Toca ou arrasta imagens aqui
+          <input type="file" id="mediaFileInput" accept="image/*" multiple class="sr-only">
+        </div>
+        <div class="media-grid" id="mediaGrid"></div>
+      </section>
+    </main>
+
+    <div class="sticky-actions">
+      <button type="button" class="btn btn-ghost" id="btnSaveDraft">Guardar rascunho</button>
+      <button type="button" class="btn btn-primary" id="btnPublish">Publicar na loja</button>
+    </div>
+  </div>
+
+  <!-- Product modal -->
+  <div class="modal-backdrop" id="productModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <h2 id="modalTitle">Produto</h2>
+        <button type="button" class="modal-close" data-close-modal="productModal" aria-label="Fechar">×</button>
+      </div>
+      <div class="field">
+        <label>ID (único)</label>
+        <input type="text" id="f_id" placeholder="ex: tank" autocomplete="off">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Nome PT</label>
+          <input type="text" id="f_name_pt">
+        </div>
+        <div class="field">
+          <label>Nome EN</label>
+          <input type="text" id="f_name_en">
+        </div>
+      </div>
+      <div class="field">
+        <label>Descrição PT</label>
+        <textarea id="f_desc_pt" rows="2"></textarea>
+      </div>
+      <div class="field">
+        <label>Descrição EN</label>
+        <textarea id="f_desc_en" rows="2"></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Preço (Kz)</label>
+          <input type="number" id="f_price" inputmode="decimal" min="0" step="100">
+        </div>
+        <div class="field">
+          <label>Ordem</label>
+          <input type="number" id="f_order" inputmode="numeric" min="0">
+        </div>
+      </div>
+      <div class="field">
+        <label>Tamanhos (separados por vírgula)</label>
+        <input type="text" id="f_sizes" placeholder="S, M, L, XL">
+      </div>
+      <div class="field">
+        <label>Imagem</label>
+        <input type="text" id="f_image" placeholder="URL ou images/…">
+        <img id="f_image_preview" src="images/logo.jpg" alt="" style="width:80px;height:80px;object-fit:cover;border-radius:8px;margin-top:8px;background:#1c1c1c;">
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+          <button type="button" class="btn btn-ghost btn-sm" id="btnUploadProductImage">Carregar</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="btnPickProductImage">Escolher da média</button>
+        </div>
+      </div>
+      <div class="field">
+        <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:0.9rem;cursor:pointer;">
+          <input type="checkbox" id="f_active" checked style="width:auto;margin:0;"> Ativo na loja
+        </label>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close-modal="productModal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btnSaveProduct">Guardar produto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Media picker modal -->
+  <div class="modal-backdrop" id="pickerModal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h2>Escolher da média</h2>
+        <button type="button" class="modal-close" data-close-modal="pickerModal" aria-label="Fechar">×</button>
+      </div>
+      <div class="picker-grid" id="pickerGrid"></div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close-modal="pickerModal">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/products.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

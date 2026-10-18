@@ -1,0 +1,189 @@
+/**
+ * Attitude Run Club — Live catalog loader
+ * Merge order: localStorage drafts → remote catalog.json → DEFAULT_* fallbacks
+ */
+(function (global) {
+  'use strict';
+
+  const LS = {
+    products: 'arc_products_override',
+    zones: 'arc_zones_override',
+    texts: 'arc_texts_override',
+    images: 'arc_images_override',
+    published: 'arc_catalog_published',
+  };
+
+  function readLS(key) {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Resolve final catalog for the public site.
+   * @returns {Promise<{products, zones, texts, images, source}>}
+   */
+  async function loadCatalog() {
+    const defaults = {
+      products: global.DEFAULT_PRODUCTS || [],
+      zones: global.DEFAULT_ZONES || [],
+      texts: global.DEFAULT_TEXTS || { pt: {}, en: {} },
+      images: global.DEFAULT_SITE_IMAGES || {},
+    };
+
+    // 1) Admin drafts (same browser preview)
+    const draftProducts = readLS(LS.products);
+    const draftZones = readLS(LS.zones);
+    const draftTexts = readLS(LS.texts);
+    const draftImages = readLS(LS.images);
+
+    // 2) Last successful publish stored locally (fallback when remote empty)
+    const publishedLocal = readLS(LS.published);
+
+    // 3) Remote Cloudinary catalog
+    let remote = null;
+    const url = global.CATALOG_JSON_URL || '';
+    if (url) {
+      try {
+        const res = await fetch(url + (url.includes('?') ? '&' : '?') + 't=' + Date.now(), {
+          cache: 'no-store',
+        });
+        if (res.ok) remote = await res.json();
+      } catch (_) {
+        /* keep defaults */
+      }
+    }
+
+    const base = remote || publishedLocal || defaults;
+
+    return {
+      products: Array.isArray(draftProducts)
+        ? draftProducts.filter((p) => p.active !== false)
+        : (base.products || defaults.products).filter((p) => p.active !== false),
+      zones: Array.isArray(draftZones) ? draftZones : (base.zones || defaults.zones),
+      texts: draftTexts && typeof draftTexts === 'object' ? draftTexts : (base.texts || defaults.texts),
+      images: draftImages && typeof draftImages === 'object' ? draftImages : (base.images || defaults.images),
+      source: draftProducts ? 'draft' : remote ? 'remote' : publishedLocal ? 'local-publish' : 'defaults',
+    };
+  }
+
+  /** Apply site image slots: data-site-img on <img>, data-site-img-bg on elements */
+  function applySiteImages(images) {
+    if (!images || typeof images !== 'object') return;
+    document.querySelectorAll('[data-site-img]').forEach((el) => {
+      const key = el.getAttribute('data-site-img');
+      const url = images[key];
+      if (url) {
+        if (el.tagName === 'IMG') el.src = url;
+        else if (el.tagName === 'VIDEO') el.poster = url;
+      }
+    });
+    document.querySelectorAll('[data-site-img-bg]').forEach((el) => {
+      const key = el.getAttribute('data-site-img-bg');
+      const url = images[key];
+      if (url) {
+        el.style.backgroundImage = `url('${url}')`;
+      }
+    });
+    // CSS variables for optional use
+    if (images.hero) {
+      document.documentElement.style.setProperty('--hero-bg', `url('${images.hero}')`);
+    }
+  }
+
+  /** Merge catalog texts into existing translations object (if present) */
+  function applyTexts(texts) {
+    if (!texts || typeof global.translations !== 'object') return;
+    ['pt', 'en'].forEach((lang) => {
+      if (!texts[lang] || !global.translations[lang]) return;
+      Object.assign(global.translations[lang], texts[lang]);
+    });
+    // Re-apply current language if setLanguage exists
+    if (typeof global.setLanguage === 'function' && global.currentLang) {
+      global.setLanguage(global.currentLang);
+    }
+  }
+
+  /**
+   * Render product cards into #productsGrid from catalog products.
+   * Path prefix: '' on home, '../' on pages/*
+   */
+  function renderProductGrid(products, pathPrefix) {
+    const grid = document.getElementById('productsGrid');
+    if (!grid || !Array.isArray(products)) return;
+
+    const prefix = pathPrefix != null ? pathPrefix : (location.pathname.includes('/pages/') ? '../' : '');
+    const lang = global.currentLang || document.documentElement.lang || 'pt';
+
+    grid.innerHTML = products
+      .slice()
+      .sort((a, b) => (a.order || 0) - (b.order || 0))
+      .map((p, i) => {
+        const name = lang === 'en' ? (p.name_en || p.name_pt) : (p.name_pt || p.name_en);
+        const desc = lang === 'en' ? (p.desc_en || p.desc_pt) : (p.desc_pt || p.desc_en);
+        let img = p.image || '';
+        if (img && !/^https?:\/\//i.test(img) && !img.startsWith(prefix) && !img.startsWith('/')) {
+          // normalize images/… relative to site root
+          if (img.startsWith('images/')) img = prefix + img;
+          else if (img.startsWith('../images/')) img = img;
+          else img = prefix + 'images/' + img.replace(/^.*\//, '');
+        }
+        const sizes = (p.sizes && p.sizes.length) ? p.sizes : ['Único'];
+        const sizeOpts = sizes
+          .map((s, si) => `<option value="${esc(s)}"${si === Math.min(1, sizes.length - 1) ? ' selected' : ''}>${esc(s)}</option>`)
+          .join('');
+        const priceFmt = (Number(p.price) || 0).toLocaleString('pt-AO');
+        const delay = i % 3 === 1 ? ' reveal-delay-1' : i % 3 === 2 ? ' reveal-delay-2' : '';
+
+        return `
+      <article class="product-card reveal${delay}" data-id="${esc(p.id)}" data-name-pt="${esc(p.name_pt || '')}" data-name-en="${esc(p.name_en || '')}" data-price="${Number(p.price) || 0}">
+        <div class="product-img-wrap">
+          <img src="${esc(img)}" alt="${esc(name)}" loading="lazy">
+        </div>
+        <div class="product-body">
+          <h3 class="product-name">${esc(name)}</h3>
+          <p class="product-desc">${esc(desc || '')}</p>
+          <p class="product-price">${priceFmt} <span>Kz</span></p>
+          <div class="product-meta">
+            <label class="size-label" data-i18n="loja.size">Tamanho</label>
+            <select class="product-size" aria-label="Tamanho">${sizeOpts}</select>
+            <label class="qty-label" data-i18n="loja.qty">Qtd</label>
+            <div class="qty-stepper" role="group" aria-label="Quantidade">
+              <button type="button" class="qty-btn qty-minus" aria-label="Diminuir">−</button>
+              <input type="number" class="product-qty" min="1" max="10" value="1" readonly inputmode="numeric" aria-label="Quantidade">
+              <button type="button" class="qty-btn qty-plus" aria-label="Aumentar">+</button>
+            </div>
+          </div>
+          <button type="button" class="product-add btn-outline-thin" data-i18n="loja.add">Adicionar</button>
+        </div>
+      </article>`;
+      })
+      .join('');
+
+    // Re-apply i18n labels on new nodes
+    if (typeof global.setLanguage === 'function' && global.currentLang) {
+      global.setLanguage(global.currentLang);
+    }
+
+    // Notify cart module that grid was rebuilt
+    grid.dispatchEvent(new CustomEvent('arc:products-rendered'));
+  }
+
+  function esc(s) {
+    return String(s ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  global.ARCCatalog = {
+    loadCatalog,
+    applySiteImages,
+    applyTexts,
+    renderProductGrid,
+  };
+})(typeof window !== 'undefined' ? window : globalThis);

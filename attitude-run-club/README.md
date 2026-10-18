@@ -217,11 +217,29 @@ PT / EN toggle is present (basic implementation). Expand translations in `js/mai
 - `pages/planos.html` — Full 4-step section above the plans grid + Regibox CTA
 - `index.html` — Short 3-step teaser before the final CTA, linking to Planos
 - `css/style.css` — `.how-section`, `.how-grid`, `.how-step`, `.how-teaser` styles + mobile grid
-- `js/main.js` — PT/EN keys for how-to steps
+- `js/main.js` — Full PT/EN i18n keys for all how-to strings
+
+**Flow:** Choose plan → Register on Regibox → Pay inscription + monthly → Join the tribe.
 
 ---
 
-### Deploy
+### 2026-10-10 — Live days-to-event + stats + ticket link
+**Request:** Show remaining days to Attituders Let’s Go (30 Oct 2026, 19h); fix ticket URL; update impact stat.
+
+**Files changed:**
+- `js/main.js` — Live countdown to `2026-10-30T19:00:00+01:00` (updates `#daysToEvent`, `#roadmapDays`, and all `.js-days-to-event`); i18n for “Dias para o evento” / “Days to the event” and “Pessoas” / “People”
+- `index.html` — Stats: live days count + **1000 Pessoas** (was ∞ Impacto)
+- `pages/roadmap.html` — Hero title uses live day count (“X dias para mudar tudo”)
+- `pages/eventos.html` — Days badge on upcoming event card; ticket link → `https://ticket.ao/event/attituders-lets-go/`
+- `pages/planos.html` — Days badge under hero
+- `pages/contacto.html` — Days badge under hero
+- `css/style.css` — `.days-badge` styles
+
+**Event target:** Attituders Let’s Go · Friday 30 October 2026 · 19h · ticket.ao
+
+---
+
+## Deploy
 Push this entire folder to GitHub → connect to Cloudflare Pages / Workers.  
 After any change, make sure **HTML + CSS + JS** are all updated on the live site.
 
@@ -270,3 +288,31 @@ After any change, make sure **HTML + CSS + JS** are all updated on the live site
 - Automatic deployments enabled from `main`.
 - Old Worker can be deleted once Pages is confirmed stable.
 - Future API / admin: use Pages Functions (`functions/`) + D1/KV/R2 bindings on this same project.
+
+---
+
+### 2026-10-18 — Admin panel + Publish API (Cloudinary + Worker)
+
+**Request:** Set up staff admin and live catalog following the Site + Admin Blueprint.
+
+**Added:**
+- `admin.html` — password-gated staff panel (products, zones, texts, site images, media library)
+- `css/admin.css` — mobile-first admin UI (sticky Guardar/Publicar, modals, cards)
+- `js/products.js` — default catalog seed (7 products), zones, texts, Cloudinary config placeholders
+- `js/catalog.js` — loadCatalog (draft → remote → defaults), renderProductGrid, applySiteImages/Texts
+- `js/admin.js` — CRUD, media upload (unsigned preset), publish via Worker
+- `worker/` — Cloudflare Worker (`POST /publish`) signs raw upload of `catalog.json` to Cloudinary
+- `BLUEPRINT.md` — architecture notes for this brand
+
+**Public loja:** product grid is now rendered from the live catalog (falls back to defaults in `products.js`). Cart + WhatsApp checkout unchanged (`arc-cart`).
+
+**Default admin password:** `attitude2026` — change after handoff.
+
+**Deploy checklist:**
+1. Create Cloudinary cloud + unsigned preset + folder `attitude-run-club`
+2. `cd worker && npx wrangler deploy` + put 4 secrets
+3. Set `PUBLISH_URL` in `js/admin.js`
+4. Set `CATALOG_JSON_URL`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_UPLOAD_PRESET` in `js/products.js`
+5. Smoke-test: admin → upload → assign → Publicar → hard-refresh loja
+
+See `BLUEPRINT.md` and `worker/README.md` for full details.

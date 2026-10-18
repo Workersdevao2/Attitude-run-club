@@ -261,6 +261,21 @@
     </div>
   </footer>
 
+  <script src="js/products.js"></script>
+  <script src="js/catalog.js"></script>
   <script src="js/main.js"></script>
+  <script>
+    (async function () {
+      if (!window.ARCCatalog) return;
+      const cat = await ARCCatalog.loadCatalog();
+      ARCCatalog.applyTexts(cat.texts);
+      ARCCatalog.applySiteImages(cat.images);
+      // Optional: mark hero with data-site-img-bg="hero" in HTML for live swaps
+      const heroBg = document.querySelector('.hero-bg');
+      if (heroBg && cat.images && cat.images.hero) {
+        heroBg.style.backgroundImage = "url('" + cat.images.hero + "')";
+      }
+    })();
+  </script>
 </body>
 </html>

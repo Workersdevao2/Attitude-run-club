@@ -1058,9 +1058,13 @@ if (hamburger && mobileMenu) {
     updateMobileBar();
   }
 
-  // Quantity steppers on product cards
-  if (isShop) {
+  // Bind quantity steppers + add-to-cart on product cards (supports dynamic catalog render)
+  function bindShopCards() {
+    if (!isShop || !grid) return;
+
     grid.querySelectorAll('.qty-stepper').forEach(stepper => {
+      if (stepper.dataset.bound === '1') return;
+      stepper.dataset.bound = '1';
       const input = stepper.querySelector('.product-qty');
       const minus = stepper.querySelector('.qty-minus');
       const plus = stepper.querySelector('.qty-plus');
@@ -1071,17 +1075,14 @@ if (hamburger && mobileMenu) {
         input.value = String(n);
       }
 
-      if (minus) {
-        minus.addEventListener('click', () => setQty(parseInt(input.value, 10) - 1));
-      }
-      if (plus) {
-        plus.addEventListener('click', () => setQty(parseInt(input.value, 10) + 1));
-      }
+      if (minus) minus.addEventListener('click', () => setQty(parseInt(input.value, 10) - 1));
+      if (plus) plus.addEventListener('click', () => setQty(parseInt(input.value, 10) + 1));
     });
 
     grid.querySelectorAll('.product-card').forEach(card => {
       const addBtn = card.querySelector('.product-add');
-      if (!addBtn) return;
+      if (!addBtn || addBtn.dataset.bound === '1') return;
+      addBtn.dataset.bound = '1';
       addBtn.addEventListener('click', () => {
         const id = card.dataset.id;
         const price = parseInt(card.dataset.price, 10) || 0;
@@ -1123,6 +1124,12 @@ if (hamburger && mobileMenu) {
         openPanel();
       });
     });
+  }
+
+  if (isShop) {
+    bindShopCards();
+    // Re-bind after catalog.js renders products dynamically
+    grid.addEventListener('arc:products-rendered', bindShopCards);
   }
 
   // Panel open / close
