@@ -251,3 +251,17 @@ After any change, make sure **HTML + CSS + JS** are all updated on the live site
 **Checkout flow:** Add products (size + qty) → fill name / phone / city → “Enviar pedido no WhatsApp” opens `wa.me/244933953989` with order + client data pre-filled.
 
 **Note:** Prices are indicative (Kz). Adjust in `data-price` attributes on each product card when final retail prices are confirmed. Member discounts (10/20/30%) remain as stated on Planos.
+
+---
+
+### 2026-10-18 — Hamburger not showing on phones (Honor 10 Lite)
+**Problem:** Hamburger menu missing on narrow Android phones (~360px). Long logo text pushed the button off-screen (body `overflow-x: hidden`), and the 28×28 target was easy to miss.
+
+**Files changed:**
+- `css/style.css`
+  - `.nav-right` / `.hamburger` → `flex-shrink: 0` so they never get compressed
+  - `.nav-logo` → `min-width: 0` so it can shrink instead of overflowing
+  - Hamburger size → 44×44 (proper touch target), bars 22px wide
+  - ≤900px: smaller logo type/image, tighter nav padding, `display: flex !important` on hamburger
+
+**How to verify:** Open on phone ≤900px width — three white bars should sit at the right of the header next to PT/EN.

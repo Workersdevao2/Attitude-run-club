@@ -82,10 +82,13 @@ nav.scrolled {
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0; /* allow shrink so hamburger is never pushed off-screen */
+  flex-shrink: 1;
 }
 .nav-logo img {
   height: 36px;
   width: auto;
+  flex-shrink: 0;
 }
 .nav-logo span { color: var(--accent); }
 .nav-links {
@@ -110,6 +113,7 @@ nav.scrolled {
   display: flex;
   align-items: center;
   gap: 20px;
+  flex-shrink: 0; /* never compress lang + hamburger */
 }
 .lang-toggle {
   display: flex;
@@ -143,26 +147,34 @@ nav.scrolled {
 }
 .nav-cta:hover { background: var(--accent-soft); color: var(--black); }
 
-/* HAMBURGER */
+/* HAMBURGER — large touch target for phones (Honor / Android) */
 .hamburger {
   display: none;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 6px;
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   background: none;
   border: none;
   cursor: none;
   padding: 0;
+  margin: 0;
   z-index: 110;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 .hamburger span {
   display: block;
-  width: 100%;
+  width: 22px;
   height: 2px;
   background: var(--white);
   transition: transform 0.3s, opacity 0.3s;
+  pointer-events: none;
 }
 .hamburger.active span:nth-child(1) {
   transform: translateY(8px) rotate(45deg);
@@ -1517,12 +1529,30 @@ footer {
   }
 }
 @media (max-width: 900px) {
-  nav { padding: 16px 24px; }
-  .nav-links { display: none; }
-  .nav-cta { display: none; }
-  .hamburger { display: flex; }
+  nav {
+    padding: 12px 16px;
+    gap: 8px;
+  }
+  .nav-logo {
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    gap: 8px;
+  }
+  .nav-logo img {
+    height: 28px;
+  }
+  .nav-links { display: none !important; }
+  .nav-cta { display: none !important; }
+  .hamburger {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
   .mobile-menu { display: flex; }
-  .lang-toggle { margin-right: 12px; }
+  .nav-right {
+    gap: 8px;
+  }
+  .lang-toggle { margin-right: 0; }
   section, .page-hero { padding: 80px 24px; }
   .hero { padding: 0 24px 60px; }
   .hero-title { font-size: 64px; }
