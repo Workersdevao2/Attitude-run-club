@@ -6,7 +6,7 @@
   'use strict';
 
   // ── Config (override after deploy) ──────────────────────────────────────
-  const PUBLISH_URL = ''; // e.g. 'https://attitude-run-club-publish.YOUR.workers.dev/publish'
+  const PUBLISH_URL = 'https://attitude-run-club-publish.workersdevao.workers.dev/publish';
   const DEFAULT_ADMIN_PASSWORD = 'attitude2026'; // change after handoff
   const LS = {
     auth: 'arc_admin_auth',
