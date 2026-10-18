@@ -2,7 +2,12 @@
 
 Official multi-page website for **Attitude Run Club**.
 
-**Live:** https://attitude-run-club.workersdevao.workers.dev/
+**Live:**
+- https://attituderunclub.com
+- https://www.attituderunclub.com
+- Preview: https://attitude-run-club.pages.dev
+
+**Hosting:** Cloudflare Pages (Git-connected, auto-deploy from `main`)
 
 ---
 
@@ -15,12 +20,14 @@ attitude-run-club/
 │   ├── planos.html         → Membership plans
 │   ├── eventos.html        → Events
 │   ├── roadmap.html        → 90-day roadmap
-│   └── contacto.html       → Contact
+│   ├── contacto.html       → Contact
+│   ├── loja.html           → Shop (Attitude Sportwear)
+│   └── checkout.html       → WhatsApp checkout
 ├── css/
 │   └── style.css           → Global styles
 ├── js/
-│   └── main.js             → Cursor, language toggle, mobile menu, past-events carousel
-├── images/                 → Photos + logo
+│   └── main.js             → Cursor, language toggle, mobile menu, carousel, cart
+├── images/                 → Photos + logo + product shots
 └── README.md
 ```
 
@@ -210,29 +217,11 @@ PT / EN toggle is present (basic implementation). Expand translations in `js/mai
 - `pages/planos.html` — Full 4-step section above the plans grid + Regibox CTA
 - `index.html` — Short 3-step teaser before the final CTA, linking to Planos
 - `css/style.css` — `.how-section`, `.how-grid`, `.how-step`, `.how-teaser` styles + mobile grid
-- `js/main.js` — Full PT/EN i18n keys for all how-to strings
-
-**Flow:** Choose plan → Register on Regibox → Pay inscription + monthly → Join the tribe.
+- `js/main.js` — PT/EN keys for how-to steps
 
 ---
 
-### 2026-10-10 — Live days-to-event + stats + ticket link
-**Request:** Show remaining days to Attituders Let’s Go (30 Oct 2026, 19h); fix ticket URL; update impact stat.
-
-**Files changed:**
-- `js/main.js` — Live countdown to `2026-10-30T19:00:00+01:00` (updates `#daysToEvent`, `#roadmapDays`, and all `.js-days-to-event`); i18n for “Dias para o evento” / “Days to the event” and “Pessoas” / “People”
-- `index.html` — Stats: live days count + **1000 Pessoas** (was ∞ Impacto)
-- `pages/roadmap.html` — Hero title uses live day count (“X dias para mudar tudo”)
-- `pages/eventos.html` — Days badge on upcoming event card; ticket link → `https://ticket.ao/event/attituders-lets-go/`
-- `pages/planos.html` — Days badge under hero
-- `pages/contacto.html` — Days badge under hero
-- `css/style.css` — `.days-badge` styles
-
-**Event target:** Attituders Let’s Go · Friday 30 October 2026 · 19h · ticket.ao
-
----
-
-## Deploy
+### Deploy
 Push this entire folder to GitHub → connect to Cloudflare Pages / Workers.  
 After any change, make sure **HTML + CSS + JS** are all updated on the live site.
 
@@ -265,3 +254,19 @@ After any change, make sure **HTML + CSS + JS** are all updated on the live site
   - ≤900px: smaller logo type/image, tighter nav padding, `display: flex !important` on hamburger
 
 **How to verify:** Open on phone ≤900px width — three white bars should sit at the right of the header next to PT/EN.
+
+---
+
+### 2026-10-18 — Migrated hosting: Worker → Cloudflare Pages
+**Change:** Site was previously deployed as a Cloudflare Worker with static assets. Moved to **Cloudflare Pages** for Git auto-deploy and cleaner static hosting.
+
+**Domains (Active + SSL):**
+- `attituderunclub.com`
+- `www.attituderunclub.com`
+- Preview: `attitude-run-club.pages.dev`
+
+**Notes:**
+- Custom domains were removed from the old Worker first (Worker-managed DNS is read-only), then added on the Pages project.
+- Automatic deployments enabled from `main`.
+- Old Worker can be deleted once Pages is confirmed stable.
+- Future API / admin: use Pages Functions (`functions/`) + D1/KV/R2 bindings on this same project.
