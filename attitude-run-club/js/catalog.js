@@ -59,14 +59,19 @@
 
     const base = remote || publishedLocal || defaults;
 
+    // Draft only wins if it has at least one product (empty [] must not blank the shop)
+    const useDraftProducts = Array.isArray(draftProducts) && draftProducts.length > 0;
+    const useDraftZones = Array.isArray(draftZones) && draftZones.length > 0;
+
     return {
-      products: Array.isArray(draftProducts)
-        ? draftProducts.filter((p) => p.active !== false)
-        : (base.products || defaults.products).filter((p) => p.active !== false),
-      zones: Array.isArray(draftZones) ? draftZones : (base.zones || defaults.zones),
+      products: (useDraftProducts
+        ? draftProducts
+        : (base.products || defaults.products)
+      ).filter((p) => p.active !== false),
+      zones: useDraftZones ? draftZones : (base.zones || defaults.zones),
       texts: draftTexts && typeof draftTexts === 'object' ? draftTexts : (base.texts || defaults.texts),
       images: draftImages && typeof draftImages === 'object' ? draftImages : (base.images || defaults.images),
-      source: draftProducts ? 'draft' : remote ? 'remote' : publishedLocal ? 'local-publish' : 'defaults',
+      source: useDraftProducts ? 'draft' : remote ? 'remote' : publishedLocal ? 'local-publish' : 'defaults',
     };
   }
 
@@ -171,10 +176,9 @@
     // Reveal animation: cards are injected after the initial observer run
     if (typeof global.observeReveals === 'function') {
       global.observeReveals(grid);
-    } else {
-      // Fallback if main.js not loaded yet — show immediately
-      grid.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
     }
+    // Always force visible so shop never stays blank if observer misses
+    grid.querySelectorAll('.product-card.reveal').forEach((el) => el.classList.add('visible'));
 
     // Notify cart module that grid was rebuilt
     grid.dispatchEvent(new CustomEvent('arc:products-rendered'));
