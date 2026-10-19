@@ -82,6 +82,22 @@
     if (passwordInput) passwordInput.value = '';
   }
 
+  // Password show / hide
+  const passwordToggle = $('#passwordToggle');
+  if (passwordToggle && passwordInput) {
+    passwordToggle.addEventListener('click', () => {
+      const showing = passwordInput.type === 'text';
+      passwordInput.type = showing ? 'password' : 'text';
+      const eye = passwordToggle.querySelector('.icon-eye');
+      const eyeOff = passwordToggle.querySelector('.icon-eye-off');
+      if (eye) eye.hidden = !showing;
+      if (eyeOff) eyeOff.hidden = showing;
+      passwordToggle.setAttribute('aria-label', showing ? 'Mostrar password' : 'Ocultar password');
+      passwordToggle.title = showing ? 'Mostrar password' : 'Ocultar password';
+      passwordInput.focus();
+    });
+  }
+
   if (loginForm) {
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -623,6 +639,7 @@
   async function loadInbox() {
     const list = $('#inboxList');
     if (list) list.innerHTML = '<p class="inbox-empty">A carregar…</p>';
+    updateStats({ inboxLoading: true });
     try {
       const res = await fetch(INBOX_URL, {
         method: 'POST',
@@ -640,6 +657,8 @@
       if (list) {
         list.innerHTML = '<p class="inbox-empty">Não foi possível carregar o inbox. Confirma que o Worker está publicado com /inbox.</p>';
       }
+      // Keep last known count if any; otherwise show 0 without loading state
+      updateStats();
       toast('Inbox: ' + (err.message || err), 'error');
     }
   }
@@ -764,12 +783,21 @@
     });
   });
 
-  function updateStats() {
-    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  function updateStats(opts = {}) {
+    const set = (id, v, loading) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = v;
+      el.classList.toggle('is-loading', !!loading);
+    };
     set('statProducts', products.filter((p) => p.active !== false).length);
     set('statZones', zones.length);
     set('statMedia', media.length);
-    set('statInbox', inboxItems.filter((x) => x.status === 'new').length);
+    if (opts.inboxLoading) {
+      set('statInbox', '…', true);
+    } else {
+      set('statInbox', inboxItems.filter((x) => x.status === 'new').length);
+    }
     const last = localStorage.getItem('arc_last_publish');
     set('statPublish', last ? new Date(last).toLocaleString('pt-AO') : '—');
   }
@@ -780,7 +808,8 @@
     renderTexts();
     renderSlots();
     renderMedia();
-    updateStats();
+    // Local stats first (no zero flash), inbox shows loading until fetch returns
+    updateStats({ inboxLoading: true });
     loadInbox();
   }
 

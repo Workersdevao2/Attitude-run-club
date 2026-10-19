@@ -94,6 +94,44 @@ body.no-sticky-pad { padding-bottom: 0; }
   outline: none;
   border-color: #555;
 }
+.password-field {
+  position: relative;
+  margin-bottom: 16px;
+}
+.password-field input {
+  margin-bottom: 0;
+  padding-right: 48px;
+}
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s, background 0.15s;
+}
+.password-toggle:hover {
+  color: var(--text);
+  background: rgba(255,255,255,0.06);
+}
+.password-toggle:focus-visible {
+  outline: 1px solid #555;
+  outline-offset: 2px;
+}
+.password-toggle .icon-eye-off[hidden],
+.password-toggle .icon-eye[hidden] {
+  display: none !important;
+}
 .login-error {
   color: var(--danger);
   font-size: 0.85rem;
@@ -505,6 +543,11 @@ body.no-sticky-pad { padding-bottom: 0; }
   border-radius: var(--radius);
   padding: 16px;
   text-align: center;
+}
+.stat-card .num.is-loading {
+  color: var(--muted);
+  font-weight: 400;
+  letter-spacing: 0.08em;
 }
 .stat-card .num {
   font-size: 1.6rem;
