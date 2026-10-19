@@ -8,10 +8,12 @@ Adapted from the Naravazz Diversos pattern for **Attitude Run Club**.
 
 * Pure HTML / CSS / JS (no framework, no build step)
 * Cloudflare Pages — static site
-* Cloudflare Worker — publish API (holds Cloudinary secrets)
+* Cloudflare Worker — publish API + inbox (`/publish`, `/submit`, `/inbox`)
+* Cloudflare KV — inbox for contacts and orders (`INBOX` binding)
 * Cloudinary — media uploads (unsigned preset) + live `catalog.json` (signed upload via Worker)
 * localStorage — admin drafts / same-browser preview
-* Orders via WhatsApp (no payment backend)
+* Orders: saved to admin inbox + WhatsApp (no payment backend)
+* Contact form: saved to admin inbox (Pedidos tab)
 
 ## Folders
 

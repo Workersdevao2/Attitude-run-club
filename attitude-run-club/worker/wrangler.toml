@@ -4,21 +4,16 @@ compatibility_date = "2024-09-23"
 workers_dev = true
 preview_urls = true
 
-# ── Inbox KV (highly recommended) ──────────────────────────────────────────
-# Without this, inbox uses Cloudinary and can lose messages (CDN lag).
-#
-# Run once:
-#   npx wrangler kv namespace create INBOX
-#   npx wrangler kv namespace create INBOX --preview
-# Uncomment and paste IDs:
-#
+# Inbox — Cloudflare KV (required for reliable contact + orders)
 [[kv_namespaces]]
 binding = "INBOX"
 id = "fcb92e41fd214f4db515b077da8f26e8"
 preview_id = "d01a348fb8204d218b0acac23d20eae3"
 
-# Secrets (CLI — never commit):
+# Secrets (set via CLI — never commit):
 #   npx wrangler secret put ADMIN_PASSWORD
 #   npx wrangler secret put CLOUDINARY_CLOUD_NAME
 #   npx wrangler secret put CLOUDINARY_API_KEY
 #   npx wrangler secret put CLOUDINARY_API_SECRET
+# Optional:
+#   npx wrangler secret put CLOUDINARY_FOLDER   # default: attitude-run-club

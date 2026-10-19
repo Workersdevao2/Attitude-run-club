@@ -16,24 +16,65 @@ Official multi-page website for **Attitude Run Club**.
 ```
 attitude-run-club/
 ├── index.html              → Home
+├── admin.html              → Staff panel (password)
 ├── pages/
 │   ├── planos.html         → Membership plans
 │   ├── eventos.html        → Events
 │   ├── roadmap.html        → 90-day roadmap
-│   ├── contacto.html       → Contact
+│   ├── contacto.html       → Contact (form → Worker inbox)
 │   ├── loja.html           → Shop (Attitude Sportwear)
-│   └── checkout.html       → WhatsApp checkout
+│   └── checkout.html       → Checkout (inbox + WhatsApp)
 ├── css/
-│   └── style.css           → Global styles
+│   ├── style.css           → Public site
+│   └── admin.css           → Admin UI
 ├── js/
-│   └── main.js             → Cursor, language toggle, mobile menu, carousel, cart
-├── images/                 → Photos + logo + product shots
+│   ├── main.js             → i18n, menu, cart, checkout submit
+│   ├── products.js         → Defaults + Cloudinary config
+│   ├── catalog.js          → Load live catalog
+│   └── admin.js            → CRUD, media, publish, Pedidos inbox
+├── worker/                 → Cloudflare Worker API
+│   ├── src/index.js        → /publish · /submit · /inbox
+│   ├── wrangler.toml       → KV INBOX + deploy config
+│   └── README.md
+├── images/
+├── BLUEPRINT.md
 └── README.md
 ```
+
+**API:** `https://attitude-run-club-publish.workersdevao.workers.dev`  
+**Admin:** `/admin.html` → tab **Pedidos** (contacts + orders)
 
 ---
 
 ## Important Changes Log
+
+### 2026-10-19 — Contact + orders inbox in admin
+
+**Request:** Contact form and checkout orders appear in the admin panel (not only WhatsApp).
+
+**How it works:**
+- `POST /submit` — public (contact or order)
+- `POST /inbox` — admin list / status / delete
+- Storage: **Cloudflare KV** (`INBOX` binding) — reliable
+- Admin tab **Pedidos** loads the inbox
+- Checkout still opens WhatsApp; also saves to inbox
+- Contact form uses a standalone script in `contacto.html`
+
+**Files:**
+- `worker/src/index.js` — `/submit`, `/inbox`, KV + Cloudinary fallback
+- `worker/wrangler.toml` — `[[kv_namespaces]]` binding `INBOX`
+- `worker/README.md` — deploy + test
+- `pages/contacto.html` — form + inline submit
+- `js/main.js` — checkout submit + success feedback
+- `admin.html` / `js/admin.js` / `css/admin.css` — Pedidos UI
+
+**Worker + KV (live):**
+- URL: `https://attitude-run-club-publish.workersdevao.workers.dev`
+- Binding: `env.INBOX` → KV namespace `fcb92e41…`
+- Redeploy: `cd worker && npx wrangler deploy`
+- Health check: submit/list JSON includes `"storage":"kv"`
+
+---
 
 ### 2026-09-25 — Mobile Hamburger Menu
 **Problem:** Nav links disappeared on mobile but no hamburger was present.

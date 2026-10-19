@@ -1,21 +1,54 @@
-# Attitude Run Club — Publish Worker
+# Attitude Run Club — API Worker
 
-Small Cloudflare Worker that accepts admin publishes and writes `catalog.json` to Cloudinary (signed raw upload). Secrets never leave the Worker.
+Cloudflare Worker for:
+
+- **Publish catalog** → Cloudinary `catalog.json` (admin)
+- **Inbox** → contact messages + shop orders (public submit, admin list)
+
+Live: `https://attitude-run-club-publish.workersdevao.workers.dev`
+
+---
+
+## Status
+
+- **Live:** `https://attitude-run-club-publish.workersdevao.workers.dev`
+- **KV INBOX:** bound and active (`fcb92e41fd214f4db515b077da8f26e8`)
+- Deploy output should list: `env.INBOX (…)  KV Namespace`
+- Submit/list responses should include `"storage":"kv"`
 
 ## Deploy
 
 ```bash
 cd worker
 npx wrangler deploy
+```
+
+On success you should see the `INBOX` KV binding listed. **No** warning about unexpected top-level `binding` / `id`.
+
+Secrets (only if missing):
+
+```bash
 npx wrangler secret put ADMIN_PASSWORD
 npx wrangler secret put CLOUDINARY_CLOUD_NAME
 npx wrangler secret put CLOUDINARY_API_KEY
 npx wrangler secret put CLOUDINARY_API_SECRET
-# optional:
-# npx wrangler secret put CLOUDINARY_FOLDER   # default: attitude-run-club
 ```
 
-After deploy, copy the `*.workers.dev` URL (e.g. `https://attitude-run-club-publish.<account>.workers.dev`) into `js/admin.js` as `PUBLISH_URL`.
+### wrangler.toml (current)
+
+```toml
+[[kv_namespaces]]
+binding = "INBOX"
+id = "fcb92e41fd214f4db515b077da8f26e8"
+preview_id = "d01a348fb8204d218b0acac23d20eae3"
+```
+
+`[[kv_namespaces]]` must stay uncommented. If Wrangler warns about top-level `binding`/`id`/`preview_id`, the table header is missing and KV is not bound.
+
+KV was created once with:
+`npx wrangler kv namespace create INBOX` and `--preview`.
+
+---
 
 ## Endpoints
 
@@ -37,6 +70,8 @@ Success: `{ "ok": true, "updatedAt": "...", "url": "https://res.cloudinary.com/�
 
 ### `POST /submit` — public (contact + orders)
 
+Contact:
+
 ```json
 {
   "type": "contact",
@@ -48,7 +83,7 @@ Success: `{ "ok": true, "updatedAt": "...", "url": "https://res.cloudinary.com/�
 }
 ```
 
-Or order:
+Order:
 
 ```json
 {
@@ -63,7 +98,10 @@ Or order:
 }
 ```
 
-Saved to Cloudinary `{folder}/inbox.json`.
+Success: `{ "ok": true, "id": "msg_…", "count": N, "storage": "kv" }`
+
+- **Production uses KV** (`storage: "kv"`).
+- Cloudinary `inbox.json` only if KV binding is missing (not recommended).
 
 ### `POST /inbox` — admin only
 
@@ -73,26 +111,49 @@ Saved to Cloudinary `{folder}/inbox.json`.
 { "password": "…", "action": "delete", "id": "msg_…" }
 ```
 
+List success includes `"storage": "kv"` when KV is active.
+
+---
+
+## Quick test
+
+```bash
+# Submit contact
+curl -sS -X POST "https://attitude-run-club-publish.workersdevao.workers.dev/submit" \
+  -H "Content-Type: application/json" \
+  -d '{"type":"contact","name":"Test","message":"hello","source":"contacto"}'
+
+# List inbox (admin password)
+curl -sS -X POST "https://attitude-run-club-publish.workersdevao.workers.dev/inbox" \
+  -H "Content-Type: application/json" \
+  -d '{"password":"YOUR_ADMIN_PASSWORD","action":"list"}'
+```
+
+Both responses should show `"storage":"kv"`.
+
+---
+
 ## Catalog URL (public site)
 
 ```
 https://res.cloudinary.com/ev6fgna8/raw/upload/attitude-run-club/catalog.json
 ```
 
-Already set as `CATALOG_JSON_URL` in `js/products.js`.
+Set as `CATALOG_JSON_URL` in `js/products.js`.
 
-## Secrets for this project
+API base used in:
 
-```bash
-npx wrangler secret put ADMIN_PASSWORD          # e.g. attitude2026
-npx wrangler secret put CLOUDINARY_CLOUD_NAME   # ev6fgna8
-npx wrangler secret put CLOUDINARY_API_KEY      # 756438622497218
-npx wrangler secret put CLOUDINARY_API_SECRET   # from Cloudinary dashboard
-```
+- `js/admin.js` → `/publish`, `/inbox`
+- `js/main.js` → `/submit` (checkout)
+- `pages/contacto.html` → `/submit` (inline script)
+
+---
 
 ## Security
 
-- Only requests with the correct `ADMIN_PASSWORD` can overwrite the catalog.
-- Media uploads use an **unsigned** Cloudinary preset from the browser (separate from this Worker).
-- API secret and Google client secret must never ship in client-side JS.
-- Change the default admin password after handoff.
+- Only `ADMIN_PASSWORD` can publish catalog or read/update inbox.
+- `/submit` is public (rate-limit later if needed).
+- Cloudinary API secret never ships in client JS.
+- Media uploads use an **unsigned** Cloudinary preset from the browser.
+- Change default admin password after handoff.
+- Do **not** commit `wrangler-account.json` or secret values.
