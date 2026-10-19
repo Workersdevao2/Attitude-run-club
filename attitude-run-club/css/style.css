@@ -1644,6 +1644,12 @@ footer {
   flex-direction: column;
   transition: border-color 0.25s;
 }
+/* Product cards load async — never leave them invisible if .reveal was applied */
+.product-card.reveal,
+.product-card.reveal.visible {
+  opacity: 1 !important;
+  transform: none !important;
+}
 .product-card:hover {
   border-color: rgba(255,255,255,0.22);
 }

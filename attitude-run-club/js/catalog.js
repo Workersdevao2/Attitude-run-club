@@ -141,10 +141,10 @@
           .map((s, si) => `<option value="${esc(s)}"${si === Math.min(1, sizes.length - 1) ? ' selected' : ''}>${esc(s)}</option>`)
           .join('');
         const priceFmt = (Number(p.price) || 0).toLocaleString('pt-AO');
-        const delay = i % 3 === 1 ? ' reveal-delay-1' : i % 3 === 2 ? ' reveal-delay-2' : '';
 
+        // No .reveal class — products load async; reveal observer only runs once on page load
         return `
-      <article class="product-card reveal${delay}" data-id="${esc(p.id)}" data-name-pt="${esc(p.name_pt || '')}" data-name-en="${esc(p.name_en || '')}" data-price="${Number(p.price) || 0}">
+      <article class="product-card" data-id="${esc(p.id)}" data-name-pt="${esc(p.name_pt || '')}" data-name-en="${esc(p.name_en || '')}" data-price="${Number(p.price) || 0}">
         <div class="product-img-wrap">
           <img src="${esc(img)}" alt="${esc(name)}" loading="lazy">
         </div>
@@ -172,13 +172,6 @@
     if (typeof global.setLanguage === 'function' && global.currentLang) {
       global.setLanguage(global.currentLang);
     }
-
-    // Reveal animation: cards are injected after the initial observer run
-    if (typeof global.observeReveals === 'function') {
-      global.observeReveals(grid);
-    }
-    // Always force visible so shop never stays blank if observer misses
-    grid.querySelectorAll('.product-card.reveal').forEach((el) => el.classList.add('visible'));
 
     // Notify cart module that grid was rebuilt
     grid.dispatchEvent(new CustomEvent('arc:products-rendered'));
