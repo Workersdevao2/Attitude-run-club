@@ -136,7 +136,7 @@
           else if (img.startsWith('../images/')) img = img;
           else img = prefix + 'images/' + img.replace(/^.*\//, '');
         }
-        const sizes = (p.sizes && p.sizes.length) ? p.sizes : ['Único'];
+        const sizes = (p.sizes && p.sizes.length) ? p.sizes : ['A confirmar'];
         const sizeOpts = sizes
           .map((s, si) => `<option value="${esc(s)}"${si === Math.min(1, sizes.length - 1) ? ' selected' : ''}>${esc(s)}</option>`)
           .join('');
@@ -158,7 +158,7 @@
             <label class="qty-label" data-i18n="loja.qty">Qtd</label>
             <div class="qty-stepper" role="group" aria-label="Quantidade">
               <button type="button" class="qty-btn qty-minus" aria-label="Diminuir">−</button>
-              <input type="number" class="product-qty" min="1" max="10" value="1" readonly inputmode="numeric" aria-label="Quantidade">
+              <input type="number" class="product-qty" min="1" max="99" value="1" readonly inputmode="numeric" aria-label="Quantidade">
               <button type="button" class="qty-btn qty-plus" aria-label="Aumentar">+</button>
             </div>
           </div>

@@ -334,12 +334,14 @@ const translations = {
     'loja.form.title': 'Encomendar via WhatsApp',
     'loja.form.name': 'Nome completo',
     'loja.form.phone': 'Telefone / WhatsApp',
+    'loja.form.email': 'Email',
     'loja.form.city': 'Cidade / Local de entrega',
     'loja.form.notes': 'Notas (opcional)',
     'loja.form.btn': 'Enviar pedido no WhatsApp',
     'loja.form.hint': 'Abre o WhatsApp com o teu pedido pré-preenchido. Respondemos para confirmar.',
     'loja.ph.name': 'O teu nome',
     'loja.ph.phone': '+244 9XX XXX XXX',
+    'loja.ph.email': 'O teu email',
     'loja.ph.city': 'Ex: Luanda, Talatona',
     'loja.ph.notes': 'Cor, preferência de entrega, etc.',
     'loja.cta.eyebrow': 'Membros Attitude',
@@ -625,12 +627,14 @@ const translations = {
     'loja.form.title': 'Order via WhatsApp',
     'loja.form.name': 'Full name',
     'loja.form.phone': 'Phone / WhatsApp',
+    'loja.form.email': 'Email',
     'loja.form.city': 'City / Delivery area',
     'loja.form.notes': 'Notes (optional)',
     'loja.form.btn': 'Send order on WhatsApp',
     'loja.form.hint': 'Opens WhatsApp with your order pre-filled. We reply to confirm.',
     'loja.ph.name': 'Your name',
     'loja.ph.phone': '+244 9XX XXX XXX',
+    'loja.ph.email': 'Your email',
     'loja.ph.city': 'e.g. Luanda, Talatona',
     'loja.ph.notes': 'Colour, delivery preference, etc.',
     'loja.cta.eyebrow': 'Attitude members',
@@ -821,7 +825,8 @@ if (hamburger && mobileMenu) {
 // ─── LOJA CART + PANEL + CHECKOUT (localStorage) ───────────────────────────
 (function () {
   const CART_KEY = 'arc-cart';
-  const WA_NUMBER = '244933953989';
+  const WA_NUMBER = '244932826818';
+  const MAX_QTY = 99; // max units per product line
   const PRODUCT_IMAGES = {
     tank: '../images/product-tank.jpg',
     socks: '../images/product-socks.jpg',
@@ -1067,7 +1072,7 @@ if (hamburger && mobileMenu) {
       }
       if (plus) {
         plus.addEventListener('click', () => {
-          if (cart[idx] && cart[idx].qty < 10) {
+          if (cart[idx] && cart[idx].qty < MAX_QTY) {
             cart[idx].qty += 1;
             saveCart(cart);
             patchLineQty(idx); // in-place — images stay
@@ -1157,7 +1162,7 @@ if (hamburger && mobileMenu) {
       if (!input) return;
 
       function setQty(n) {
-        n = Math.max(1, Math.min(10, n));
+        n = Math.max(1, Math.min(MAX_QTY, n));
         input.value = String(n);
       }
 
@@ -1177,7 +1182,7 @@ if (hamburger && mobileMenu) {
         const size = sizeEl ? sizeEl.value : '—';
         let qty = qtyEl ? parseInt(qtyEl.value, 10) : 1;
         if (isNaN(qty) || qty < 1) qty = 1;
-        if (qty > 10) qty = 10;
+        if (qty > MAX_QTY) qty = MAX_QTY;
 
         const name = productName(card);
         const imgEl = card.querySelector('.product-img-wrap img');
@@ -1187,7 +1192,7 @@ if (hamburger && mobileMenu) {
         }
         const existing = cart.find(c => c.id === id && c.size === size);
         if (existing) {
-          existing.qty = Math.min(10, existing.qty + qty);
+          existing.qty = Math.min(MAX_QTY, existing.qty + qty);
           if (!existing.image && image) existing.image = image;
         } else {
           cart.push({ id, name, size, qty, price, image });
@@ -1253,10 +1258,12 @@ if (hamburger && mobileMenu) {
       }
       const nameEl = document.getElementById('checkoutName');
       const phoneEl = document.getElementById('checkoutPhone');
+      const emailEl = document.getElementById('checkoutEmail');
       const cityEl = document.getElementById('checkoutCity');
       const notesEl = document.getElementById('checkoutNotes');
       const name = (nameEl || {}).value || '';
       const phone = (phoneEl || {}).value || '';
+      const email = (emailEl || {}).value || '';
       const city = (cityEl || {}).value || '';
       const notes = (notesEl || {}).value || '';
 
@@ -1281,6 +1288,7 @@ if (hamburger && mobileMenu) {
       const clientBlock =
         (currentLang === 'en' ? 'Name: ' : 'Nome: ') + name.trim() + '\n' +
         (currentLang === 'en' ? 'Phone: ' : 'Telefone: ') + phone.trim() + '\n' +
+        (email.trim() ? ((currentLang === 'en' ? 'Email: ' : 'Email: ') + email.trim() + '\n') : '') +
         (city.trim() ? ((currentLang === 'en' ? 'City: ' : 'Cidade: ') + city.trim() + '\n') : '') +
         (notes.trim() ? ((currentLang === 'en' ? 'Notes: ' : 'Notas: ') + notes.trim() + '\n') : '');
 
@@ -1300,6 +1308,7 @@ if (hamburger && mobileMenu) {
             source: 'checkout',
             name: name.trim(),
             phone: phone.trim(),
+            email: email.trim(),
             city: city.trim(),
             notes: notes.trim(),
             items: cart.map((item) => ({
@@ -1332,6 +1341,7 @@ if (hamburger && mobileMenu) {
         saveCart(cart);
         if (nameEl) nameEl.value = '';
         if (phoneEl) phoneEl.value = '';
+        if (emailEl) emailEl.value = '';
         if (cityEl) cityEl.value = '';
         if (notesEl) notesEl.value = '';
         renderAll();

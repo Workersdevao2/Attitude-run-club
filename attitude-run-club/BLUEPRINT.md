@@ -84,7 +84,7 @@ https://res.cloudinary.com/{CLOUD_NAME}/raw/upload/attitude-run-club/catalog.jso
    * Remote catalog (everyone after publish)
    * Fall back to `DEFAULT_*`
 4. Cart: localStorage key `arc-cart`.
-5. Checkout → WhatsApp (`wa.me/244933953989`).
+5. Checkout → WhatsApp (`wa.me/244932826818`).
 
 ## Admin panel
 

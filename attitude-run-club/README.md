@@ -296,7 +296,7 @@ After any change, make sure **HTML + CSS + JS** are all updated on the live site
 - `js/main.js` — cart logic, PT/EN i18n for Loja, WhatsApp pre-filled order message
 - All pages — **Loja** link in desktop nav, mobile menu and footer
 
-**Checkout flow:** Add products (size + qty) → fill name / phone / city → “Enviar pedido no WhatsApp” opens `wa.me/244933953989` with order + client data pre-filled.
+**Checkout flow:** Add products (size + qty) → fill name / phone / city → “Enviar pedido no WhatsApp” opens `wa.me/244932826818` with order + client data pre-filled.
 
 **Note:** Prices are indicative (Kz). Adjust in `data-price` attributes on each product card when final retail prices are confirmed. Member discounts (10/20/30%) remain as stated on Planos.
 
