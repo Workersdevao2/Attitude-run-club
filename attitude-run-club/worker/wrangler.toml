@@ -12,10 +12,10 @@ preview_urls = true
 #   npx wrangler kv namespace create INBOX --preview
 # Uncomment and paste IDs:
 #
-# [[kv_namespaces]]
-# binding = "INBOX"
-# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-# preview_id = "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+[[kv_namespaces]]
+binding = "INBOX"
+id = "fcb92e41fd214f4db515b077da8f26e8"
+preview_id = "d01a348fb8204d218b0acac23d20eae3"
 
 # Secrets (CLI — never commit):
 #   npx wrangler secret put ADMIN_PASSWORD
