@@ -834,6 +834,78 @@ if (hamburger && mobileMenu) {
   const grid = document.getElementById('productsGrid');
   const isShop = !!grid;
   const isCheckout = !!document.getElementById('checkoutCartList');
+  const CART_API = 'https://attitude-run-club-publish.workersdevao.workers.dev';
+
+  // Contact form runs on contacto page (not shop/checkout) — bind before early return
+  const contactFormEarly = document.getElementById('contactForm');
+  if (contactFormEarly) {
+    contactFormEarly.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = (document.getElementById('contactName') || {}).value || '';
+      const email = (document.getElementById('contactEmail') || {}).value || '';
+      const phone = (document.getElementById('contactPhone') || {}).value || '';
+      const message = (document.getElementById('contactMsg') || {}).value || '';
+      const statusEl = document.getElementById('contactStatus');
+      const btn = document.getElementById('contactSubmit');
+      const t = (key, fallback) =>
+        (translations[currentLang] && translations[currentLang][key]) || fallback;
+
+      if (!name.trim() || !message.trim()) {
+        if (statusEl) {
+          statusEl.style.color = '#e74c3c';
+          statusEl.textContent = currentLang === 'en'
+            ? 'Name and message are required.'
+            : 'Nome e mensagem são obrigatórios.';
+        }
+        return;
+      }
+
+      if (btn) btn.disabled = true;
+      if (statusEl) {
+        statusEl.style.color = 'var(--muted, #9a9a9a)';
+        statusEl.textContent = currentLang === 'en' ? 'Sending…' : 'A enviar…';
+      }
+
+      try {
+        const res = await fetch(CART_API + '/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'contact',
+            source: 'contacto',
+            name: name.trim(),
+            email: email.trim(),
+            phone: phone.trim(),
+            message: message.trim(),
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) throw new Error(data.error || 'fail');
+        if (statusEl) {
+          statusEl.style.color = '#2ecc71';
+          statusEl.textContent = t(
+            'contacto.form.ok',
+            currentLang === 'en'
+              ? 'Message sent. The team will reply soon.'
+              : 'Mensagem enviada. A equipa responde em breve.'
+          );
+        }
+        contactFormEarly.reset();
+      } catch (_) {
+        if (statusEl) {
+          statusEl.style.color = '#e74c3c';
+          statusEl.textContent = t(
+            'contacto.form.err',
+            currentLang === 'en'
+              ? 'Could not send. Try again or use WhatsApp.'
+              : 'Não foi possível enviar. Tenta de novo ou usa o WhatsApp.'
+          );
+        }
+      }
+      if (btn) btn.disabled = false;
+    });
+  }
+
   if (!isShop && !isCheckout) return;
 
   const mobileBar = document.getElementById('mobileCartBar');
@@ -1158,26 +1230,41 @@ if (hamburger && mobileMenu) {
     if (e.key === 'Escape') closePanel();
   });
 
-  // API base (same Worker as publish)
-  const ARC_API = 'https://attitude-run-club-publish.workersdevao.workers.dev';
-
   // WhatsApp checkout + save order to admin inbox
   if (waBtn) {
+    // Status line under the button (create if missing)
+    let checkoutStatus = document.getElementById('checkoutStatus');
+    if (!checkoutStatus) {
+      checkoutStatus = document.createElement('p');
+      checkoutStatus.id = 'checkoutStatus';
+      checkoutStatus.setAttribute('role', 'status');
+      checkoutStatus.style.cssText = 'font-size:13px;margin-top:12px;min-height:1.2em;';
+      waBtn.insertAdjacentElement('afterend', checkoutStatus);
+    }
+
     waBtn.addEventListener('click', async () => {
       cart = loadCart();
       if (cart.length === 0) {
-        alert(currentLang === 'en' ? 'Add at least one product.' : 'Adiciona pelo menos um produto.');
+        checkoutStatus.style.color = '#e74c3c';
+        checkoutStatus.textContent = currentLang === 'en'
+          ? 'Add at least one product.'
+          : 'Adiciona pelo menos um produto.';
         return;
       }
-      const name = (document.getElementById('checkoutName') || {}).value || '';
-      const phone = (document.getElementById('checkoutPhone') || {}).value || '';
-      const city = (document.getElementById('checkoutCity') || {}).value || '';
-      const notes = (document.getElementById('checkoutNotes') || {}).value || '';
+      const nameEl = document.getElementById('checkoutName');
+      const phoneEl = document.getElementById('checkoutPhone');
+      const cityEl = document.getElementById('checkoutCity');
+      const notesEl = document.getElementById('checkoutNotes');
+      const name = (nameEl || {}).value || '';
+      const phone = (phoneEl || {}).value || '';
+      const city = (cityEl || {}).value || '';
+      const notes = (notesEl || {}).value || '';
 
       if (!name.trim() || !phone.trim()) {
-        alert(currentLang === 'en'
+        checkoutStatus.style.color = '#e74c3c';
+        checkoutStatus.textContent = currentLang === 'en'
           ? 'Please fill in your name and phone number.'
-          : 'Preenche o nome e o telefone.');
+          : 'Preenche o nome e o telefone.';
         return;
       }
 
@@ -1199,10 +1286,13 @@ if (hamburger && mobileMenu) {
 
       const message = header + '\n\n' + lines.join('\n') + '\n\n' + totalLine + '\n\n' + clientBlock;
 
-      // Save to admin inbox (does not block WhatsApp)
       waBtn.disabled = true;
+      checkoutStatus.style.color = 'var(--muted, #9a9a9a)';
+      checkoutStatus.textContent = currentLang === 'en' ? 'Sending order…' : 'A enviar pedido…';
+
+      let saved = false;
       try {
-        await fetch(ARC_API + '/submit', {
+        const res = await fetch(CART_API + '/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1222,75 +1312,43 @@ if (hamburger && mobileMenu) {
             total,
           }),
         });
+        const data = await res.json().catch(() => ({}));
+        saved = res.ok && data.ok;
       } catch (_) {
-        /* still open WhatsApp */
+        saved = false;
       }
-      waBtn.disabled = false;
 
+      // Always open WhatsApp with the order
       const url = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message);
       window.open(url, '_blank', 'noopener');
-    });
-  }
 
-  // Contact form → admin inbox
-  const contactForm = document.getElementById('contactForm');
-  if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = (document.getElementById('contactName') || {}).value || '';
-      const email = (document.getElementById('contactEmail') || {}).value || '';
-      const phone = (document.getElementById('contactPhone') || {}).value || '';
-      const message = (document.getElementById('contactMsg') || {}).value || '';
-      const statusEl = document.getElementById('contactStatus');
-      const btn = document.getElementById('contactSubmit');
-      const t = (key, fallback) =>
-        (translations[currentLang] && translations[currentLang][key]) || fallback;
-
-      if (!name.trim() || !message.trim()) {
-        if (statusEl) {
-          statusEl.style.color = '#e74c3c';
-          statusEl.textContent = currentLang === 'en' ? 'Name and message are required.' : 'Nome e mensagem são obrigatórios.';
-        }
-        return;
+      if (saved) {
+        checkoutStatus.style.color = '#2ecc71';
+        checkoutStatus.textContent = currentLang === 'en'
+          ? 'Order saved. WhatsApp opened — we will confirm with you.'
+          : 'Pedido guardado. WhatsApp aberto — confirmamos contigo.';
+        // Clear cart + form
+        cart = [];
+        saveCart(cart);
+        if (nameEl) nameEl.value = '';
+        if (phoneEl) phoneEl.value = '';
+        if (cityEl) cityEl.value = '';
+        if (notesEl) notesEl.value = '';
+        renderAll();
+        // Soft reset after a moment so user sees success
+        setTimeout(() => {
+          checkoutStatus.textContent = currentLang === 'en'
+            ? 'You can add more products from the shop anytime.'
+            : 'Podes adicionar mais produtos na loja quando quiseres.';
+        }, 4000);
+      } else {
+        checkoutStatus.style.color = '#f1c40f';
+        checkoutStatus.textContent = currentLang === 'en'
+          ? 'WhatsApp opened, but saving to the panel failed. Message us on WhatsApp.'
+          : 'WhatsApp aberto, mas falhou gravar no painel. Fala no WhatsApp.';
       }
 
-      if (btn) btn.disabled = true;
-      if (statusEl) {
-        statusEl.style.color = 'var(--muted)';
-        statusEl.textContent = currentLang === 'en' ? 'Sending…' : 'A enviar…';
-      }
-
-      try {
-        const res = await fetch(ARC_API + '/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            type: 'contact',
-            source: 'contacto',
-            name: name.trim(),
-            email: email.trim(),
-            phone: phone.trim(),
-            message: message.trim(),
-          }),
-        });
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok || !data.ok) throw new Error(data.error || 'fail');
-        if (statusEl) {
-          statusEl.style.color = '#2ecc71';
-          statusEl.textContent = t('contacto.form.ok', currentLang === 'en'
-            ? 'Message sent. The team will reply soon.'
-            : 'Mensagem enviada. A equipa responde em breve.');
-        }
-        contactForm.reset();
-      } catch (_) {
-        if (statusEl) {
-          statusEl.style.color = '#e74c3c';
-          statusEl.textContent = t('contacto.form.err', currentLang === 'en'
-            ? 'Could not send. Try again or use WhatsApp.'
-            : 'Não foi possível enviar. Tenta de novo ou usa o WhatsApp.');
-        }
-      }
-      if (btn) btn.disabled = false;
+      waBtn.disabled = false;
     });
   }
 
