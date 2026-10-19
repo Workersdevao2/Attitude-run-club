@@ -91,22 +91,27 @@
         </div>
       </div>
 
-      <div class="contact-form reveal reveal-delay-1">
+      <form class="contact-form reveal reveal-delay-1" id="contactForm">
         <div class="form-group">
-          <label data-i18n="contacto.form.name">Nome</label>
-          <input type="text" placeholder="O teu nome" data-i18n-placeholder="contacto.ph.name">
+          <label for="contactName" data-i18n="contacto.form.name">Nome</label>
+          <input type="text" id="contactName" name="name" required placeholder="O teu nome" data-i18n-placeholder="contacto.ph.name" autocomplete="name">
         </div>
         <div class="form-group">
-          <label data-i18n="contacto.email">Email</label>
-          <input type="email" placeholder="teu@email.com">
+          <label for="contactEmail" data-i18n="contacto.email">Email</label>
+          <input type="email" id="contactEmail" name="email" placeholder="teu@email.com" data-i18n-placeholder="contacto.ph.email" autocomplete="email">
         </div>
         <div class="form-group">
-          <label data-i18n="contacto.form.msg">Mensagem</label>
-          <textarea placeholder="Como podemos ajudar?"></textarea>
+          <label for="contactPhone" data-i18n="contacto.form.phone">Telefone / WhatsApp</label>
+          <input type="tel" id="contactPhone" name="phone" placeholder="+244 9XX XXX XXX" data-i18n-placeholder="contacto.ph.phone" autocomplete="tel">
         </div>
-        <button class="btn-primary" style="width:100%; text-align:center; border:none; cursor:none;" data-i18n="contacto.form.btn">Enviar Mensagem</button>
-        <p style="font-size:12px; color:var(--muted); margin-top:12px;" data-i18n="contacto.form.note">Ou fala connosco diretamente no WhatsApp para resposta mais rápida.</p>
-      </div>
+        <div class="form-group">
+          <label for="contactMsg" data-i18n="contacto.form.msg">Mensagem</label>
+          <textarea id="contactMsg" name="message" required placeholder="Como podemos ajudar?" data-i18n-placeholder="contacto.ph.msg" rows="4"></textarea>
+        </div>
+        <button type="submit" class="btn-primary" id="contactSubmit" style="width:100%; text-align:center;" data-i18n="contacto.form.btn">Enviar Mensagem</button>
+        <p id="contactStatus" style="font-size:13px; margin-top:12px; min-height:1.2em;" role="status"></p>
+        <p style="font-size:12px; color:var(--muted); margin-top:8px;" data-i18n="contacto.form.note">A mensagem fica no painel da equipa. Também podes escrever no WhatsApp para resposta mais rápida.</p>
+      </form>
     </div>
   </section>
 

@@ -669,3 +669,113 @@ body.no-sticky-pad { padding-bottom: 0; }
   clip: rect(0,0,0,0);
   border: 0;
 }
+
+/* ── Inbox / Pedidos ── */
+.inbox-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.chip {
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  min-height: 40px;
+}
+.chip.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+.inbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.inbox-empty {
+  color: var(--muted);
+  font-size: 0.9rem;
+  padding: 24px 0;
+  text-align: center;
+}
+.inbox-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.inbox-card.is-new {
+  border-color: #444;
+}
+.inbox-card-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 10px;
+}
+.inbox-type {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+.inbox-type.order { color: #f5f5f5; border-color: #555; }
+.inbox-status {
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--surface2);
+  color: var(--muted);
+}
+.inbox-status.new { color: var(--warn); }
+.inbox-status.done { color: var(--ok); }
+.inbox-date {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-left: auto;
+}
+.inbox-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin: 0 0 4px;
+}
+.inbox-meta {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin: 0 0 8px;
+  line-height: 1.45;
+}
+.inbox-meta a { color: var(--text); text-decoration: underline; text-underline-offset: 2px; }
+.inbox-msg {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: 0 0 10px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.inbox-items {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin: 0 0 10px;
+  padding-left: 18px;
+}
+.inbox-items li { margin-bottom: 2px; }
+.inbox-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.inbox-actions .btn { min-height: 40px; padding: 8px 14px; font-size: 0.8rem; }

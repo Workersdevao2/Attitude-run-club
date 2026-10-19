@@ -6,7 +6,9 @@
   'use strict';
 
   // ── Config (override after deploy) ──────────────────────────────────────
-  const PUBLISH_URL = 'https://attitude-run-club-publish.workersdevao.workers.dev/publish';
+  const API_BASE = 'https://attitude-run-club-publish.workersdevao.workers.dev';
+  const PUBLISH_URL = API_BASE + '/publish';
+  const INBOX_URL = API_BASE + '/inbox';
   const DEFAULT_ADMIN_PASSWORD = 'attitude2026'; // change after handoff
   const LS = {
     auth: 'arc_admin_auth',
@@ -23,8 +25,14 @@
   let texts = { pt: {}, en: {} };
   let images = {};
   let media = [];
+  let inboxItems = [];
+  let inboxFilter = 'all';
   let editingId = null;
   let pickerTarget = null; // { type: 'product'|'slot', id/key }
+
+  function adminPassword() {
+    return localStorage.getItem('arc_admin_pw') || DEFAULT_ADMIN_PASSWORD;
+  }
 
   // ── DOM ─────────────────────────────────────────────────────────────────
   const $ = (s, r = document) => r.querySelector(s);
@@ -611,11 +619,157 @@
     return src;
   }
 
+  // ── Inbox (pedidos & contactos) ─────────────────────────────────────────
+  async function loadInbox() {
+    const list = $('#inboxList');
+    if (list) list.innerHTML = '<p class="inbox-empty">A carregar…</p>';
+    try {
+      const res = await fetch(INBOX_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: adminPassword(), action: 'list' }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || 'Falha ao carregar');
+      }
+      inboxItems = Array.isArray(data.items) ? data.items : [];
+      renderInbox();
+      updateStats();
+    } catch (err) {
+      if (list) {
+        list.innerHTML = '<p class="inbox-empty">Não foi possível carregar o inbox. Confirma que o Worker está publicado com /inbox.</p>';
+      }
+      toast('Inbox: ' + (err.message || err), 'error');
+    }
+  }
+
+  function filteredInbox() {
+    return inboxItems.filter((it) => {
+      if (inboxFilter === 'all') return true;
+      if (inboxFilter === 'new') return it.status === 'new';
+      if (inboxFilter === 'done') return it.status === 'done';
+      if (inboxFilter === 'order') return it.type === 'order';
+      if (inboxFilter === 'contact') return it.type === 'contact';
+      return true;
+    });
+  }
+
+  function renderInbox() {
+    const list = $('#inboxList');
+    if (!list) return;
+    const items = filteredInbox();
+    if (!items.length) {
+      list.innerHTML = '<p class="inbox-empty">Nenhum pedido ou contacto' +
+        (inboxFilter !== 'all' ? ' neste filtro' : '') + '.</p>';
+      return;
+    }
+    list.innerHTML = items.map((it) => {
+      const isOrder = it.type === 'order';
+      const status = it.status || 'new';
+      const date = it.createdAt ? new Date(it.createdAt).toLocaleString('pt-AO') : '—';
+      const meta = [];
+      if (it.email) meta.push(`<a href="mailto:${esc(it.email)}">${esc(it.email)}</a>`);
+      if (it.phone) meta.push(`<a href="https://wa.me/${esc(String(it.phone).replace(/\D/g, ''))}" target="_blank" rel="noopener">${esc(it.phone)}</a>`);
+      if (it.city) meta.push(esc(it.city));
+      const itemsHtml = isOrder && Array.isArray(it.items) && it.items.length
+        ? '<ul class="inbox-items">' + it.items.map((line) =>
+            `<li>${esc(line.name || '')} · ${esc(line.size || '—')} · x${line.qty || 1} · ${formatKz(line.price * (line.qty || 1))}</li>`
+          ).join('') + '</ul>' +
+          (it.total ? `<p class="inbox-meta"><strong>Total estimado: ${formatKz(it.total)}</strong></p>` : '')
+        : '';
+      const msg = it.message || it.notes || '';
+      return `
+        <article class="inbox-card ${status === 'new' ? 'is-new' : ''}" data-id="${esc(it.id)}">
+          <div class="inbox-card-top">
+            <span class="inbox-type ${isOrder ? 'order' : 'contact'}">${isOrder ? 'Encomenda' : 'Contacto'}</span>
+            <span class="inbox-status ${esc(status)}">${status === 'new' ? 'Novo' : status === 'done' ? 'Concluído' : 'Lido'}</span>
+            <span class="inbox-date">${esc(date)}</span>
+          </div>
+          <p class="inbox-name">${esc(it.name || '—')}</p>
+          ${meta.length ? `<p class="inbox-meta">${meta.join(' · ')}</p>` : ''}
+          ${msg ? `<p class="inbox-msg">${esc(msg)}</p>` : ''}
+          ${itemsHtml}
+          <div class="inbox-actions">
+            ${status !== 'read' && status !== 'done' ? `<button type="button" class="btn btn-ghost btn-sm" data-inbox-status="read" data-id="${esc(it.id)}">Marcar lido</button>` : ''}
+            ${status !== 'done' ? `<button type="button" class="btn btn-ghost btn-sm" data-inbox-status="done" data-id="${esc(it.id)}">Concluir</button>` : ''}
+            ${status === 'done' ? `<button type="button" class="btn btn-ghost btn-sm" data-inbox-status="new" data-id="${esc(it.id)}">Reabrir</button>` : ''}
+            ${it.phone ? `<a class="btn btn-primary btn-sm" href="https://wa.me/${esc(String(it.phone).replace(/\D/g, ''))}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
+            <button type="button" class="btn btn-ghost btn-sm" data-inbox-delete data-id="${esc(it.id)}">Apagar</button>
+          </div>
+        </article>`;
+    }).join('');
+  }
+
+  async function inboxSetStatus(id, status) {
+    try {
+      const res = await fetch(INBOX_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: adminPassword(), action: 'setStatus', id, status }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Falha');
+      const row = inboxItems.find((x) => x.id === id);
+      if (row) row.status = status;
+      renderInbox();
+      updateStats();
+      toast('Atualizado', 'ok');
+    } catch (err) {
+      toast(err.message || String(err), 'error');
+    }
+  }
+
+  async function inboxDelete(id) {
+    if (!confirm('Apagar este registo?')) return;
+    try {
+      const res = await fetch(INBOX_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: adminPassword(), action: 'delete', id }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Falha');
+      inboxItems = inboxItems.filter((x) => x.id !== id);
+      renderInbox();
+      updateStats();
+      toast('Apagado', 'ok');
+    } catch (err) {
+      toast(err.message || String(err), 'error');
+    }
+  }
+
+  $('#btnRefreshInbox')?.addEventListener('click', () => loadInbox());
+  $$('#inboxFilters .chip').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      $$('#inboxFilters .chip').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      inboxFilter = btn.dataset.filter || 'all';
+      renderInbox();
+    });
+  });
+  $('#inboxList')?.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-inbox-status], [data-inbox-delete]');
+    if (!t) return;
+    const id = t.dataset.id;
+    if (!id) return;
+    if (t.hasAttribute('data-inbox-delete')) inboxDelete(id);
+    else if (t.dataset.inboxStatus) inboxSetStatus(id, t.dataset.inboxStatus);
+  });
+
+  // Load inbox when opening Pedidos tab
+  $$('.admin-nav button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (btn.dataset.panel === 'inbox') loadInbox();
+    });
+  });
+
   function updateStats() {
     const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
     set('statProducts', products.filter((p) => p.active !== false).length);
     set('statZones', zones.length);
     set('statMedia', media.length);
+    set('statInbox', inboxItems.filter((x) => x.status === 'new').length);
     const last = localStorage.getItem('arc_last_publish');
     set('statPublish', last ? new Date(last).toLocaleString('pt-AO') : '—');
   }
@@ -627,6 +781,7 @@
     renderSlots();
     renderMedia();
     updateStats();
+    loadInbox();
   }
 
   // ── Boot ────────────────────────────────────────────────────────────────

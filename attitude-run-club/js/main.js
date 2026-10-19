@@ -294,10 +294,14 @@ const translations = {
     'contacto.regibox': 'Registar na App Regibox →',
     'contacto.form.name': 'Nome',
     'contacto.form.email': 'Email',
+    'contacto.form.phone': 'Telefone / WhatsApp',
     'contacto.form.msg': 'Mensagem',
     'contacto.form.btn': 'Enviar Mensagem',
-    'contacto.form.note': 'Ou fala connosco diretamente no WhatsApp para resposta mais rápida.',
+    'contacto.form.note': 'A mensagem fica no painel da equipa. Também podes escrever no WhatsApp para resposta mais rápida.',
+    'contacto.form.ok': 'Mensagem enviada. A equipa responde em breve.',
+    'contacto.form.err': 'Não foi possível enviar. Tenta de novo ou usa o WhatsApp.',
     'contacto.ph.name': 'O teu nome',
+    'contacto.ph.phone': '+244 9XX XXX XXX',
     'contacto.ph.email': 'O teu email',
     'contacto.ph.msg': 'A tua mensagem...',
 
@@ -581,10 +585,14 @@ const translations = {
     'contacto.regibox': 'Register on the Regibox App →',
     'contacto.form.name': 'Name',
     'contacto.form.email': 'Email',
+    'contacto.form.phone': 'Phone / WhatsApp',
     'contacto.form.msg': 'Message',
     'contacto.form.btn': 'Send Message',
-    'contacto.form.note': 'Or message us on WhatsApp for a faster reply.',
+    'contacto.form.note': 'Your message is saved for the team. You can also use WhatsApp for a faster reply.',
+    'contacto.form.ok': 'Message sent. The team will reply soon.',
+    'contacto.form.err': 'Could not send. Try again or use WhatsApp.',
     'contacto.ph.name': 'Your name',
+    'contacto.ph.phone': '+244 9XX XXX XXX',
     'contacto.ph.email': 'Your email',
     'contacto.ph.msg': 'Your message...',
 
@@ -1150,9 +1158,12 @@ if (hamburger && mobileMenu) {
     if (e.key === 'Escape') closePanel();
   });
 
-  // WhatsApp checkout
+  // API base (same Worker as publish)
+  const ARC_API = 'https://attitude-run-club-publish.workersdevao.workers.dev';
+
+  // WhatsApp checkout + save order to admin inbox
   if (waBtn) {
-    waBtn.addEventListener('click', () => {
+    waBtn.addEventListener('click', async () => {
       cart = loadCart();
       if (cart.length === 0) {
         alert(currentLang === 'en' ? 'Add at least one product.' : 'Adiciona pelo menos um produto.');
@@ -1187,8 +1198,99 @@ if (hamburger && mobileMenu) {
         (notes.trim() ? ((currentLang === 'en' ? 'Notes: ' : 'Notas: ') + notes.trim() + '\n') : '');
 
       const message = header + '\n\n' + lines.join('\n') + '\n\n' + totalLine + '\n\n' + clientBlock;
+
+      // Save to admin inbox (does not block WhatsApp)
+      waBtn.disabled = true;
+      try {
+        await fetch(ARC_API + '/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'order',
+            source: 'checkout',
+            name: name.trim(),
+            phone: phone.trim(),
+            city: city.trim(),
+            notes: notes.trim(),
+            items: cart.map((item) => ({
+              id: item.id || '',
+              name: item.name,
+              size: item.size,
+              qty: item.qty,
+              price: item.price,
+            })),
+            total,
+          }),
+        });
+      } catch (_) {
+        /* still open WhatsApp */
+      }
+      waBtn.disabled = false;
+
       const url = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message);
       window.open(url, '_blank', 'noopener');
+    });
+  }
+
+  // Contact form → admin inbox
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = (document.getElementById('contactName') || {}).value || '';
+      const email = (document.getElementById('contactEmail') || {}).value || '';
+      const phone = (document.getElementById('contactPhone') || {}).value || '';
+      const message = (document.getElementById('contactMsg') || {}).value || '';
+      const statusEl = document.getElementById('contactStatus');
+      const btn = document.getElementById('contactSubmit');
+      const t = (key, fallback) =>
+        (translations[currentLang] && translations[currentLang][key]) || fallback;
+
+      if (!name.trim() || !message.trim()) {
+        if (statusEl) {
+          statusEl.style.color = '#e74c3c';
+          statusEl.textContent = currentLang === 'en' ? 'Name and message are required.' : 'Nome e mensagem são obrigatórios.';
+        }
+        return;
+      }
+
+      if (btn) btn.disabled = true;
+      if (statusEl) {
+        statusEl.style.color = 'var(--muted)';
+        statusEl.textContent = currentLang === 'en' ? 'Sending…' : 'A enviar…';
+      }
+
+      try {
+        const res = await fetch(ARC_API + '/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'contact',
+            source: 'contacto',
+            name: name.trim(),
+            email: email.trim(),
+            phone: phone.trim(),
+            message: message.trim(),
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) throw new Error(data.error || 'fail');
+        if (statusEl) {
+          statusEl.style.color = '#2ecc71';
+          statusEl.textContent = t('contacto.form.ok', currentLang === 'en'
+            ? 'Message sent. The team will reply soon.'
+            : 'Mensagem enviada. A equipa responde em breve.');
+        }
+        contactForm.reset();
+      } catch (_) {
+        if (statusEl) {
+          statusEl.style.color = '#e74c3c';
+          statusEl.textContent = t('contacto.form.err', currentLang === 'en'
+            ? 'Could not send. Try again or use WhatsApp.'
+            : 'Não foi possível enviar. Tenta de novo ou usa o WhatsApp.');
+        }
+      }
+      if (btn) btn.disabled = false;
     });
   }
 

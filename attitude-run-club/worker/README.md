@@ -17,9 +17,9 @@ npx wrangler secret put CLOUDINARY_API_SECRET
 
 After deploy, copy the `*.workers.dev` URL (e.g. `https://attitude-run-club-publish.<account>.workers.dev`) into `js/admin.js` as `PUBLISH_URL`.
 
-## Endpoint
+## Endpoints
 
-`POST /publish`
+### `POST /publish` — admin only
 
 ```json
 {
@@ -34,6 +34,44 @@ After deploy, copy the `*.workers.dev` URL (e.g. `https://attitude-run-club-publ
 ```
 
 Success: `{ "ok": true, "updatedAt": "...", "url": "https://res.cloudinary.com/…/catalog.json", … }`
+
+### `POST /submit` — public (contact + orders)
+
+```json
+{
+  "type": "contact",
+  "name": "Ana",
+  "email": "ana@email.com",
+  "phone": "+244…",
+  "message": "Olá",
+  "source": "contacto"
+}
+```
+
+Or order:
+
+```json
+{
+  "type": "order",
+  "name": "Ana",
+  "phone": "+244…",
+  "city": "Talatona",
+  "notes": "",
+  "items": [{ "id": "tank", "name": "Tank", "size": "M", "qty": 1, "price": 18000 }],
+  "total": 18000,
+  "source": "checkout"
+}
+```
+
+Saved to Cloudinary `{folder}/inbox.json`.
+
+### `POST /inbox` — admin only
+
+```json
+{ "password": "…", "action": "list" }
+{ "password": "…", "action": "setStatus", "id": "msg_…", "status": "read|done|new" }
+{ "password": "…", "action": "delete", "id": "msg_…" }
+```
 
 ## Catalog URL (public site)
 
