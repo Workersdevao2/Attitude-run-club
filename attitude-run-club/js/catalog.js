@@ -168,6 +168,14 @@
       global.setLanguage(global.currentLang);
     }
 
+    // Reveal animation: cards are injected after the initial observer run
+    if (typeof global.observeReveals === 'function') {
+      global.observeReveals(grid);
+    } else {
+      // Fallback if main.js not loaded yet — show immediately
+      grid.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
+    }
+
     // Notify cart module that grid was rebuilt
     grid.dispatchEvent(new CustomEvent('arc:products-rendered'));
   }

@@ -36,16 +36,22 @@ if (cursor && ring) {
   });
 }
 
-// Scroll reveal
-const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver((entries) => {
+// Scroll reveal (reusable after dynamic content, e.g. loja product grid)
+const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.classList.add('visible');
     }
   });
 }, { threshold: 0.12 });
-reveals.forEach(el => observer.observe(el));
+
+function observeReveals(root) {
+  const scope = root && root.querySelectorAll ? root : document;
+  scope.querySelectorAll('.reveal:not(.visible)').forEach(el => revealObserver.observe(el));
+}
+
+observeReveals(document);
+window.observeReveals = observeReveals;
 
 // Nav scroll effect
 const nav = document.querySelector('nav');
