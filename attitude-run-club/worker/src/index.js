@@ -32,23 +32,101 @@ function folderOf(env) {
   return env.CLOUDINARY_FOLDER || 'attitude-run-club';
 }
 
-function inboxPublicUrl(env) {
-  const cloud = env.CLOUDINARY_CLOUD_NAME;
-  const folder = folderOf(env);
-  return `https://res.cloudinary.com/${cloud}/raw/upload/${folder}/inbox.json`;
+function inboxPublicId(env) {
+  return `${folderOf(env)}/inbox`;
 }
 
-async function fetchInbox(env) {
-  const url = inboxPublicUrl(env) + '?t=' + Date.now();
+function inboxPublicUrl(env, version) {
+  const cloud = env.CLOUDINARY_CLOUD_NAME;
+  const id = inboxPublicId(env);
+  const v = version ? `v${version}/` : '';
+  // try both with and without .json (Cloudinary public_id has no extension)
+  return [
+    `https://res.cloudinary.com/${cloud}/raw/upload/${v}${id}`,
+    `https://res.cloudinary.com/${cloud}/raw/upload/${v}${id}.json`,
+  ];
+}
+
+async function parseInboxResponse(res) {
+  if (!res || !res.ok) return null;
+  const text = await res.text();
+  if (!text || !text.trim()) return null;
   try {
-    const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) return { updatedAt: null, items: [] };
-    const data = await res.json();
-    if (!data || !Array.isArray(data.items)) return { updatedAt: null, items: [] };
+    const data = JSON.parse(text);
+    if (!data || !Array.isArray(data.items)) return null;
     return data;
   } catch {
-    return { updatedAt: null, items: [] };
+    return null;
   }
+}
+
+/** Read inbox via public CDN, then Admin API if needed */
+async function fetchInbox(env) {
+  const cloud = env.CLOUDINARY_CLOUD_NAME;
+  const apiKey = env.CLOUDINARY_API_KEY;
+  const apiSecret = env.CLOUDINARY_API_SECRET;
+  const publicId = inboxPublicId(env);
+  const bust = '?t=' + Date.now();
+
+  // 1) Public CDN URLs
+  for (const base of inboxPublicUrl(env)) {
+    try {
+      const res = await fetch(base + bust, {
+        headers: { Accept: 'application/json,text/plain,*/*' },
+        cf: { cacheTtl: 0, cacheEverything: false },
+      });
+      const data = await parseInboxResponse(res);
+      if (data) return data;
+    } catch (_) {
+      /* try next */
+    }
+  }
+
+  // 2) Admin API → secure_url (works even if CDN path is odd)
+  if (cloud && apiKey && apiSecret) {
+    try {
+      const auth = btoa(`${apiKey}:${apiSecret}`);
+      const metaUrl =
+        `https://api.cloudinary.com/v1_1/${cloud}/resources/raw/upload/` +
+        encodeURIComponent(publicId);
+      const metaRes = await fetch(metaUrl, {
+        headers: { Authorization: 'Basic ' + auth },
+      });
+      if (metaRes.ok) {
+        const meta = await metaRes.json().catch(() => null);
+        const secure = meta?.secure_url || meta?.url;
+        if (secure) {
+          const res = await fetch(secure + (secure.includes('?') ? '&' : '?') + 't=' + Date.now(), {
+            cf: { cacheTtl: 0, cacheEverything: false },
+          });
+          const data = await parseInboxResponse(res);
+          if (data) return data;
+        }
+      }
+      // also try public_id with .json
+      const metaUrlJson =
+        `https://api.cloudinary.com/v1_1/${cloud}/resources/raw/upload/` +
+        encodeURIComponent(publicId + '.json');
+      const metaRes2 = await fetch(metaUrlJson, {
+        headers: { Authorization: 'Basic ' + auth },
+      });
+      if (metaRes2.ok) {
+        const meta = await metaRes2.json().catch(() => null);
+        const secure = meta?.secure_url || meta?.url;
+        if (secure) {
+          const res = await fetch(secure + (secure.includes('?') ? '&' : '?') + 't=' + Date.now(), {
+            cf: { cacheTtl: 0, cacheEverything: false },
+          });
+          const data = await parseInboxResponse(res);
+          if (data) return data;
+        }
+      }
+    } catch (_) {
+      /* fall through */
+    }
+  }
+
+  return { updatedAt: null, items: [] };
 }
 
 async function uploadRawJson(env, publicId, payload) {
@@ -60,14 +138,22 @@ async function uploadRawJson(env, publicId, payload) {
   }
 
   const timestamp = Math.floor(Date.now() / 1000);
-  const paramsToSign = `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
+  // All params except file/api_key/resource_type must be signed (alphabetical)
+  const paramsToSign =
+    `invalidate=true&overwrite=true&public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
   const signature = await sha1Hex(paramsToSign);
 
   const form = new FormData();
-  form.append('file', new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }), 'data.json');
+  form.append(
+    'file',
+    new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }),
+    'inbox.json'
+  );
   form.append('api_key', apiKey);
   form.append('timestamp', String(timestamp));
   form.append('public_id', publicId);
+  form.append('overwrite', 'true');
+  form.append('invalidate', 'true');
   form.append('signature', signature);
 
   const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`;
@@ -199,9 +285,14 @@ async function handleSubmit(request, env) {
       updatedAt: new Date().toISOString(),
       items: trimmed,
     };
-    const publicId = `${folderOf(env)}/inbox`;
-    await uploadRawJson(env, publicId, payload);
-    return json({ ok: true, id: entry.id, createdAt: entry.createdAt });
+    const cloudJson = await uploadRawJson(env, inboxPublicId(env), payload);
+    return json({
+      ok: true,
+      id: entry.id,
+      createdAt: entry.createdAt,
+      url: cloudJson.secure_url || cloudJson.url || null,
+      count: trimmed.length,
+    });
   } catch (err) {
     return json({ ok: false, error: err.message || String(err) }, 502);
   }
@@ -228,6 +319,7 @@ async function handleInbox(request, env) {
       ok: true,
       updatedAt: inbox.updatedAt,
       items: inbox.items || [],
+      count: (inbox.items || []).length,
     });
   }
 
@@ -249,7 +341,7 @@ async function handleInbox(request, env) {
     }
     if (!found) return json({ ok: false, error: 'Não encontrado' }, 404);
     const payload = { updatedAt: new Date().toISOString(), items };
-    await uploadRawJson(env, `${folderOf(env)}/inbox`, payload);
+    await uploadRawJson(env, inboxPublicId(env), payload);
     return json({ ok: true, id, status });
   }
 
@@ -259,7 +351,7 @@ async function handleInbox(request, env) {
     const inbox = await fetchInbox(env);
     const items = (Array.isArray(inbox.items) ? inbox.items : []).filter((it) => it.id !== id);
     const payload = { updatedAt: new Date().toISOString(), items };
-    await uploadRawJson(env, `${folderOf(env)}/inbox`, payload);
+    await uploadRawJson(env, inboxPublicId(env), payload);
     return json({ ok: true, id });
   }
 
