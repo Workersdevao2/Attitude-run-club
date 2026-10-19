@@ -49,16 +49,29 @@
     localStorage.removeItem(LS.auth);
   }
   function showApp() {
-    if (loginScreen) loginScreen.hidden = true;
-    if (adminApp) adminApp.hidden = false;
+    if (loginScreen) {
+      loginScreen.hidden = true;
+      loginScreen.setAttribute('hidden', '');
+    }
+    if (adminApp) {
+      adminApp.hidden = false;
+      adminApp.removeAttribute('hidden');
+    }
     document.body.classList.remove('no-sticky-pad');
     loadAll();
     renderAll();
   }
   function showLogin() {
-    if (loginScreen) loginScreen.hidden = false;
-    if (adminApp) adminApp.hidden = true;
+    if (loginScreen) {
+      loginScreen.hidden = false;
+      loginScreen.removeAttribute('hidden');
+    }
+    if (adminApp) {
+      adminApp.hidden = true;
+      adminApp.setAttribute('hidden', '');
+    }
     document.body.classList.add('no-sticky-pad');
+    if (passwordInput) passwordInput.value = '';
   }
 
   if (loginForm) {

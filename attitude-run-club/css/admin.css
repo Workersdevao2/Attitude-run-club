@@ -31,14 +31,27 @@ body {
 }
 body.no-sticky-pad { padding-bottom: 0; }
 
+/* Ensure hidden always wins (login + app toggle) */
+#adminApp[hidden],
+#loginScreen[hidden] {
+  display: none !important;
+}
+
 /* ── Login ── */
 .login-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
   min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
   padding-top: calc(24px + var(--safe-t));
+  background: var(--bg);
+}
+.login-wrap[hidden] {
+  display: none !important;
 }
 .login-card {
   width: 100%;
