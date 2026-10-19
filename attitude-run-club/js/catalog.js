@@ -129,12 +129,21 @@
       .map((p, i) => {
         const name = lang === 'en' ? (p.name_en || p.name_pt) : (p.name_pt || p.name_en);
         const desc = lang === 'en' ? (p.desc_en || p.desc_pt) : (p.desc_pt || p.desc_en);
-        let img = p.image || '';
+        let img = (p.image || '').trim();
         if (img && !/^https?:\/\//i.test(img) && !img.startsWith(prefix) && !img.startsWith('/')) {
           // normalize images/… relative to site root
           if (img.startsWith('images/')) img = prefix + img;
           else if (img.startsWith('../images/')) img = img;
           else img = prefix + 'images/' + img.replace(/^.*\//, '');
+        }
+        // Avoid empty src — Safari can blow out layout on broken/empty images
+        if (!img) {
+          img = 'data:image/svg+xml,' + encodeURIComponent(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">' +
+            '<rect fill="%23111111" width="400" height="400"/>' +
+            '<text x="200" y="205" text-anchor="middle" fill="%23555555" font-family="system-ui,sans-serif" font-size="14">Attitude</text>' +
+            '</svg>'
+          );
         }
         const sizes = (p.sizes && p.sizes.length) ? p.sizes : ['A confirmar'];
         const sizeOpts = sizes
@@ -146,7 +155,7 @@
         return `
       <article class="product-card" data-id="${esc(p.id)}" data-name-pt="${esc(p.name_pt || '')}" data-name-en="${esc(p.name_en || '')}" data-price="${Number(p.price) || 0}">
         <div class="product-img-wrap">
-          <img src="${esc(img)}" alt="${esc(name)}" loading="lazy">
+          <img src="${esc(img)}" alt="${esc(name)}" loading="lazy" decoding="async" width="400" height="400">
         </div>
         <div class="product-body">
           <h3 class="product-name">${esc(name)}</h3>
