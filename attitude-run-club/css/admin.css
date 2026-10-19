@@ -40,10 +40,6 @@ body.no-sticky-pad { padding-bottom: 0; }
   padding: 24px;
   padding-top: calc(24px + var(--safe-t));
 }
-.login-wrap[hidden],
-#adminApp[hidden] {
-  display: none !important;
-}
 .login-card {
   width: 100%;
   max-width: 380px;

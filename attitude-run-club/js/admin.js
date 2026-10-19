@@ -49,27 +49,15 @@
     localStorage.removeItem(LS.auth);
   }
   function showApp() {
-    if (loginScreen) {
-      loginScreen.hidden = true;
-      loginScreen.style.display = 'none';
-    }
-    if (adminApp) {
-      adminApp.hidden = false;
-      adminApp.style.display = '';
-    }
+    if (loginScreen) loginScreen.hidden = true;
+    if (adminApp) adminApp.hidden = false;
     document.body.classList.remove('no-sticky-pad');
     loadAll();
     renderAll();
   }
   function showLogin() {
-    if (loginScreen) {
-      loginScreen.hidden = false;
-      loginScreen.style.display = '';
-    }
-    if (adminApp) {
-      adminApp.hidden = true;
-      adminApp.style.display = 'none';
-    }
+    if (loginScreen) loginScreen.hidden = false;
+    if (adminApp) adminApp.hidden = true;
     document.body.classList.add('no-sticky-pad');
   }
 
@@ -464,60 +452,83 @@
     uploadZone.addEventListener('drop', async (e) => {
       e.preventDefault();
       uploadZone.classList.remove('dragover');
-      const files = [...(e.dataTransfer?.files || [])];
+      const files = [...(e.dataTransfer?.files || [])].filter((f) => f.type.startsWith('image/'));
       for (const file of files) {
-        if (!file.type.startsWith('image/')) continue;
         const url = await uploadToCloudinary(file);
-        if (!url) continue;
-        media.unshift({ url, at: new Date().toISOString() });
-        saveJSON(LS.media, media);
+        if (url) {
+          media.unshift({ url, at: new Date().toISOString() });
+          saveJSON(LS.media, media);
+        }
       }
       renderMedia();
-      if (files.length) toast('Upload concluído', 'ok');
     });
   }
 
   function openMediaPicker(type, key) {
     pickerTarget = type === 'slot' ? { type: 'slot', key } : { type: 'product' };
     const grid = $('#pickerGrid');
-    if (!grid) return;
-    grid.innerHTML = media.map((m, i) => `
-      <div class="media-item" data-pick="${i}">
-        <img src="${esc(m.url)}" alt="" loading="lazy">
-      </div>
-    `).join('') || '<p style="color:var(--muted)">Sem imagens na biblioteca.</p>';
-    grid.querySelectorAll('[data-pick]').forEach((el) => {
-      el.addEventListener('click', () => {
-        const url = media[parseInt(el.dataset.pick, 10)]?.url;
-        if (!url) return;
-        if (pickerTarget?.type === 'product') {
-          $('#f_image').value = url;
-          $('#f_image_preview').src = url;
-        } else if (pickerTarget?.type === 'slot' && pickerTarget.key) {
-          images[pickerTarget.key] = url;
-          renderSlots();
-        }
-        closeModal('mediaPickerModal');
-        pickerTarget = null;
+    if (grid) {
+      grid.innerHTML = media.map((m, i) => `
+        <div class="media-item" data-pick="${i}">
+          <img src="${esc(m.url)}" alt="">
+        </div>
+      `).join('') || '<p style="color:var(--muted)">Biblioteca vazia.</p>';
+      grid.querySelectorAll('[data-pick]').forEach((el) => {
+        el.addEventListener('click', () => {
+          const url = media[parseInt(el.dataset.pick, 10)]?.url;
+          if (!url) return;
+          if (pickerTarget?.type === 'product') {
+            $('#f_image').value = url;
+            $('#f_image_preview').src = url;
+          } else if (pickerTarget?.type === 'slot' && pickerTarget.key) {
+            images[pickerTarget.key] = url;
+            renderSlots();
+          }
+          closeModal('pickerModal');
+          pickerTarget = null;
+          toast('Imagem atribuída', 'ok');
+        });
       });
-    });
-    openModal('mediaPickerModal');
+    }
+    openModal('pickerModal');
   }
 
   // ── Publish ─────────────────────────────────────────────────────────────
   function buildCatalog() {
     return {
       updatedAt: new Date().toISOString(),
-      products: products.map((p) => ({ ...p })),
-      zones: zones.map((z) => ({ ...z })),
-      texts: structuredClone(texts),
-      images: structuredClone(images),
+      products: products.filter((p) => p.active !== false),
+      zones,
+      texts,
+      images,
     };
   }
 
   async function publish() {
-    const password = sessionStorage.getItem('arc_publish_pw') || localStorage.getItem('arc_admin_pw') || DEFAULT_ADMIN_PASSWORD;
     const catalog = buildCatalog();
+    const n = catalog.products.length;
+    const z = catalog.zones.length;
+    if (!confirm(`Publicar na loja?\n\n• ${n} produtos\n• ${z} zonas\n• textos + imagens do site\n\nTodos os visitantes verão estas alterações no próximo carregamento.`)) {
+      return;
+    }
+
+    // Always save draft first
+    saveJSON(LS.products, products);
+    saveJSON(LS.zones, zones);
+    saveJSON(LS.texts, texts);
+    saveJSON(LS.images, images);
+
+    const password = sessionStorage.getItem('arc_publish_pw') || localStorage.getItem('arc_admin_pw') || DEFAULT_ADMIN_PASSWORD;
+
+    // Fallback: local signed path if no Worker URL (desktop only — not for shared phones)
+    if (!PUBLISH_URL) {
+      // Store catalog in localStorage as "published" preview for this browser
+      localStorage.setItem('arc_catalog_published', JSON.stringify(catalog));
+      toast('Sem PUBLISH_URL — catálogo guardado só neste browser. Configura o Worker.', 'error');
+      updateStats();
+      return;
+    }
+
     toast('A publicar…');
     try {
       const res = await fetch(PUBLISH_URL, {
@@ -526,8 +537,11 @@
         body: JSON.stringify({ password, catalog }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || data.message || res.statusText);
-      localStorage.setItem('arc_last_publish', catalog.updatedAt);
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || ('HTTP ' + res.status));
+      }
+      localStorage.setItem('arc_catalog_published', JSON.stringify(catalog));
+      localStorage.setItem('arc_last_publish', data.updatedAt || catalog.updatedAt);
       toast('Publicado com sucesso', 'ok');
       updateStats();
     } catch (err) {
@@ -567,10 +581,10 @@
   // ── Utils ───────────────────────────────────────────────────────────────
   function esc(s) {
     return String(s ?? '')
-      .replace(/&/g, '&')
-      .replace(/</g, '<')
-      .replace(/>/g, '>')
-      .replace(/"/g, '"');
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
   function formatKz(n) {
     return (Number(n) || 0).toLocaleString('pt-AO') + ' Kz';
@@ -578,6 +592,7 @@
   function resolveImg(src) {
     if (!src) return '';
     if (/^https?:\/\//i.test(src)) return src;
+    // Admin is at /admin.html — relative paths need no ../ for images/
     if (src.startsWith('images/')) return src;
     if (src.startsWith('../images/')) return src.replace('../', '');
     return src;
