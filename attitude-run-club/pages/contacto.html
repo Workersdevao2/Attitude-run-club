@@ -148,5 +148,80 @@
   </footer>
 
   <script src="../js/main.js"></script>
+  <script>
+  /* Contact → admin inbox (standalone — does not depend on cart code) */
+  (function () {
+    var API = 'https://attitude-run-club-publish.workersdevao.workers.dev/submit';
+    var form = document.getElementById('contactForm');
+    if (!form || form.dataset.bound === '1') return;
+    form.dataset.bound = '1';
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      var name = (document.getElementById('contactName') || {}).value || '';
+      var email = (document.getElementById('contactEmail') || {}).value || '';
+      var phone = (document.getElementById('contactPhone') || {}).value || '';
+      var message = (document.getElementById('contactMsg') || {}).value || '';
+      var statusEl = document.getElementById('contactStatus');
+      var btn = document.getElementById('contactSubmit');
+
+      name = String(name).trim();
+      message = String(message).trim();
+
+      if (!name || !message) {
+        if (statusEl) {
+          statusEl.style.color = '#e74c3c';
+          statusEl.textContent = 'Nome e mensagem são obrigatórios.';
+        }
+        return;
+      }
+
+      if (btn) btn.disabled = true;
+      if (statusEl) {
+        statusEl.style.color = '#9a9a9a';
+        statusEl.textContent = 'A enviar…';
+      }
+
+      fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'contact',
+          source: 'contacto',
+          name: name,
+          email: String(email).trim(),
+          phone: String(phone).trim(),
+          message: message
+        })
+      })
+        .then(function (res) {
+          return res.json().then(function (data) {
+            return { res: res, data: data };
+          });
+        })
+        .then(function (out) {
+          if (!out.res.ok || !out.data || !out.data.ok) {
+            throw new Error((out.data && out.data.error) || 'Falha');
+          }
+          if (statusEl) {
+            statusEl.style.color = '#2ecc71';
+            statusEl.textContent = 'Mensagem enviada. A equipa responde em breve.';
+          }
+          form.reset();
+        })
+        .catch(function (err) {
+          if (statusEl) {
+            statusEl.style.color = '#e74c3c';
+            statusEl.textContent = 'Não foi possível enviar. Tenta de novo ou usa o WhatsApp. (' + (err.message || 'erro') + ')';
+          }
+        })
+        .finally(function () {
+          if (btn) btn.disabled = false;
+        });
+    }, true);
+  })();
+  </script>
 </body>
 </html>

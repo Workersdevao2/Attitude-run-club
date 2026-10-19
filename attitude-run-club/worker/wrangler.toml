@@ -4,11 +4,21 @@ compatibility_date = "2024-09-23"
 workers_dev = true
 preview_urls = true
 
-# Secrets (set via CLI — never commit):
+# ── Inbox KV (highly recommended) ──────────────────────────────────────────
+# Without this, inbox uses Cloudinary and can lose messages (CDN lag).
+#
+# Run once:
+#   npx wrangler kv namespace create INBOX
+#   npx wrangler kv namespace create INBOX --preview
+# Uncomment and paste IDs:
+#
+# [[kv_namespaces]]
+# binding = "INBOX"
+# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+# preview_id = "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+
+# Secrets (CLI — never commit):
 #   npx wrangler secret put ADMIN_PASSWORD
 #   npx wrangler secret put CLOUDINARY_CLOUD_NAME
 #   npx wrangler secret put CLOUDINARY_API_KEY
 #   npx wrangler secret put CLOUDINARY_API_SECRET
-#
-# Optional vars (or hardcode folder in Worker):
-#   CLOUDINARY_FOLDER = "attitude-run-club"
