@@ -58,13 +58,19 @@
 
     <nav class="admin-nav" aria-label="Secções">
       <button type="button" data-panel="dashboard" class="active">Painel</button>
-      <button type="button" data-panel="inbox">Pedidos</button>
+      <button type="button" data-panel="inbox">Pedidos <span class="nav-badge" id="navInboxBadge" hidden>0</span></button>
       <button type="button" data-panel="products">Produtos</button>
       <button type="button" data-panel="zones">Zonas</button>
       <button type="button" data-panel="texts">Textos</button>
       <button type="button" data-panel="images">Imagens</button>
       <button type="button" data-panel="media">Média</button>
     </nav>
+
+    <div class="publish-strip" id="publishStrip" aria-live="polite">
+      <span class="publish-dot" id="publishDot"></span>
+      <span id="publishStripText">A verificar estado…</span>
+      <button type="button" class="btn btn-ghost btn-sm" id="btnUndoDraft" hidden>Desfazer rascunho</button>
+    </div>
 
     <main class="admin-main">
       <!-- DASHBOARD -->
@@ -108,19 +114,64 @@
             <h2>Produtos</h2>
             <p>Catálogo da Attitude Sportwear. Preços em Kz.</p>
           </div>
-          <button type="button" class="btn btn-primary" id="btnAddProduct">+ Produto</button>
+          <div class="panel-head-actions">
+            <button type="button" class="btn btn-ghost btn-sm" id="btnExportCsv" title="Exportar CSV">CSV</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="btnDensity" title="Densidade">Compacto</button>
+            <button type="button" class="btn btn-primary" id="btnAddProduct">+ Produto</button>
+          </div>
         </div>
+
+        <div class="admin-toolbar" id="productToolbar">
+          <div class="admin-search-wrap">
+            <input type="search" id="productSearch" class="admin-search" placeholder="Pesquisar nome ou ID…" autocomplete="off">
+          </div>
+          <select id="productFilterStatus" class="admin-select" aria-label="Estado">
+            <option value="all">Todos os estados</option>
+            <option value="active">Ativos</option>
+            <option value="inactive">Inativos</option>
+            <option value="noimage">Sem foto</option>
+            <option value="soldout">Esgotados</option>
+          </select>
+          <select id="productFilterCat" class="admin-select" aria-label="Categoria">
+            <option value="all">Todas as categorias</option>
+          </select>
+          <span class="admin-filter-count" id="productFilterCount"></span>
+        </div>
+
+        <div class="bulk-bar" id="bulkBar" hidden>
+          <span id="bulkCount">0 selecionados</span>
+          <button type="button" class="btn btn-ghost btn-sm" data-bulk="activate">Ativar</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-bulk="deactivate">Desativar</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-bulk="soldout">Marcar esgotado</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-bulk="unsoldout">Tirar esgotado</button>
+          <select id="bulkCategory" class="admin-select" aria-label="Definir categoria">
+            <option value="">Categoria…</option>
+            <option value="shorts">Shorts</option>
+            <option value="conjuntos">Conjuntos</option>
+            <option value="tops">Tops</option>
+            <option value="bottoms">Calças &amp; Leggings</option>
+            <option value="outerwear">Casacos</option>
+            <option value="acessorios">Acessórios</option>
+            <option value="kids">Kids &amp; Teens</option>
+            <option value="outros">Outros</option>
+          </select>
+          <button type="button" class="btn btn-ghost btn-sm" data-bulk="clear">Limpar</button>
+        </div>
+
         <div class="product-list" id="productList"></div>
         <div class="product-table-wrap">
-          <table class="product-table">
+          <table class="product-table" id="productTable">
             <thead>
               <tr>
+                <th class="col-check"><input type="checkbox" id="selectAllProducts" aria-label="Selecionar todos"></th>
                 <th></th>
                 <th>Nome</th>
+                <th>Cat.</th>
                 <th>Preço</th>
                 <th>Tamanhos</th>
                 <th>Cores</th>
                 <th>Estado</th>
+                <th>Ordem</th>
                 <th></th>
               </tr>
             </thead>
@@ -215,7 +266,11 @@
       </div>
       <div class="field">
         <label>ID (único)</label>
-        <input type="text" id="f_id" placeholder="ex: tank" autocomplete="off">
+        <div class="id-row">
+          <input type="text" id="f_id" placeholder="ex: pala-run-attitude" autocomplete="off">
+          <button type="button" class="btn btn-ghost btn-sm" id="btnCopyId" title="Copiar ID">Copiar</button>
+        </div>
+        <p class="field-hint" id="f_id_hint">Só editável em produtos novos. Usa letras, números e hífen.</p>
       </div>
       <div class="field-row">
         <div class="field">
@@ -262,13 +317,33 @@
           <button type="button" class="btn btn-ghost btn-sm" id="btnPickProductImage">Escolher da média</button>
         </div>
       </div>
-      <div class="field">
-        <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:0.9rem;cursor:pointer;">
-          <input type="checkbox" id="f_active" checked style="width:auto;margin:0;"> Ativo na loja
-        </label>
+      <div class="field-row">
+        <div class="field">
+          <label>Categoria</label>
+          <select id="f_category">
+            <option value="">— Auto (pelo nome) —</option>
+            <option value="shorts">Shorts</option>
+            <option value="conjuntos">Conjuntos</option>
+            <option value="tops">Tops</option>
+            <option value="bottoms">Calças &amp; Leggings</option>
+            <option value="outerwear">Casacos</option>
+            <option value="acessorios">Acessórios</option>
+            <option value="kids">Kids &amp; Teens</option>
+            <option value="outros">Outros</option>
+          </select>
+        </div>
+        <div class="field">
+          <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:0.9rem;cursor:pointer;margin-top:22px;">
+            <input type="checkbox" id="f_active" checked style="width:auto;margin:0;"> Ativo na loja
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:0.9rem;cursor:pointer;margin-top:10px;">
+            <input type="checkbox" id="f_soldout" style="width:auto;margin:0;"> Esgotado
+          </label>
+        </div>
       </div>
       <div class="modal-foot">
         <button type="button" class="btn btn-ghost" data-close-modal="productModal">Cancelar</button>
+        <button type="button" class="btn btn-ghost" id="btnDupProduct" hidden>Duplicar</button>
         <button type="button" class="btn btn-primary" id="btnSaveProduct">Guardar produto</button>
       </div>
     </div>
