@@ -57,7 +57,7 @@ body::before {
   opacity: 0.4;
 }
 
-/* NAV — fixed + safe-area so it does not jump when mobile browser chrome shows/hides */
+/* NAV — fixed + safe-area; JS pins top to visualViewport to stop mobile chrome jump */
 nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -67,17 +67,18 @@ nav {
   align-items: center;
   padding: 20px 48px;
   padding-top: max(20px, env(safe-area-inset-top, 0px));
+  /* Always solid so content never peeks through the bar on light sections */
+  background: rgba(8,8,8,0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   transition: background 0.3s, backdrop-filter 0.3s;
-  /* Own compositing layer — reduces jump when address bar collapses */
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 nav.scrolled {
-  background: rgba(8,8,8,0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(8,8,8,0.98);
 }
 .nav-logo {
   font-family: var(--font-display);

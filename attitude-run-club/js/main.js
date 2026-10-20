@@ -53,16 +53,31 @@ function observeReveals(root) {
 observeReveals(document);
 window.observeReveals = observeReveals;
 
-// Nav scroll effect
+// Nav scroll effect + lock to visual viewport (fixes mobile address-bar jump/gap)
 const nav = document.querySelector('nav');
 if (nav) {
-  window.addEventListener('scroll', () => {
+  const updateNavScroll = () => {
     if (window.scrollY > 60) {
       nav.classList.add('scrolled');
     } else {
       nav.classList.remove('scrolled');
     }
-  });
+  };
+  window.addEventListener('scroll', updateNavScroll, { passive: true });
+  updateNavScroll();
+
+  // iOS/Android: keep fixed nav glued to the top of the *visible* viewport
+  // when the browser chrome shows/hides (prevents gap + content peeking above header)
+  const pinNavToVisualViewport = () => {
+    if (!window.visualViewport) return;
+    const offset = window.visualViewport.offsetTop || 0;
+    nav.style.top = offset + 'px';
+  };
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', pinNavToVisualViewport);
+    window.visualViewport.addEventListener('scroll', pinNavToVisualViewport);
+    pinNavToVisualViewport();
+  }
 }
 
 // ─── FULL PT / EN TRANSLATIONS ───────────────────────────────────────────────
