@@ -372,6 +372,22 @@ const translations = {
     'loja.panel.title': 'Carrinho',
     'loja.panel.checkout': 'Ir para checkout',
     'loja.panel.continue': 'Continuar a comprar',
+    'loja.loading': 'A carregar produtos…',
+    'loja.search.ph': 'Pesquisar produtos…',
+    'loja.sort.label': 'Ordenar',
+    'loja.sort.order': 'Destaque',
+    'loja.sort.priceAsc': 'Preço ↑',
+    'loja.sort.priceDesc': 'Preço ↓',
+    'loja.sort.nameAsc': 'Nome A–Z',
+    'loja.sort.nameDesc': 'Nome Z–A',
+    'loja.clear': 'Limpar filtros',
+    'loja.loadMore': 'Carregar mais',
+    'loja.quick': 'Vista rápida',
+    'loja.empty.title': 'Nenhum produto encontrado',
+    'loja.empty.sub': 'Tenta outra pesquisa ou limpa os filtros.',
+    'loja.results': '{n} produtos',
+    'loja.resultsOne': '1 produto',
+    'loja.resultsFiltered': '{shown} de {total}',
     'checkout.title': 'Finaliza<br>o pedido.',
     'checkout.sub': 'Revisa os produtos e envia a encomenda pelo WhatsApp. Confirmamos stock, tamanho e pagamento contigo.',
     'checkout.back': '← Voltar à loja'
@@ -666,6 +682,22 @@ const translations = {
     'loja.panel.title': 'Cart',
     'loja.panel.checkout': 'Go to checkout',
     'loja.panel.continue': 'Continue shopping',
+    'loja.loading': 'Loading products…',
+    'loja.search.ph': 'Search products…',
+    'loja.sort.label': 'Sort',
+    'loja.sort.order': 'Featured',
+    'loja.sort.priceAsc': 'Price ↑',
+    'loja.sort.priceDesc': 'Price ↓',
+    'loja.sort.nameAsc': 'Name A–Z',
+    'loja.sort.nameDesc': 'Name Z–A',
+    'loja.clear': 'Clear filters',
+    'loja.loadMore': 'Load more',
+    'loja.quick': 'Quick view',
+    'loja.empty.title': 'No products found',
+    'loja.empty.sub': 'Try another search or clear the filters.',
+    'loja.results': '{n} products',
+    'loja.resultsOne': '1 product',
+    'loja.resultsFiltered': '{shown} of {total}',
     'checkout.title': 'Complete<br>your order.',
     'checkout.sub': 'Review your products and send the order via WhatsApp. We confirm stock, size and payment with you.',
     'checkout.back': '← Back to shop'
@@ -1167,7 +1199,7 @@ if (hamburger && mobileMenu) {
     updateMobileBar();
   }
 
-  // Bind quantity steppers + add-to-cart on product cards (supports dynamic catalog render)
+  // Bind quantity steppers + add-to-cart + colour swatches on product cards
   function bindShopCards() {
     if (!isShop || !grid) return;
 
@@ -1186,6 +1218,39 @@ if (hamburger && mobileMenu) {
 
       if (minus) minus.addEventListener('click', () => setQty(parseInt(input.value, 10) - 1));
       if (plus) plus.addEventListener('click', () => setQty(parseInt(input.value, 10) + 1));
+    });
+
+    // Colour swatches → hidden select
+    grid.querySelectorAll('.color-swatches').forEach(wrap => {
+      if (wrap.dataset.bound === '1') return;
+      wrap.dataset.bound = '1';
+      const card = wrap.closest('.product-card');
+      const select = card ? card.querySelector('.product-color') : null;
+      wrap.querySelectorAll('.color-swatch').forEach(btn => {
+        btn.addEventListener('click', () => {
+          wrap.querySelectorAll('.color-swatch').forEach(b => {
+            b.classList.remove('is-active');
+            b.setAttribute('aria-pressed', 'false');
+          });
+          btn.classList.add('is-active');
+          btn.setAttribute('aria-pressed', 'true');
+          if (select) select.value = btn.dataset.color || '';
+        });
+      });
+    });
+
+    // Quick view buttons
+    grid.querySelectorAll('.product-quick-btn').forEach(btn => {
+      if (btn.dataset.bound === '1') return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const id = btn.getAttribute('data-quick');
+        if (window.ARCShop && typeof ARCShop.openQuickView === 'function') {
+          ARCShop.openQuickView(id);
+        }
+      });
     });
 
     grid.querySelectorAll('.product-card').forEach(card => {
@@ -1236,6 +1301,53 @@ if (hamburger && mobileMenu) {
       });
     });
   }
+
+  // Expose add-to-cart helper for quick view
+  window.ARCCartAdd = function (item) {
+    if (!item || !item.id) return;
+    cart = loadCart();
+    const existing = cart.find(
+      (c) => c.id === item.id && c.size === item.size && (c.color || '') === (item.color || '')
+    );
+    if (existing) {
+      existing.qty = Math.min(MAX_QTY, existing.qty + (item.qty || 1));
+      if (!existing.image && item.image) existing.image = item.image;
+    } else {
+      cart.push({
+        id: item.id,
+        name: item.name,
+        size: item.size || '—',
+        color: item.color || '',
+        qty: Math.min(MAX_QTY, item.qty || 1),
+        price: item.price || 0,
+        image: item.image || '',
+      });
+    }
+    saveCart(cart);
+    renderAll();
+    openPanel();
+  };
+
+  // Toolbar cart badge + open
+  function updateShopBadge() {
+    const badge = document.getElementById('shopCartBadge');
+    const n = cartQty();
+    if (badge) {
+      if (n > 0) {
+        badge.hidden = false;
+        badge.textContent = String(n);
+      } else {
+        badge.hidden = true;
+      }
+    }
+  }
+  const _renderAll = renderAll;
+  renderAll = function () {
+    _renderAll();
+    updateShopBadge();
+  };
+  const toolbarCart = document.getElementById('shopToolbarCart');
+  if (toolbarCart) toolbarCart.addEventListener('click', openPanel);
 
   if (isShop) {
     bindShopCards();
@@ -1385,3 +1497,385 @@ if (hamburger && mobileMenu) {
 
   renderAll();
 })();
+
+// ─── SHOP: search, chips, sort, load more, quick view ───────────────────────
+(function (global) {
+  'use strict';
+
+  const PAGE_SIZE = 12;
+  let allProducts = [];
+  let pathPrefix = '../';
+  let filtered = [];
+  let visibleCount = PAGE_SIZE;
+  let state = { q: '', cat: 'all', sort: 'order' };
+  let qvProduct = null;
+
+  function t(key, fallback) {
+    const lang = global.currentLang || 'pt';
+    const dict = global.translations && global.translations[lang];
+    return (dict && dict[key]) || fallback || key;
+  }
+
+  function catLabel(key) {
+    const meta = (global.ARCCatalog && ARCCatalog.CATEGORY_META) || {};
+    const m = meta[key];
+    if (!m) return key;
+    return (global.currentLang === 'en' ? m.en : m.pt) || key;
+  }
+
+  function normalize(s) {
+    return String(s || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function getFiltered() {
+    let list = allProducts.slice();
+    const q = normalize(state.q).trim();
+    if (q) {
+      list = list.filter((p) => {
+        const blob = normalize(
+          [p.name_pt, p.name_en, p.desc_pt, p.desc_en, p.id].filter(Boolean).join(' ')
+        );
+        return blob.includes(q);
+      });
+    }
+    if (state.cat && state.cat !== 'all') {
+      list = list.filter((p) => {
+        const c = p.category || (ARCCatalog && ARCCatalog.inferCategory(p)) || 'outros';
+        return c === state.cat;
+      });
+    }
+    const lang = global.currentLang || 'pt';
+    list.sort((a, b) => {
+      switch (state.sort) {
+        case 'price-asc':
+          return (a.price || 0) - (b.price || 0);
+        case 'price-desc':
+          return (b.price || 0) - (a.price || 0);
+        case 'name-asc': {
+          const na = lang === 'en' ? a.name_en || a.name_pt : a.name_pt || a.name_en;
+          const nb = lang === 'en' ? b.name_en || b.name_pt : b.name_pt || b.name_en;
+          return String(na).localeCompare(String(nb), lang === 'en' ? 'en' : 'pt');
+        }
+        case 'name-desc': {
+          const na = lang === 'en' ? a.name_en || a.name_pt : a.name_pt || a.name_en;
+          const nb = lang === 'en' ? b.name_en || b.name_pt : b.name_pt || b.name_en;
+          return String(nb).localeCompare(String(na), lang === 'en' ? 'en' : 'pt');
+        }
+        default:
+          return (a.order || 0) - (b.order || 0);
+      }
+    });
+    return list;
+  }
+
+  function buildChips() {
+    const el = document.getElementById('shopChips');
+    if (!el) return;
+    const counts = {};
+    allProducts.forEach((p) => {
+      const c = p.category || (ARCCatalog && ARCCatalog.inferCategory(p)) || 'outros';
+      counts[c] = (counts[c] || 0) + 1;
+    });
+    const order = ['all', 'shorts', 'conjuntos', 'tops', 'bottoms', 'outerwear', 'acessorios', 'kids', 'outros'];
+    const keys = order.filter((k) => k === 'all' || counts[k]);
+    el.innerHTML = keys
+      .map((k) => {
+        const n = k === 'all' ? allProducts.length : counts[k] || 0;
+        const active = state.cat === k ? ' is-active' : '';
+        return `<button type="button" class="shop-chip${active}" data-cat="${k}" role="tab" aria-selected="${state.cat === k}">${catLabel(k)} <span class="shop-chip-n">${n}</span></button>`;
+      })
+      .join('');
+    el.querySelectorAll('.shop-chip').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.cat = btn.getAttribute('data-cat') || 'all';
+        visibleCount = PAGE_SIZE;
+        render();
+      });
+    });
+  }
+
+  function updateMeta() {
+    const results = document.getElementById('shopResults');
+    const clearBtn = document.getElementById('shopClear');
+    const empty = document.getElementById('shopEmpty');
+    const loadWrap = document.getElementById('shopLoadMoreWrap');
+    const total = filtered.length;
+    const shown = Math.min(visibleCount, total);
+    const hasFilter = !!(state.q.trim() || (state.cat && state.cat !== 'all'));
+
+    if (results) {
+      if (total === 0) {
+        results.textContent = '';
+      } else if (shown < total) {
+        results.textContent = t('loja.resultsFiltered', '{shown} de {total}')
+          .replace('{shown}', String(shown))
+          .replace('{total}', String(total));
+      } else if (total === 1) {
+        results.textContent = t('loja.resultsOne', '1 produto');
+      } else {
+        results.textContent = t('loja.results', '{n} produtos').replace('{n}', String(total));
+      }
+    }
+    if (clearBtn) clearBtn.hidden = !hasFilter;
+    if (empty) empty.hidden = total > 0;
+    if (loadWrap) loadWrap.hidden = shown >= total || total === 0;
+
+    // search placeholder i18n
+    const search = document.getElementById('shopSearch');
+    if (search) search.placeholder = t('loja.search.ph', 'Pesquisar produtos…');
+  }
+
+  function render() {
+    filtered = getFiltered();
+    buildChips();
+    const slice = filtered.slice(0, visibleCount);
+    const grid = document.getElementById('productsGrid');
+    if (grid && ARCCatalog) {
+      if (slice.length === 0) {
+        grid.innerHTML = '';
+      } else {
+        ARCCatalog.renderProductGrid(slice, pathPrefix);
+      }
+    }
+    updateMeta();
+  }
+
+  function clearFilters() {
+    state.q = '';
+    state.cat = 'all';
+    state.sort = 'order';
+    visibleCount = PAGE_SIZE;
+    const search = document.getElementById('shopSearch');
+    const sort = document.getElementById('shopSort');
+    if (search) search.value = '';
+    if (sort) sort.value = 'order';
+    render();
+  }
+
+  function openQuickView(id) {
+    const p = allProducts.find((x) => x.id === id);
+    if (!p) return;
+    qvProduct = p;
+    const lang = global.currentLang || 'pt';
+    const name = lang === 'en' ? p.name_en || p.name_pt : p.name_pt || p.name_en;
+    const desc = lang === 'en' ? p.desc_en || p.desc_pt : p.desc_pt || p.desc_en;
+    const cat = p.category || (ARCCatalog && ARCCatalog.inferCategory(p)) || '';
+    const modal = document.getElementById('qvModal');
+    const overlay = document.getElementById('qvOverlay');
+    const img = document.getElementById('qvImg');
+    const nameEl = document.getElementById('qvName');
+    const descEl = document.getElementById('qvDesc');
+    const priceEl = document.getElementById('qvPrice');
+    const catEl = document.getElementById('qvCat');
+    const sizeEl = document.getElementById('qvSize');
+    const colorEl = document.getElementById('qvColor');
+    const swatchesEl = document.getElementById('qvSwatches');
+    const qtyEl = document.getElementById('qvQty');
+
+    if (img) {
+      let src = (p.image || '').trim();
+      if (!src) {
+        src =
+          'data:image/svg+xml,' +
+          encodeURIComponent(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600"><rect fill="%23111111" width="600" height="600"/></svg>'
+          );
+      } else if (!/^https?:\/\//i.test(src) && !src.startsWith(pathPrefix) && !src.startsWith('/')) {
+        if (src.startsWith('images/')) src = pathPrefix + src;
+        else src = pathPrefix + 'images/' + src.replace(/^.*\//, '');
+      }
+      img.src = src;
+      img.alt = name || '';
+    }
+    if (nameEl) nameEl.textContent = name || '';
+    if (descEl) descEl.textContent = desc || '';
+    if (priceEl)
+      priceEl.innerHTML =
+        (Number(p.price) || 0).toLocaleString('pt-AO') + ' <span>Kz</span>';
+    if (catEl) catEl.textContent = cat ? catLabel(cat) : '';
+
+    const sizes = p.sizes && p.sizes.length ? p.sizes : ['Único'];
+    if (sizeEl) {
+      sizeEl.innerHTML = sizes
+        .map((s, i) => `<option value="${s}"${i === 0 ? ' selected' : ''}>${s}</option>`)
+        .join('');
+    }
+    const colors = p.colors && p.colors.length ? p.colors : [];
+    if (colorEl) {
+      colorEl.innerHTML = colors.length
+        ? colors
+            .map((c, i) => `<option value="${c}"${i === 0 ? ' selected' : ''}>${c}</option>`)
+            .join('')
+        : '<option value="">—</option>';
+    }
+    if (swatchesEl) {
+      if (colors.length && ARCCatalog) {
+        swatchesEl.innerHTML = colors
+          .map((c, ci) => {
+            const hex = ARCCatalog.colorHex(c);
+            const light = ['#f2f2f2', '#e8e4dc', '#a8a8a8', '#c4b09a', '#c9a227'].includes(hex);
+            return `<button type="button" class="color-swatch${ci === 0 ? ' is-active' : ''}${light ? ' is-light' : ''}" data-color="${c}" title="${c}" style="--swatch:${hex}" aria-pressed="${ci === 0}"></button>`;
+          })
+          .join('');
+        swatchesEl.querySelectorAll('.color-swatch').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            swatchesEl.querySelectorAll('.color-swatch').forEach((b) => {
+              b.classList.remove('is-active');
+              b.setAttribute('aria-pressed', 'false');
+            });
+            btn.classList.add('is-active');
+            btn.setAttribute('aria-pressed', 'true');
+            if (colorEl) colorEl.value = btn.dataset.color || '';
+          });
+        });
+      } else {
+        swatchesEl.innerHTML = '';
+      }
+    }
+    if (qtyEl) qtyEl.value = '1';
+
+    if (modal) {
+      modal.hidden = false;
+      modal.classList.add('open');
+    }
+    if (overlay) {
+      overlay.hidden = false;
+      overlay.classList.add('open');
+    }
+    document.body.classList.add('qv-open');
+  }
+
+  function closeQuickView() {
+    const modal = document.getElementById('qvModal');
+    const overlay = document.getElementById('qvOverlay');
+    if (modal) {
+      modal.classList.remove('open');
+      modal.hidden = true;
+    }
+    if (overlay) {
+      overlay.classList.remove('open');
+      overlay.hidden = true;
+    }
+    document.body.classList.remove('qv-open');
+    qvProduct = null;
+  }
+
+  function init(products, prefix) {
+    allProducts = (products || []).map((p) => ({
+      ...p,
+      category: p.category || (ARCCatalog && ARCCatalog.inferCategory(p)) || 'outros',
+    }));
+    pathPrefix = prefix != null ? prefix : '../';
+    visibleCount = PAGE_SIZE;
+    state = { q: '', cat: 'all', sort: 'order' };
+
+    const search = document.getElementById('shopSearch');
+    const sort = document.getElementById('shopSort');
+    const clearBtn = document.getElementById('shopClear');
+    const emptyClear = document.getElementById('shopEmptyClear');
+    const loadMore = document.getElementById('shopLoadMore');
+
+    if (search) {
+      let timer;
+      search.addEventListener('input', () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          state.q = search.value || '';
+          visibleCount = PAGE_SIZE;
+          render();
+        }, 180);
+      });
+    }
+    if (sort) {
+      sort.addEventListener('change', () => {
+        state.sort = sort.value || 'order';
+        visibleCount = PAGE_SIZE;
+        render();
+      });
+    }
+    if (clearBtn) clearBtn.addEventListener('click', clearFilters);
+    if (emptyClear) emptyClear.addEventListener('click', clearFilters);
+    if (loadMore) {
+      loadMore.addEventListener('click', () => {
+        visibleCount += PAGE_SIZE;
+        render();
+      });
+    }
+
+    // Quick view controls
+    const qvClose = document.getElementById('qvClose');
+    const qvOverlay = document.getElementById('qvOverlay');
+    const qvMinus = document.getElementById('qvMinus');
+    const qvPlus = document.getElementById('qvPlus');
+    const qvQty = document.getElementById('qvQty');
+    const qvAdd = document.getElementById('qvAdd');
+    if (qvClose) qvClose.addEventListener('click', closeQuickView);
+    if (qvOverlay) qvOverlay.addEventListener('click', closeQuickView);
+    if (qvMinus && qvQty) {
+      qvMinus.addEventListener('click', () => {
+        qvQty.value = String(Math.max(1, (parseInt(qvQty.value, 10) || 1) - 1));
+      });
+    }
+    if (qvPlus && qvQty) {
+      qvPlus.addEventListener('click', () => {
+        qvQty.value = String(Math.min(99, (parseInt(qvQty.value, 10) || 1) + 1));
+      });
+    }
+    if (qvAdd) {
+      qvAdd.addEventListener('click', () => {
+        if (!qvProduct) return;
+        const lang = global.currentLang || 'pt';
+        const name =
+          lang === 'en'
+            ? qvProduct.name_en || qvProduct.name_pt
+            : qvProduct.name_pt || qvProduct.name_en;
+        const sizeEl = document.getElementById('qvSize');
+        const colorEl = document.getElementById('qvColor');
+        const qtyEl = document.getElementById('qvQty');
+        const imgEl = document.getElementById('qvImg');
+        if (typeof global.ARCCartAdd === 'function') {
+          global.ARCCartAdd({
+            id: qvProduct.id,
+            name: name,
+            size: sizeEl ? sizeEl.value : '—',
+            color: colorEl && colorEl.value ? colorEl.value : '',
+            qty: qtyEl ? parseInt(qtyEl.value, 10) || 1 : 1,
+            price: Number(qvProduct.price) || 0,
+            image: imgEl ? imgEl.src : '',
+          });
+        }
+        closeQuickView();
+      });
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeQuickView();
+    });
+
+    // Re-render labels on language change
+    const prevSet = global.setLanguage;
+    if (typeof prevSet === 'function') {
+      global.setLanguage = function (lang) {
+        prevSet(lang);
+        if (allProducts.length) {
+          buildChips();
+          updateMeta();
+          // re-render cards so names flip language
+          const slice = getFiltered().slice(0, visibleCount);
+          if (ARCCatalog) ARCCatalog.renderProductGrid(slice, pathPrefix);
+        }
+      };
+    }
+
+    render();
+  }
+
+  global.ARCShop = {
+    init,
+    openQuickView,
+    closeQuickView,
+    clearFilters,
+  };
+})(typeof window !== 'undefined' ? window : globalThis);

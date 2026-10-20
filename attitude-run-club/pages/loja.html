@@ -66,10 +66,50 @@
     <p class="page-hero-sub reveal reveal-delay-2" data-i18n="loja.sub">Peças oficiais de performance. Encomenda via WhatsApp — confirmamos stock, tamanho e pagamento contigo.</p>
   </section>
 
-  <!-- PRODUCTS (rendered from live catalog / defaults via catalog.js) -->
+  <!-- Shop toolbar: search, categories, sort -->
+  <div class="shop-toolbar" id="shopToolbar">
+    <div class="shop-toolbar-inner">
+      <div class="shop-search-wrap">
+        <svg class="shop-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+        </svg>
+        <input type="search" id="shopSearch" class="shop-search" placeholder="Pesquisar produtos…" autocomplete="off" enterkeyhint="search">
+      </div>
+      <div class="shop-sort-wrap">
+        <label class="shop-sort-label" for="shopSort" data-i18n="loja.sort.label">Ordenar</label>
+        <select id="shopSort" class="shop-sort" aria-label="Ordenar">
+          <option value="order" data-i18n="loja.sort.order">Destaque</option>
+          <option value="price-asc" data-i18n="loja.sort.priceAsc">Preço ↑</option>
+          <option value="price-desc" data-i18n="loja.sort.priceDesc">Preço ↓</option>
+          <option value="name-asc" data-i18n="loja.sort.nameAsc">Nome A–Z</option>
+          <option value="name-desc" data-i18n="loja.sort.nameDesc">Nome Z–A</option>
+        </select>
+      </div>
+      <button type="button" class="shop-cart-btn" id="shopToolbarCart" aria-label="Carrinho">
+        <span data-i18n="loja.panel.title">Carrinho</span>
+        <span class="shop-cart-badge" id="shopCartBadge" hidden>0</span>
+      </button>
+    </div>
+    <div class="shop-chips" id="shopChips" role="tablist" aria-label="Categorias"></div>
+    <div class="shop-meta-row">
+      <p class="shop-results" id="shopResults" aria-live="polite"></p>
+      <button type="button" class="shop-clear" id="shopClear" hidden data-i18n="loja.clear">Limpar filtros</button>
+    </div>
+  </div>
+
   <section class="loja-section">
     <div class="products-grid" id="productsGrid">
       <p class="products-loading" style="grid-column:1/-1;color:var(--muted,#888);padding:2rem 0;text-align:center;" data-i18n="loja.loading">A carregar produtos…</p>
+    </div>
+
+    <div class="shop-empty" id="shopEmpty" hidden>
+      <p class="shop-empty-title" data-i18n="loja.empty.title">Nenhum produto encontrado</p>
+      <p class="shop-empty-sub" data-i18n="loja.empty.sub">Tenta outra pesquisa ou limpa os filtros.</p>
+      <button type="button" class="btn-outline-thin" id="shopEmptyClear" data-i18n="loja.clear">Limpar filtros</button>
+    </div>
+
+    <div class="shop-load-more-wrap" id="shopLoadMoreWrap" hidden>
+      <button type="button" class="btn-outline-thin shop-load-more" id="shopLoadMore" data-i18n="loja.loadMore">Carregar mais</button>
     </div>
   </section>
 
@@ -82,6 +122,37 @@
     </div>
   </section>
 
+  <!-- Quick view modal -->
+  <div class="qv-overlay" id="qvOverlay" hidden></div>
+  <div class="qv-modal" id="qvModal" role="dialog" aria-modal="true" aria-labelledby="qvName" hidden>
+    <button type="button" class="qv-close" id="qvClose" aria-label="Fechar">
+      <span></span><span></span>
+    </button>
+    <div class="qv-grid">
+      <div class="qv-media">
+        <img id="qvImg" src="" alt="">
+      </div>
+      <div class="qv-body">
+        <p class="qv-cat" id="qvCat"></p>
+        <h2 class="qv-name" id="qvName"></h2>
+        <p class="qv-desc" id="qvDesc"></p>
+        <p class="qv-price" id="qvPrice"></p>
+        <div class="qv-swatches" id="qvSwatches"></div>
+        <div class="qv-meta">
+          <label class="size-label" data-i18n="loja.size">Tamanho</label>
+          <select class="product-size" id="qvSize" aria-label="Tamanho"></select>
+          <select class="product-color" id="qvColor" hidden aria-label="Cor"></select>
+          <label class="qty-label" data-i18n="loja.qty">Qtd</label>
+          <div class="qty-stepper" role="group" aria-label="Quantidade">
+            <button type="button" class="qty-btn qty-minus" id="qvMinus" aria-label="Diminuir">−</button>
+            <input type="number" class="product-qty" id="qvQty" min="1" max="99" value="1" readonly inputmode="numeric" aria-label="Quantidade">
+            <button type="button" class="qty-btn qty-plus" id="qvPlus" aria-label="Aumentar">+</button>
+          </div>
+        </div>
+        <button type="button" class="product-add btn-outline-thin" id="qvAdd" data-i18n="loja.add">Adicionar</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Cart panel (drawer) -->
   <div class="cart-overlay" id="cartOverlay" hidden></div>
@@ -156,7 +227,11 @@
       const cat = await ARCCatalog.loadCatalog();
       ARCCatalog.applyTexts(cat.texts);
       ARCCatalog.applySiteImages(cat.images);
-      ARCCatalog.renderProductGrid(cat.products, '../');
+      if (window.ARCShop && typeof ARCShop.init === 'function') {
+        ARCShop.init(cat.products, '../');
+      } else {
+        ARCCatalog.renderProductGrid(cat.products, '../');
+      }
     })();
   </script>
 </body>

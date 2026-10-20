@@ -501,8 +501,8 @@ const DEFAULT_PRODUCTS = [
     order: 36
   },
   {
-    id: "para-run-attitude",
-    name_pt: "Para Run Attitude",
+    id: "pala-run-attitude",
+    name_pt: "Pala Run Attitude",
     name_en: "Attitude Run Visor",
     desc_pt: "Cores: preto, branco.",
     desc_en: "Colours: black, white.",
