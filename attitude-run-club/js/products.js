@@ -793,8 +793,8 @@ const DEFAULT_TEXTS = {
  * Values are relative paths or full Cloudinary URLs after publish.
  */
 const DEFAULT_SITE_IMAGES = {
-  hero: 'images/hero-team.jpg',
-  'loja-hero': '',
+  hero: 'images/start-01.jpg',
+  'loja-hero': 'images/hero-team.jpg',
   logo: 'images/logo.jpg'
 };
 

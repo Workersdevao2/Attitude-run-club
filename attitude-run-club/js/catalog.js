@@ -200,11 +200,22 @@
     };
   }
 
+  function resolveSiteUrl(url) {
+    if (!url || typeof url !== 'string') return url;
+    const u = url.trim();
+    if (!u || /^https?:\/\//i.test(u) || u.startsWith('data:') || u.startsWith('/')) return u;
+    // Root-relative assets (images/…) from pages/* need ../
+    if (location.pathname.includes('/pages/') && (u.startsWith('images/') || u.startsWith('./images/'))) {
+      return '../' + u.replace(/^\.\//, '');
+    }
+    return u;
+  }
+
   function applySiteImages(images) {
     if (!images || typeof images !== 'object') return;
     document.querySelectorAll('[data-site-img]').forEach((el) => {
       const key = el.getAttribute('data-site-img');
-      const url = images[key];
+      const url = resolveSiteUrl(images[key]);
       if (url) {
         if (el.tagName === 'IMG') el.src = url;
         else if (el.tagName === 'VIDEO') el.poster = url;
@@ -212,11 +223,11 @@
     });
     document.querySelectorAll('[data-site-img-bg]').forEach((el) => {
       const key = el.getAttribute('data-site-img-bg');
-      const url = images[key];
+      const url = resolveSiteUrl(images[key]);
       if (url) el.style.backgroundImage = `url('${url}')`;
     });
     if (images.hero) {
-      document.documentElement.style.setProperty('--hero-bg', `url('${images.hero}')`);
+      document.documentElement.style.setProperty('--hero-bg', `url('${resolveSiteUrl(images.hero)}')`);
     }
   }
 
