@@ -57,7 +57,7 @@ body::before {
   opacity: 0.4;
 }
 
-/* NAV */
+/* NAV — fixed + safe-area so it does not jump when mobile browser chrome shows/hides */
 nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -66,11 +66,18 @@ nav {
   justify-content: space-between;
   align-items: center;
   padding: 20px 48px;
+  padding-top: max(20px, env(safe-area-inset-top, 0px));
   transition: background 0.3s, backdrop-filter 0.3s;
+  /* Own compositing layer — reduces jump when address bar collapses */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 nav.scrolled {
   background: rgba(8,8,8,0.92);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 .nav-logo {
   font-family: var(--font-display);
@@ -230,7 +237,7 @@ nav.scrolled {
 }
 .mobile-close {
   position: absolute;
-  top: 24px;
+  top: max(24px, calc(env(safe-area-inset-top, 0px) + 10px));
   right: 24px;
   width: 44px;
   height: 44px;
@@ -1530,7 +1537,8 @@ footer {
 }
 @media (max-width: 900px) {
   nav {
-    padding: 12px 16px;
+    padding: 10px 16px;
+    padding-top: max(10px, env(safe-area-inset-top, 0px));
     gap: 8px;
   }
   .nav-logo {
