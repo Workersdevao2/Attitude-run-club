@@ -68,6 +68,9 @@
     document.body.classList.remove('no-sticky-pad');
     loadAll();
     renderAll();
+    if (typeof updatePublishStrip === 'function') updatePublishStrip();
+    const undoBtn = document.getElementById('btnUndoDraft');
+    if (undoBtn) undoBtn.hidden = true;
   }
   function showLogin() {
     if (loginScreen) {
@@ -380,7 +383,15 @@
     const bar = document.getElementById('bulkBar');
     const count = document.getElementById('bulkCount');
     const n = selectedIds.size;
-    if (bar) bar.hidden = n === 0;
+    if (bar) {
+      if (n === 0) {
+        bar.hidden = true;
+        bar.setAttribute('hidden', '');
+      } else {
+        bar.hidden = false;
+        bar.removeAttribute('hidden');
+      }
+    }
     if (count) count.textContent = n + (n === 1 ? ' selecionado' : ' selecionados');
     const all = document.getElementById('selectAllProducts');
     if (all) {
