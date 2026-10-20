@@ -147,11 +147,37 @@
     const defT = window.DEFAULT_TEXTS || { pt: {}, en: {} };
     const defI = window.DEFAULT_SITE_IMAGES || {};
 
-    products = loadJSON(LS.products, null) || structuredClone(defP);
+    const draftP = loadJSON(LS.products, null);
+    // Prefer full default catalog when draft is missing the new product set
+    const draftLooksLegacy = Array.isArray(draftP) && draftP.length > 0 &&
+      !draftP.some((p) => p && p.id === 'short-boost');
+    products = (!draftP || draftLooksLegacy)
+      ? structuredClone(defP)
+      : draftP;
     zones = loadJSON(LS.zones, null) || structuredClone(defZ);
     texts = loadJSON(LS.texts, null) || structuredClone(defT);
     images = loadJSON(LS.images, null) || structuredClone(defI);
     media = loadJSON(LS.media, []) || [];
+
+    // Merge colours / sizes from defaults when draft is older (missing fields)
+    if (Array.isArray(defP) && defP.length) {
+      const byId = Object.fromEntries(defP.map((p) => [p.id, p]));
+      products = products.map((p) => {
+        const d = byId[p.id];
+        if (!d) return { ...p, colors: Array.isArray(p.colors) ? p.colors : [] };
+        const next = { ...p };
+        if (!Array.isArray(next.colors) || next.colors.length === 0) {
+          if (Array.isArray(d.colors) && d.colors.length) next.colors = [...d.colors];
+          else next.colors = [];
+        }
+        if (!Array.isArray(next.sizes) || next.sizes.length === 0) {
+          if (Array.isArray(d.sizes) && d.sizes.length) next.sizes = [...d.sizes];
+        }
+        // Keep staff images if already set
+        if (!next.image && d.image) next.image = d.image;
+        return next;
+      });
+    }
   }
 
   function saveDraft() {

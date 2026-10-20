@@ -63,11 +63,29 @@
     const useDraftProducts = Array.isArray(draftProducts) && draftProducts.length > 0;
     const useDraftZones = Array.isArray(draftZones) && draftZones.length > 0;
 
+    // Enrich missing colours/sizes from defaults (older drafts / published catalogs)
+    const defById = Object.fromEntries((defaults.products || []).map((p) => [p.id, p]));
+    function enrich(list) {
+      return (list || []).map((p) => {
+        const d = defById[p.id];
+        if (!d) return { ...p, colors: Array.isArray(p.colors) ? p.colors : [] };
+        const next = { ...p };
+        if (!Array.isArray(next.colors) || !next.colors.length) {
+          next.colors = Array.isArray(d.colors) ? [...d.colors] : [];
+        }
+        if (!Array.isArray(next.sizes) || !next.sizes.length) {
+          if (Array.isArray(d.sizes) && d.sizes.length) next.sizes = [...d.sizes];
+        }
+        return next;
+      });
+    }
+
+    const rawProducts = useDraftProducts
+      ? draftProducts
+      : (base.products || defaults.products);
+
     return {
-      products: (useDraftProducts
-        ? draftProducts
-        : (base.products || defaults.products)
-      ).filter((p) => p.active !== false),
+      products: enrich(rawProducts).filter((p) => p.active !== false),
       zones: useDraftZones ? draftZones : (base.zones || defaults.zones),
       texts: draftTexts && typeof draftTexts === 'object' ? draftTexts : (base.texts || defaults.texts),
       images: draftImages && typeof draftImages === 'object' ? draftImages : (base.images || defaults.images),
