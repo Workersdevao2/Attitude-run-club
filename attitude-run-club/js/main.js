@@ -310,6 +310,7 @@ const translations = {
     'loja.title': 'Corre com<br>estilo.',
     'loja.sub': 'Peças oficiais de performance. Encomenda via WhatsApp — confirmamos stock, tamanho e pagamento contigo.',
     'loja.size': 'Tamanho',
+    'loja.color': 'Cor',
     'loja.qty': 'Qtd',
     'loja.add': 'Adicionar',
     'loja.oneSize': 'Único',
@@ -603,6 +604,7 @@ const translations = {
     'loja.title': 'Run with<br>style.',
     'loja.sub': 'Official performance pieces. Order via WhatsApp — we confirm stock, size and payment with you.',
     'loja.size': 'Size',
+    'loja.color': 'Colour',
     'loja.qty': 'Qty',
     'loja.add': 'Add',
     'loja.oneSize': 'One size',
@@ -1111,7 +1113,7 @@ if (hamburger && mobileMenu) {
             '<div class="cart-item-top">' +
               '<div class="cart-item-info">' +
                 '<span class="cart-item-name">' + item.name + '</span>' +
-                '<span class="cart-item-meta">' + item.size + '</span>' +
+                '<span class="cart-item-meta">' + item.size + (item.color ? ' · ' + item.color : '') + '</span>' +
               '</div>' +
               '<span class="cart-item-price">' + lineTotal + '</span>' +
               '<button type="button" class="cart-item-remove" data-idx="' + idx + '" aria-label="Remover">×</button>' +
@@ -1129,7 +1131,7 @@ if (hamburger && mobileMenu) {
             '<div class="cart-item-top">' +
               '<div class="cart-item-info">' +
                 '<span class="cart-item-name">' + item.name + '</span>' +
-                '<span class="cart-item-meta">' + item.size + ' · ×' + item.qty + '</span>' +
+                '<span class="cart-item-meta">' + item.size + (item.color ? ' · ' + item.color : '') + ' · ×' + item.qty + '</span>' +
               '</div>' +
               '<span class="cart-item-price">' + lineTotal + '</span>' +
               '<button type="button" class="cart-item-remove" data-idx="' + idx + '" aria-label="Remover">×</button>' +
@@ -1178,8 +1180,10 @@ if (hamburger && mobileMenu) {
         const id = card.dataset.id;
         const price = parseInt(card.dataset.price, 10) || 0;
         const sizeEl = card.querySelector('.product-size');
+        const colorEl = card.querySelector('.product-color');
         const qtyEl = card.querySelector('.product-qty');
         const size = sizeEl ? sizeEl.value : '—';
+        const color = (colorEl && colorEl.value) ? colorEl.value : '';
         let qty = qtyEl ? parseInt(qtyEl.value, 10) : 1;
         if (isNaN(qty) || qty < 1) qty = 1;
         if (qty > MAX_QTY) qty = MAX_QTY;
@@ -1190,12 +1194,12 @@ if (hamburger && mobileMenu) {
         if (imgEl && imgEl.getAttribute('src')) {
           image = imgEl.getAttribute('src');
         }
-        const existing = cart.find(c => c.id === id && c.size === size);
+        const existing = cart.find(c => c.id === id && c.size === size && (c.color || '') === color);
         if (existing) {
           existing.qty = Math.min(MAX_QTY, existing.qty + qty);
           if (!existing.image && image) existing.image = image;
         } else {
-          cart.push({ id, name, size, qty, price, image });
+          cart.push({ id, name, size, color, qty, price, image });
         }
         saveCart(cart);
 
@@ -1278,7 +1282,7 @@ if (hamburger && mobileMenu) {
       let total = 0;
       const lines = cart.map(item => {
         total += item.price * item.qty;
-        return '• ' + item.name + ' | ' + item.size + ' | x' + item.qty + ' | ' + formatKz(item.price * item.qty);
+        return '• ' + item.name + ' | ' + item.size + (item.color ? ' | ' + item.color : '') + ' | x' + item.qty + ' | ' + formatKz(item.price * item.qty);
       });
 
       const header = currentLang === 'en'
@@ -1315,6 +1319,7 @@ if (hamburger && mobileMenu) {
               id: item.id || '',
               name: item.name,
               size: item.size,
+              color: item.color || '',
               qty: item.qty,
               price: item.price,
             })),

@@ -145,10 +145,17 @@
             '</svg>'
           );
         }
-        const sizes = (p.sizes && p.sizes.length) ? p.sizes : ['A confirmar'];
+        const sizes = (p.sizes && p.sizes.length) ? p.sizes : ['Único'];
         const sizeOpts = sizes
-          .map((s, si) => `<option value="${esc(s)}"${si === Math.min(1, sizes.length - 1) ? ' selected' : ''}>${esc(s)}</option>`)
+          .map((s, si) => `<option value="${esc(s)}"${si === 0 ? ' selected' : ''}>${esc(s)}</option>`)
           .join('');
+        const colors = (p.colors && p.colors.length) ? p.colors : [];
+        const colorSelect = colors.length
+          ? `<label class="color-label" data-i18n="loja.color">Cor</label>
+            <select class="product-color" aria-label="Cor">${colors.map((c, ci) =>
+              `<option value="${esc(c)}"${ci === 0 ? ' selected' : ''}>${esc(c)}</option>`
+            ).join('')}</select>`
+          : `<select class="product-color" aria-label="Cor" hidden><option value="">—</option></select>`;
         const priceFmt = (Number(p.price) || 0).toLocaleString('pt-AO');
 
         // No .reveal class — products load async; reveal observer only runs once on page load
@@ -164,6 +171,7 @@
           <div class="product-meta">
             <label class="size-label" data-i18n="loja.size">Tamanho</label>
             <select class="product-size" aria-label="Tamanho">${sizeOpts}</select>
+            ${colorSelect}
             <label class="qty-label" data-i18n="loja.qty">Qtd</label>
             <div class="qty-stepper" role="group" aria-label="Quantidade">
               <button type="button" class="qty-btn qty-minus" aria-label="Diminuir">−</button>

@@ -192,7 +192,7 @@
           <img src="${esc(resolveImg(p.image))}" alt="" loading="lazy" onerror="this.src='images/logo.jpg'">
           <div class="meta">
             <h3>${esc(p.name_pt || p.name_en || p.id)}</h3>
-            <p>${formatKz(p.price)} · ${(p.sizes || []).join(', ') || '—'}</p>
+            <p>${formatKz(p.price)} · ${(p.sizes || []).join(', ') || '—'} · ${(p.colors || []).join(', ') || '—'}</p>
           </div>
           <div class="actions">
             <button type="button" class="btn btn-ghost btn-sm" data-edit="${esc(p.id)}">Editar</button>
@@ -211,7 +211,8 @@
           <td><img src="${esc(resolveImg(p.image))}" alt="" onerror="this.src='images/logo.jpg'"></td>
           <td>${esc(p.name_pt || '')}<br><span style="color:var(--muted);font-size:0.8em">${esc(p.name_en || '')}</span></td>
           <td>${formatKz(p.price)}</td>
-          <td>${(p.sizes || []).join(', ')}</td>
+          <td>${(p.sizes || []).join(', ') || '—'}</td>
+          <td>${(p.colors || []).join(', ') || '—'}</td>
           <td>${p.active === false ? 'Off' : 'On'}</td>
           <td class="row-actions">
             <button type="button" class="btn btn-ghost btn-sm" data-edit="${esc(p.id)}">Editar</button>
@@ -235,7 +236,8 @@
     $('#f_desc_pt').value = p?.desc_pt || '';
     $('#f_desc_en').value = p?.desc_en || '';
     $('#f_price').value = p?.price ?? '';
-    $('#f_sizes').value = (p?.sizes || ['S', 'M', 'L', 'XL']).join(', ');
+    $('#f_sizes').value = (p?.sizes || []).join(', ');
+    $('#f_colors').value = (p?.colors || []).join(', ');
     $('#f_order').value = p?.order ?? products.length + 1;
     $('#f_active').checked = p ? p.active !== false : true;
     const img = p?.image || '';
@@ -251,6 +253,10 @@
       .split(',')
       .map((s) => s.trim())
       .filter(Boolean);
+    const colors = ($('#f_colors').value || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
     const data = {
       id,
       name_pt: ($('#f_name_pt').value || '').trim(),
@@ -260,6 +266,7 @@
       price,
       image: ($('#f_image').value || '').trim(),
       sizes: sizes.length ? sizes : ['Único'],
+      colors,
       active: $('#f_active').checked,
       order: parseInt($('#f_order').value, 10) || 0,
     };
@@ -693,7 +700,7 @@
       if (it.city) meta.push(esc(it.city));
       const itemsHtml = isOrder && Array.isArray(it.items) && it.items.length
         ? '<ul class="inbox-items">' + it.items.map((line) =>
-            `<li>${esc(line.name || '')} · ${esc(line.size || '—')} · x${line.qty || 1} · ${formatKz(line.price * (line.qty || 1))}</li>`
+            `<li>${esc(line.name || '')} · ${esc(line.size || '—')}${line.color ? ' · ' + esc(line.color) : ''} · x${line.qty || 1} · ${formatKz(line.price * (line.qty || 1))}</li>`
           ).join('') + '</ul>' +
           (it.total ? `<p class="inbox-meta"><strong>Total estimado: ${formatKz(it.total)}</strong></p>` : '')
         : '';

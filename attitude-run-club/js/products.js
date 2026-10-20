@@ -41,6 +41,7 @@ const DEFAULT_PRODUCTS = [
     price: 33500,
     image: '',
     sizes: ["S", "XL"],
+    colors: ["Azul", "Preto"],
     active: true,
     order: 1
   },
@@ -53,6 +54,7 @@ const DEFAULT_PRODUCTS = [
     price: 80500,
     image: '',
     sizes: ["S", "XL"],
+    colors: ["Preta", "Cinza claro", "Castanho caqui", "Rosa"],
     active: true,
     order: 2
   },
@@ -65,6 +67,7 @@ const DEFAULT_PRODUCTS = [
     price: 13000,
     image: '',
     sizes: [],
+    colors: ["Preto"],
     active: true,
     order: 3
   },
@@ -77,6 +80,7 @@ const DEFAULT_PRODUCTS = [
     price: 116500,
     image: '',
     sizes: [],
+    colors: [],
     active: true,
     order: 4
   },
@@ -89,6 +93,7 @@ const DEFAULT_PRODUCTS = [
     price: 67500,
     image: '',
     sizes: [],
+    colors: [],
     active: true,
     order: 5
   },
@@ -101,6 +106,7 @@ const DEFAULT_PRODUCTS = [
     price: 49000,
     image: '',
     sizes: [],
+    colors: [],
     active: true,
     order: 6
   },
@@ -113,6 +119,7 @@ const DEFAULT_PRODUCTS = [
     price: 71900,
     image: '',
     sizes: ["XL"],
+    colors: ["Preto", "Verde"],
     active: true,
     order: 7
   },
@@ -125,6 +132,7 @@ const DEFAULT_PRODUCTS = [
     price: 51560,
     image: '',
     sizes: ["M", "L", "XL", "2XL"],
+    colors: ["Cinza claro", "Cinza escuro"],
     active: true,
     order: 8
   },
@@ -137,6 +145,7 @@ const DEFAULT_PRODUCTS = [
     price: 51560,
     image: '',
     sizes: [],
+    colors: [],
     active: true,
     order: 9
   },
@@ -149,6 +158,7 @@ const DEFAULT_PRODUCTS = [
     price: 61500,
     image: '',
     sizes: ["S", "XL"],
+    colors: ["Preto", "Bege", "Cinza"],
     active: true,
     order: 10
   },
@@ -161,6 +171,7 @@ const DEFAULT_PRODUCTS = [
     price: 40500,
     image: '',
     sizes: [],
+    colors: ["Única"],
     active: true,
     order: 11
   },
@@ -173,6 +184,7 @@ const DEFAULT_PRODUCTS = [
     price: 36500,
     image: '',
     sizes: ["M", "L", "XL"],
+    colors: ["Cinza", "Castanha escura", "Castanha clara"],
     active: true,
     order: 12
   },
@@ -185,6 +197,7 @@ const DEFAULT_PRODUCTS = [
     price: 39200,
     image: '',
     sizes: ["L", "4XL"],
+    colors: ["Rosa", "Bege", "Preta"],
     active: true,
     order: 13
   },
@@ -197,6 +210,7 @@ const DEFAULT_PRODUCTS = [
     price: 40700,
     image: '',
     sizes: ["L", "XL"],
+    colors: ["Preto", "Castanho"],
     active: true,
     order: 14
   },
@@ -209,6 +223,7 @@ const DEFAULT_PRODUCTS = [
     price: 36500,
     image: '',
     sizes: ["2XL"],
+    colors: ["Azul escuro"],
     active: true,
     order: 15
   },
@@ -221,6 +236,7 @@ const DEFAULT_PRODUCTS = [
     price: 39200,
     image: '',
     sizes: ["S", "M", "L"],
+    colors: ["Vermelho", "Azul", "Lilás", "Cinza"],
     active: true,
     order: 16
   },
@@ -233,6 +249,7 @@ const DEFAULT_PRODUCTS = [
     price: 45000,
     image: '',
     sizes: ["S", "XL"],
+    colors: ["Branca", "Azul ciano", "Azul marinho"],
     active: true,
     order: 17
   },
@@ -245,6 +262,7 @@ const DEFAULT_PRODUCTS = [
     price: 57500,
     image: '',
     sizes: ["2XL", "3XL"],
+    colors: ["Rosé", "Preto"],
     active: true,
     order: 18
   },
@@ -257,6 +275,7 @@ const DEFAULT_PRODUCTS = [
     price: 39850,
     image: '',
     sizes: ["M", "L", "XL", "2XL"],
+    colors: ["Bege", "Verde escura", "Azul escuro", "Cinza escura"],
     active: true,
     order: 19
   },
@@ -269,6 +288,7 @@ const DEFAULT_PRODUCTS = [
     price: 45850,
     image: '',
     sizes: [],
+    colors: [],
     active: true,
     order: 20
   },
@@ -281,6 +301,7 @@ const DEFAULT_PRODUCTS = [
     price: 30000,
     image: '',
     sizes: ["S", "2XL"],
+    colors: [],
     active: true,
     order: 21
   },
@@ -293,6 +314,7 @@ const DEFAULT_PRODUCTS = [
     price: 45550,
     image: '',
     sizes: ["L", "XL"],
+    colors: ["Amarelo manteiga", "Cinza escuro", "Castanho"],
     active: true,
     order: 22
   },
@@ -305,6 +327,7 @@ const DEFAULT_PRODUCTS = [
     price: 79990,
     image: '',
     sizes: ["S"],
+    colors: ["Preto", "Roxo", "Cinza", "Azul", "Vermelho"],
     active: true,
     order: 23
   },
@@ -317,6 +340,7 @@ const DEFAULT_PRODUCTS = [
     price: 49850,
     image: '',
     sizes: [],
+    colors: [],
     active: true,
     order: 24
   },
@@ -329,6 +353,7 @@ const DEFAULT_PRODUCTS = [
     price: 37000,
     image: '',
     sizes: ["2XL", "3XL"],
+    colors: ["Bege", "Preto"],
     active: true,
     order: 25
   },
@@ -341,6 +366,7 @@ const DEFAULT_PRODUCTS = [
     price: 42000,
     image: '',
     sizes: ["2XL", "3XL"],
+    colors: ["Preto", "Cinza claro", "Cinza escuro"],
     active: true,
     order: 26
   },
@@ -353,6 +379,7 @@ const DEFAULT_PRODUCTS = [
     price: 78000,
     image: '',
     sizes: [],
+    colors: ["Preto", "Bege", "Branco"],
     active: true,
     order: 27
   },
@@ -365,6 +392,7 @@ const DEFAULT_PRODUCTS = [
     price: 75000,
     image: '',
     sizes: [],
+    colors: ["Azul escuro", "Cinza escuro", "Cinza claro", "Laranja"],
     active: true,
     order: 28
   },
@@ -377,6 +405,7 @@ const DEFAULT_PRODUCTS = [
     price: 40500,
     image: '',
     sizes: [],
+    colors: ["Preta", "Branca"],
     active: true,
     order: 29
   },
@@ -389,6 +418,7 @@ const DEFAULT_PRODUCTS = [
     price: 50000,
     image: '',
     sizes: [],
+    colors: ["Preto", "Azul claro", "Azul escuro", "Branco"],
     active: true,
     order: 30
   },
@@ -401,6 +431,7 @@ const DEFAULT_PRODUCTS = [
     price: 57500,
     image: '',
     sizes: ["M", "XL"],
+    colors: ["Branca", "Preta"],
     active: true,
     order: 31
   },
@@ -413,6 +444,7 @@ const DEFAULT_PRODUCTS = [
     price: 38500,
     image: '',
     sizes: ["S", "XL"],
+    colors: ["Cinza", "Neon verde", "Neon laranja"],
     active: true,
     order: 32
   },
@@ -425,6 +457,7 @@ const DEFAULT_PRODUCTS = [
     price: 39200,
     image: '',
     sizes: ["S", "M", "L", "XL", "2XL", "3XL"],
+    colors: ["Bege", "Cinzento", "Azul", "Verde oliva", "Preto"],
     active: true,
     order: 33
   },
@@ -437,6 +470,7 @@ const DEFAULT_PRODUCTS = [
     price: 145500,
     image: '',
     sizes: ["M", "2XL"],
+    colors: ["Preto"],
     active: true,
     order: 34
   },
@@ -449,6 +483,7 @@ const DEFAULT_PRODUCTS = [
     price: 53850,
     image: '',
     sizes: ["M", "L"],
+    colors: ["Vermelho", "Azul escuro", "Preto", "Verde", "Laranja"],
     active: true,
     order: 35
   },
@@ -461,6 +496,7 @@ const DEFAULT_PRODUCTS = [
     price: 87000,
     image: '',
     sizes: [],
+    colors: [],
     active: true,
     order: 36
   },
@@ -473,6 +509,7 @@ const DEFAULT_PRODUCTS = [
     price: 18000,
     image: '',
     sizes: [],
+    colors: ["Preto", "Branco"],
     active: true,
     order: 37
   },
@@ -485,6 +522,7 @@ const DEFAULT_PRODUCTS = [
     price: 62500,
     image: '',
     sizes: [],
+    colors: ["Preto", "Off white", "Bordô"],
     active: true,
     order: 38
   },
@@ -497,6 +535,7 @@ const DEFAULT_PRODUCTS = [
     price: 55850,
     image: '',
     sizes: [],
+    colors: ["Azul", "Cinza", "Lilás", "Rosa", "Preto"],
     active: true,
     order: 39
   },
@@ -509,6 +548,7 @@ const DEFAULT_PRODUCTS = [
     price: 42000,
     image: '',
     sizes: ["S", "XXL"],
+    colors: ["Cinza", "Castanho", "Bege"],
     active: true,
     order: 40
   },
@@ -521,6 +561,7 @@ const DEFAULT_PRODUCTS = [
     price: 42000,
     image: '',
     sizes: ["S", "XL"],
+    colors: ["Cinza", "Castanho", "Bege"],
     active: true,
     order: 41
   },
@@ -533,6 +574,7 @@ const DEFAULT_PRODUCTS = [
     price: 49500,
     image: '',
     sizes: ["S", "2XL"],
+    colors: ["Cinza escuro", "Cinza claro", "Preto"],
     active: true,
     order: 42
   },
@@ -545,6 +587,7 @@ const DEFAULT_PRODUCTS = [
     price: 52850,
     image: '',
     sizes: ["M", "L", "XL"],
+    colors: ["Amarelo", "Verde", "Lilás"],
     active: true,
     order: 43
   },
@@ -557,6 +600,7 @@ const DEFAULT_PRODUCTS = [
     price: 45000,
     image: '',
     sizes: [],
+    colors: ["Branco", "Preto", "Azul escuro"],
     active: true,
     order: 44
   },
@@ -569,6 +613,7 @@ const DEFAULT_PRODUCTS = [
     price: 42000,
     image: '',
     sizes: ["XL", "3XL"],
+    colors: ["Preta"],
     active: true,
     order: 45
   },
@@ -581,6 +626,7 @@ const DEFAULT_PRODUCTS = [
     price: 55850,
     image: '',
     sizes: ["S", "XL"],
+    colors: ["Azul céu vibrante", "Rosa", "Castanho"],
     active: true,
     order: 46
   },
@@ -593,6 +639,7 @@ const DEFAULT_PRODUCTS = [
     price: 28750,
     image: '',
     sizes: [],
+    colors: ["Cinza escuro", "Cinza claro", "Branco"],
     active: true,
     order: 47
   },
@@ -605,6 +652,7 @@ const DEFAULT_PRODUCTS = [
     price: 40500,
     image: '',
     sizes: [],
+    colors: ["Preta", "Branca"],
     active: true,
     order: 48
   },
@@ -617,6 +665,7 @@ const DEFAULT_PRODUCTS = [
     price: 33500,
     image: '',
     sizes: ["S", "XL"],
+    colors: ["Única"],
     active: true,
     order: 49
   },
@@ -629,6 +678,7 @@ const DEFAULT_PRODUCTS = [
     price: 40500,
     image: '',
     sizes: ["M", "XXL"],
+    colors: ["Branca", "Preto", "Azul", "Cinza", "Laranja"],
     active: true,
     order: 50
   },
@@ -641,6 +691,7 @@ const DEFAULT_PRODUCTS = [
     price: 38500,
     image: '',
     sizes: ["M", "L", "XXL"],
+    colors: ["Branca", "Rosa", "Azul", "Verde", "Preto"],
     active: true,
     order: 51
   },
@@ -653,6 +704,7 @@ const DEFAULT_PRODUCTS = [
     price: 10000,
     image: '',
     sizes: [],
+    colors: [],
     active: true,
     order: 52
   },
@@ -665,6 +717,7 @@ const DEFAULT_PRODUCTS = [
     price: 10000,
     image: '',
     sizes: [],
+    colors: [],
     active: true,
     order: 53
   },
@@ -677,6 +730,7 @@ const DEFAULT_PRODUCTS = [
     price: 6500,
     image: '',
     sizes: [],
+    colors: ["Preta", "Branca"],
     active: true,
     order: 54
   },
@@ -689,6 +743,7 @@ const DEFAULT_PRODUCTS = [
     price: 7500,
     image: '',
     sizes: [],
+    colors: ["Preta", "Branca"],
     active: true,
     order: 55
   },
@@ -701,6 +756,7 @@ const DEFAULT_PRODUCTS = [
     price: 55000,
     image: '',
     sizes: [],
+    colors: [],
     active: true,
     order: 56
   }
