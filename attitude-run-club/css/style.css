@@ -278,8 +278,8 @@ nav.scrolled {
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: center;
-  opacity: 0.35;
+  background-position: center 35%;
+  opacity: 0.42;
   z-index: 0;
 }
 .hero-overlay {
