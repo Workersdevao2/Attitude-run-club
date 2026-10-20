@@ -53,11 +53,11 @@ function observeReveals(root) {
 observeReveals(document);
 window.observeReveals = observeReveals;
 
-// Nav scroll effect + lock to visual viewport (fixes mobile address-bar jump/gap)
+// Nav scroll effect + pin to visual viewport (stops mobile address-bar gap/jump)
 const nav = document.querySelector('nav');
 if (nav) {
   const updateNavScroll = () => {
-    if (window.scrollY > 60) {
+    if (window.scrollY > 40) {
       nav.classList.add('scrolled');
     } else {
       nav.classList.remove('scrolled');
@@ -66,16 +66,17 @@ if (nav) {
   window.addEventListener('scroll', updateNavScroll, { passive: true });
   updateNavScroll();
 
-  // iOS/Android: keep fixed nav glued to the top of the *visible* viewport
-  // when the browser chrome shows/hides (prevents gap + content peeking above header)
+  // Keep fixed header aligned with the *visible* top when mobile browser chrome moves.
+  // Uses transform (not top) so it does not fight CSS top:0 / safe-area.
   const pinNavToVisualViewport = () => {
-    if (!window.visualViewport) return;
-    const offset = window.visualViewport.offsetTop || 0;
-    nav.style.top = offset + 'px';
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const y = vv.offsetTop || 0;
+    nav.style.transform = y ? `translateY(${y}px) translateZ(0)` : 'translateZ(0)';
   };
   if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', pinNavToVisualViewport);
-    window.visualViewport.addEventListener('scroll', pinNavToVisualViewport);
+    window.visualViewport.addEventListener('resize', pinNavToVisualViewport, { passive: true });
+    window.visualViewport.addEventListener('scroll', pinNavToVisualViewport, { passive: true });
     pinNavToVisualViewport();
   }
 }
