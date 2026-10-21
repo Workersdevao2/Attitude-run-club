@@ -679,6 +679,22 @@
     const idx = products.findIndex((x) => x.id === id);
     if (idx >= 0) products[idx] = Object.assign({}, products[idx], data);
     else products.push(data);
+
+    // Place product at requested order and renumber 1…n (true swap / insert)
+    const desired = Math.max(1, parseInt(data.order, 10) || products.length);
+    normalizeOrders();
+    const sorted = [...products].sort((a, b) => (a.order || 0) - (b.order || 0));
+    const from = sorted.findIndex((x) => x.id === id);
+    if (from >= 0) {
+      const [item] = sorted.splice(from, 1);
+      const to = Math.min(Math.max(desired - 1, 0), sorted.length);
+      sorted.splice(to, 0, item);
+      sorted.forEach((p, i) => {
+        p.order = i + 1;
+      });
+      products = sorted;
+    }
+
     closeModal('productModal');
     renderProducts();
     updateStats();
@@ -1081,6 +1097,15 @@
     }
     openModal('pickerModal');
   }
+
+
+  document.getElementById('btnUploadProductImage')?.addEventListener('click', () => {
+    pickerTarget = { type: 'product' };
+    document.getElementById('mediaFileInput')?.click();
+  });
+  document.getElementById('btnPickProductImage')?.addEventListener('click', () => {
+    openMediaPicker('product');
+  });
 
   // ── Publish ─────────────────────────────────────────────────────────────
   function buildCatalog() {
