@@ -341,6 +341,27 @@
     );
   }
 
+  function textsFingerprint(t) {
+    const src = t || { pt: {}, en: {} };
+    const keys = new Set([
+      ...Object.keys(src.pt || {}),
+      ...Object.keys(src.en || {}),
+    ]);
+    const sorted = [...keys].sort();
+    return JSON.stringify(
+      sorted.map((k) => [k, (src.pt && src.pt[k]) || '', (src.en && src.en[k]) || ''])
+    );
+  }
+
+  function imagesFingerprint(img) {
+    const o = img || {};
+    return JSON.stringify(
+      Object.keys(o)
+        .sort()
+        .map((k) => [k, o[k] || ''])
+    );
+  }
+
   function updatePublishStrip() {
     const text = document.getElementById('publishStripText');
     const dot = document.getElementById('publishDot');
@@ -351,7 +372,16 @@
       published = JSON.parse(localStorage.getItem('arc_catalog_published') || 'null');
     } catch (_) {}
     const liveProducts = published && Array.isArray(published.products) ? published.products : [];
-    const dirty = catalogFingerprint(products) !== catalogFingerprint(liveProducts);
+    const liveTexts = published && published.texts ? published.texts : { pt: {}, en: {} };
+    const liveImages = published && published.images ? published.images : {};
+    const dirtyProducts = catalogFingerprint(products) !== catalogFingerprint(liveProducts);
+    const dirtyTexts = textsFingerprint(texts) !== textsFingerprint(liveTexts);
+    const dirtyImages = imagesFingerprint(images) !== imagesFingerprint(liveImages);
+    const dirty = dirtyProducts || dirtyTexts || dirtyImages;
+    const parts = [];
+    if (dirtyProducts) parts.push('produtos');
+    if (dirtyTexts) parts.push('textos');
+    if (dirtyImages) parts.push('imagens');
     const lastLabel = last
       ? new Date(last).toLocaleString('pt-AO', { dateStyle: 'short', timeStyle: 'short' })
       : 'nunca';
@@ -360,7 +390,7 @@
       dot.classList.toggle('is-clean', !dirty);
     }
     text.textContent = dirty
-      ? 'Rascunho com alterações por publicar · Última publicação: ' + lastLabel
+      ? 'Alterações por publicar (' + parts.join(', ') + ') · Última publicação: ' + lastLabel
       : 'Loja sincronizada · Última publicação: ' + lastLabel;
   }
 
@@ -980,8 +1010,67 @@
   });
 
   // ── Texts ───────────────────────────────────────────────────────────────
-  function renderTexts() {
-    const groups = window.TEXT_GROUPS || [
+  let textSearchQ = '';
+  let textLangMode = 'both'; // both | pt | en
+  let textChipFilter = 'all';
+  let textAccordionMode = true; // one group open at a time when not searching
+  let textOpenGroupId = null;
+  let textExpandAll = false;
+
+  const TEXT_PREVIEW_URLS = {
+    'Hero (home)': 'index.html',
+    Marquee: 'index.html',
+    Pilares: 'index.html#pilares',
+    Stats: 'index.html',
+    Galeria: 'index.html',
+    'Como entrar (home)': 'index.html',
+    'Como entrar (planos)': 'pages/planos.html',
+    'CTA home': 'index.html',
+    'Planos (página)': 'pages/planos.html',
+    'Planos (benefícios)': 'pages/planos.html',
+    Eventos: 'pages/eventos.html',
+    Roadmap: 'pages/roadmap.html',
+    Contacto: 'pages/contacto.html',
+    Loja: 'pages/loja.html',
+    Footer: 'index.html',
+  };
+
+  function defaultTextValue(lang, key) {
+    const def = (window.DEFAULT_TEXTS && window.DEFAULT_TEXTS[lang]) || {};
+    return def[key] != null ? String(def[key]) : '';
+  }
+
+  function baselineTextValue(lang, key) {
+    // Prefer last published catalog; fall back to code defaults
+    try {
+      const published = JSON.parse(localStorage.getItem('arc_catalog_published') || 'null');
+      if (published && published.texts && published.texts[lang] && published.texts[lang][key] != null) {
+        return String(published.texts[lang][key]);
+      }
+    } catch (_) {}
+    return defaultTextValue(lang, key);
+  }
+
+  function isTextKeyDirty(key) {
+    const pt = (texts.pt && texts.pt[key]) || '';
+    const en = (texts.en && texts.en[key]) || '';
+    return pt !== baselineTextValue('pt', key) || en !== baselineTextValue('en', key);
+  }
+
+  function textNeedsHtmlHint(key, val) {
+    const d = defaultTextValue('pt', key) + defaultTextValue('en', key) + (val || '');
+    return /<br\s*\/?>/i.test(d) || (key && (key.includes('title') || key.includes('sub')));
+  }
+
+  function groupIdFromLabel(label) {
+    return 'tg-' + String(label || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
+  }
+
+  function getTextGroups() {
+    return window.TEXT_GROUPS || [
       {
         label: 'Textos',
         keys: [
@@ -993,50 +1082,299 @@
         ],
       },
     ];
+  }
+
+  function renderTextsChips(groups) {
+    const el = $('#textsChips');
+    if (!el) return;
+    const items = [{ id: 'all', label: 'Todos' }].concat(
+      groups.map((g) => ({ id: groupIdFromLabel(g.label), label: g.label }))
+    );
+    el.innerHTML = items
+      .map(
+        (c) =>
+          `<button type="button" class="chip${textChipFilter === c.id ? ' active' : ''}" data-text-chip="${esc(c.id)}">${esc(c.label)}</button>`
+      )
+      .join('');
+    el.querySelectorAll('[data-text-chip]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        textChipFilter = btn.dataset.textChip;
+        textExpandAll = false;
+        if (textChipFilter !== 'all') textOpenGroupId = textChipFilter;
+        renderTexts();
+      });
+    });
+  }
+
+  function renderTexts() {
+    const groups = getTextGroups();
     const el = $('#textsGrid');
     if (!el) return;
     if (!texts.pt) texts.pt = {};
     if (!texts.en) texts.en = {};
 
-    el.innerHTML = groups
+    renderTextsChips(groups);
+
+    const q = (textSearchQ || '').trim().toLowerCase();
+    let visibleFields = 0;
+    let dirtyTotal = 0;
+
+    const html = groups
       .map((g) => {
-        const blocks = (g.keys || [])
+        const gid = groupIdFromLabel(g.label);
+        if (textChipFilter !== 'all' && textChipFilter !== gid) return '';
+
+        const keys = (g.keys || []).filter(({ k, label }) => {
+          if (!q) return true;
+          const hay = (label + ' ' + k + ' ' + (texts.pt[k] || '') + ' ' + (texts.en[k] || '')).toLowerCase();
+          return hay.includes(q);
+        });
+        if (!keys.length) return '';
+
+        let dirtyInGroup = 0;
+        const blocks = keys
           .map(({ k, label }) => {
-            const rows = String(texts.pt[k] || texts.en[k] || '').length > 80 ? 3 : 2;
+            const dirty = isTextKeyDirty(k);
+            if (dirty) dirtyInGroup++;
+            dirtyTotal += dirty ? 1 : 0;
+            visibleFields++;
+            const ptVal = texts.pt[k] || '';
+            const enVal = texts.en[k] || '';
+            const rows = Math.min(6, Math.max(2, Math.ceil(Math.max(ptVal.length, enVal.length) / 55)));
+            const hint = textNeedsHtmlHint(k, ptVal)
+              ? `<p class="text-html-hint">Podes usar <code>&lt;br&gt;</code> para quebras de linha. <button type="button" class="btn-link" data-insert-br="${esc(k)}">Inserir quebra</button></p>`
+              : '';
             return `
-          <div class="text-block" data-key="${esc(k)}">
-            <h3>${esc(label)} <code>${esc(k)}</code></h3>
-            <div class="field">
-              <label>PT</label>
-              <textarea data-lang="pt" rows="${rows}">${esc(texts.pt[k] || '')}</textarea>
+          <div class="text-block${dirty ? ' is-dirty' : ''}" data-key="${esc(k)}">
+            <div class="text-block-head">
+              <h3>
+                ${dirty ? '<span class="text-dirty-dot" title="Editado em relação ao original"></span>' : ''}
+                ${esc(label)}
+                <code>${esc(k)}</code>
+              </h3>
+              <div class="text-block-actions">
+                <button type="button" class="btn btn-ghost btn-xs" data-copy-pt-en="${esc(k)}" title="Copiar PT → EN">PT→EN</button>
+                <button type="button" class="btn btn-ghost btn-xs" data-reset-key="${esc(k)}" title="Repor original">Original</button>
+              </div>
             </div>
-            <div class="field">
-              <label>EN</label>
-              <textarea data-lang="en" rows="${rows}">${esc(texts.en[k] || '')}</textarea>
+            ${hint}
+            <div class="text-fields text-lang-${esc(textLangMode)}">
+              <div class="field field-pt">
+                <label>PT <span class="char-count" data-count-for="pt-${esc(k)}">${ptVal.length}</span></label>
+                <textarea data-lang="pt" data-key-ref="${esc(k)}" rows="${rows}">${esc(ptVal)}</textarea>
+              </div>
+              <div class="field field-en">
+                <label>EN <span class="char-count" data-count-for="en-${esc(k)}">${enVal.length}</span></label>
+                <textarea data-lang="en" data-key-ref="${esc(k)}" rows="${rows}">${esc(enVal)}</textarea>
+              </div>
             </div>
           </div>`;
           })
           .join('');
+
+        const preview = TEXT_PREVIEW_URLS[g.label];
+        const previewBtn = preview
+          ? `<a class="btn btn-ghost btn-xs" href="${esc(preview)}" target="_blank" rel="noopener" title="Pré-visualizar">Ver ↗</a>`
+          : '';
+        const shouldOpen =
+          textExpandAll ||
+          !!q ||
+          textChipFilter === gid ||
+          textOpenGroupId === gid ||
+          (!textOpenGroupId && !textExpandAll && !q && textChipFilter === 'all' && gid === groupIdFromLabel(groups[0].label));
+
         return `
-        <details class="text-group" open>
-          <summary class="text-group-summary">${esc(g.label)} <span class="text-group-count">${(g.keys || []).length}</span></summary>
+        <details class="text-group" data-group-id="${esc(gid)}" ${shouldOpen ? 'open' : ''}>
+          <summary class="text-group-summary">
+            <span class="text-group-title">${esc(g.label)}</span>
+            ${dirtyInGroup ? `<span class="text-dirty-badge">${dirtyInGroup} editado${dirtyInGroup > 1 ? 's' : ''}</span>` : ''}
+            <span class="text-group-count">${keys.length}</span>
+            ${previewBtn}
+            <button type="button" class="btn btn-ghost btn-xs text-group-reset" data-reset-group="${esc(gid)}" title="Repor grupo ao original">Original</button>
+          </summary>
           <div class="text-group-body">${blocks}</div>
         </details>`;
       })
       .join('');
 
+    el.innerHTML =
+      html ||
+      '<p class="texts-empty">Nenhum texto corresponde à pesquisa.</p>';
+
+    const countEl = $('#textFilterCount');
+    if (countEl) {
+      countEl.textContent =
+        visibleFields +
+        ' campo' +
+        (visibleFields === 1 ? '' : 's') +
+        (dirtyTotal ? ' · ' + dirtyTotal + ' editado' + (dirtyTotal === 1 ? '' : 's') : '');
+    }
+
+    // Accordion: only one open when not searching / expand-all
+    el.querySelectorAll('details.text-group').forEach((det) => {
+      det.addEventListener('toggle', () => {
+        if (!det.open) {
+          if (textOpenGroupId === det.dataset.groupId) textOpenGroupId = null;
+          return;
+        }
+        textOpenGroupId = det.dataset.groupId;
+        if (textAccordionMode && !textExpandAll && !q) {
+          el.querySelectorAll('details.text-group').forEach((other) => {
+            if (other !== det) other.open = false;
+          });
+        }
+      });
+    });
+
+    // Prevent summary buttons from toggling details
+    el.querySelectorAll('.text-group-reset, .text-group-summary a').forEach((btn) => {
+      btn.addEventListener('click', (e) => e.stopPropagation());
+    });
+
     el.querySelectorAll('textarea').forEach((ta) => {
       const sync = () => {
-        const key = ta.closest('[data-key]')?.dataset.key;
+        const key = ta.dataset.keyRef || ta.closest('[data-key]')?.dataset.key;
         const lang = ta.dataset.lang;
         if (key && lang) {
           if (!texts[lang]) texts[lang] = {};
           texts[lang][key] = ta.value;
+          const counter = el.querySelector('[data-count-for="' + lang + '-' + key + '"]');
+          if (counter) counter.textContent = String(ta.value.length);
+          const block = ta.closest('.text-block');
+          if (block) block.classList.toggle('is-dirty', isTextKeyDirty(key));
+          updatePublishStrip();
         }
       };
       ta.addEventListener('change', sync);
       ta.addEventListener('input', sync);
     });
+
+    el.querySelectorAll('[data-reset-key]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const key = btn.dataset.resetKey;
+        if (!key) return;
+        if (!texts.pt) texts.pt = {};
+        if (!texts.en) texts.en = {};
+        texts.pt[key] = defaultTextValue('pt', key);
+        texts.en[key] = defaultTextValue('en', key);
+        textOpenGroupId = groupIdFromLabel(
+          (getTextGroups().find((g) => (g.keys || []).some((x) => x.k === key)) || {}).label || ''
+        );
+        renderTexts();
+        updatePublishStrip();
+        toast('Texto reposto ao original');
+      });
+    });
+
+    el.querySelectorAll('[data-copy-pt-en]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const key = btn.dataset.copyPtEn;
+        if (!key) return;
+        if (!texts.en) texts.en = {};
+        texts.en[key] = (texts.pt && texts.pt[key]) || '';
+        renderTexts();
+        updatePublishStrip();
+        toast('PT copiado para EN');
+      });
+    });
+
+    el.querySelectorAll('[data-insert-br]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const key = btn.dataset.insertBr;
+        const mode = textLangMode === 'en' ? 'en' : 'pt';
+        const ta =
+          el.querySelector('textarea[data-key-ref="' + key + '"][data-lang="' + mode + '"]') ||
+          el.querySelector('textarea[data-key-ref="' + key + '"][data-lang="pt"]');
+        if (!ta) return;
+        const start = ta.selectionStart || ta.value.length;
+        const end = ta.selectionEnd || start;
+        const insert = '<br>';
+        ta.value = ta.value.slice(0, start) + insert + ta.value.slice(end);
+        ta.focus();
+        ta.selectionStart = ta.selectionEnd = start + insert.length;
+        ta.dispatchEvent(new Event('input'));
+      });
+    });
+
+    el.querySelectorAll('[data-reset-group]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const gid = btn.dataset.resetGroup;
+        const g = groups.find((x) => groupIdFromLabel(x.label) === gid);
+        if (!g || !confirm('Repor todos os textos de «' + g.label + '» ao original?')) return;
+        (g.keys || []).forEach(({ k }) => {
+          if (!texts.pt) texts.pt = {};
+          if (!texts.en) texts.en = {};
+          texts.pt[k] = defaultTextValue('pt', k);
+          texts.en[k] = defaultTextValue('en', k);
+        });
+        renderTexts();
+        updatePublishStrip();
+        toast('Grupo reposto ao original');
+      });
+    });
+  }
+
+  function bindTextsToolbar() {
+    const search = $('#textSearch');
+    if (search && !search.dataset.bound) {
+      search.dataset.bound = '1';
+      let t = null;
+      search.addEventListener('input', () => {
+        clearTimeout(t);
+        t = setTimeout(() => {
+          textSearchQ = search.value || '';
+          renderTexts();
+        }, 150);
+      });
+    }
+    $$('.texts-lang-toggle [data-text-lang]').forEach((btn) => {
+      if (btn.dataset.bound) return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', () => {
+        textLangMode = btn.dataset.textLang || 'both';
+        $$('.texts-lang-toggle [data-text-lang]').forEach((b) =>
+          b.classList.toggle('active', b.dataset.textLang === textLangMode)
+        );
+        const grid = $('#textsGrid');
+        if (grid) {
+          grid.querySelectorAll('.text-fields').forEach((f) => {
+            f.classList.remove('text-lang-both', 'text-lang-pt', 'text-lang-en');
+            f.classList.add('text-lang-' + textLangMode);
+          });
+        }
+      });
+    });
+    const collapse = $('#btnTextsCollapse');
+    const expand = $('#btnTextsExpand');
+    if (collapse && !collapse.dataset.bound) {
+      collapse.dataset.bound = '1';
+      collapse.addEventListener('click', () => {
+        textExpandAll = false;
+        textOpenGroupId = null;
+        textChipFilter = 'all';
+        $$('#textsGrid details.text-group').forEach((d) => {
+          d.open = false;
+        });
+        renderTextsChips(getTextGroups());
+      });
+    }
+    if (expand && !expand.dataset.bound) {
+      expand.dataset.bound = '1';
+      expand.addEventListener('click', () => {
+        textExpandAll = true;
+        textOpenGroupId = null;
+        $$('#textsGrid details.text-group').forEach((d) => {
+          d.open = true;
+        });
+      });
+    }
   }
 
   // ── Site images ─────────────────────────────────────────────────────────
@@ -1518,6 +1856,7 @@
   }
 
   function renderAll() {
+    bindTextsToolbar();
     renderProducts();
     renderZones();
     renderTexts();

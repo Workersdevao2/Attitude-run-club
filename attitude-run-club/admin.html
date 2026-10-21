@@ -199,7 +199,23 @@
             <h2>Textos do site</h2>
             <p>Conteúdo de marca PT / EN — heroes, secções, planos, eventos, CTAs e footer. Após publicar, o site inteiro atualiza.</p>
           </div>
+          <div class="panel-head-actions">
+            <button type="button" class="btn btn-ghost btn-sm" id="btnTextsCollapse" title="Fechar todos">Fechar</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="btnTextsExpand" title="Abrir todos">Abrir</button>
+          </div>
         </div>
+        <div class="texts-toolbar" id="textsToolbar">
+          <div class="admin-search-wrap">
+            <input type="search" id="textSearch" class="admin-search" placeholder="Pesquisar texto ou chave…" autocomplete="off">
+          </div>
+          <div class="texts-lang-toggle" role="group" aria-label="Idioma a editar">
+            <button type="button" class="chip active" data-text-lang="both">PT + EN</button>
+            <button type="button" class="chip" data-text-lang="pt">Só PT</button>
+            <button type="button" class="chip" data-text-lang="en">Só EN</button>
+          </div>
+          <span class="admin-filter-count" id="textFilterCount"></span>
+        </div>
+        <div class="texts-chips" id="textsChips" role="tablist" aria-label="Secções"></div>
         <div class="texts-grid" id="textsGrid"></div>
       </section>
 
