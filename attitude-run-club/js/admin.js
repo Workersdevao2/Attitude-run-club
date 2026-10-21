@@ -56,7 +56,7 @@
     sessionStorage.removeItem(LS.auth);
     localStorage.removeItem(LS.auth);
   }
-  function showApp() {
+  async function showApp() {
     if (loginScreen) {
       loginScreen.hidden = true;
       loginScreen.setAttribute('hidden', '');
@@ -66,7 +66,8 @@
       adminApp.removeAttribute('hidden');
     }
     document.body.classList.remove('no-sticky-pad');
-    loadAll();
+    toast('A sincronizar catálogo…');
+    await loadAll();
     renderAll();
     if (typeof updatePublishStrip === 'function') updatePublishStrip();
     const undoBtn = document.getElementById('btnUndoDraft');
@@ -144,43 +145,118 @@
     localStorage.setItem(key, JSON.stringify(val));
   }
 
-  function loadAll() {
+  async function fetchRemoteCatalog() {
+    const url = window.CATALOG_JSON_URL || '';
+    if (!url) return null;
+    try {
+      const res = await fetch(url + (url.includes('?') ? '&' : '?') + 't=' + Date.now(), {
+        cache: 'no-store',
+      });
+      if (!res.ok) return null;
+      return await res.json();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function mergeProductLists(baseList, enrichFrom) {
+    const byId = Object.fromEntries((enrichFrom || []).map((p) => [p.id, p]));
+    return (baseList || []).map((p) => {
+      const d = byId[p.id];
+      if (!d) {
+        return {
+          ...p,
+          colors: Array.isArray(p.colors) ? p.colors : [],
+          sizes: Array.isArray(p.sizes) ? p.sizes : p.sizes,
+        };
+      }
+      const next = { ...p };
+      if (!Array.isArray(next.colors) || next.colors.length === 0) {
+        next.colors = Array.isArray(d.colors) ? [...d.colors] : [];
+      }
+      if (!Array.isArray(next.sizes) || next.sizes.length === 0) {
+        if (Array.isArray(d.sizes) && d.sizes.length) next.sizes = [...d.sizes];
+      }
+      // Prefer existing draft image; else take remote/default image
+      if (!next.image && d.image) next.image = d.image;
+      if (next.category == null && d.category) next.category = d.category;
+      if (next.soldOut == null && d.soldOut != null) next.soldOut = d.soldOut;
+      return next;
+    });
+  }
+
+  /** Seed local media library from product/site image URLs so picker works on new devices. */
+  function seedMediaFromCatalog() {
+    const urls = new Set((media || []).map((m) => m && m.url).filter(Boolean));
+    const add = (url) => {
+      if (!url || typeof url !== 'string') return;
+      const u = url.trim();
+      if (!u || !/^https?:\/\//i.test(u) || urls.has(u)) return;
+      urls.add(u);
+      media.push({ url: u, at: new Date().toISOString(), seeded: true });
+    };
+    (products || []).forEach((p) => add(p && p.image));
+    Object.values(images || {}).forEach(add);
+    if (media.length) saveJSON(LS.media, media);
+  }
+
+  async function loadAll() {
     const defP = window.DEFAULT_PRODUCTS || [];
     const defZ = window.DEFAULT_ZONES || [];
     const defT = window.DEFAULT_TEXTS || { pt: {}, en: {} };
     const defI = window.DEFAULT_SITE_IMAGES || {};
 
+    const remote = await fetchRemoteCatalog();
+    if (remote && Array.isArray(remote.products)) {
+      try {
+        localStorage.setItem('arc_catalog_published', JSON.stringify(remote));
+        if (remote.updatedAt) localStorage.setItem('arc_last_publish', remote.updatedAt);
+      } catch (_) {}
+    }
+
     const draftP = loadJSON(LS.products, null);
-    // Prefer full default catalog when draft is missing the new product set
-    const draftLooksLegacy = Array.isArray(draftP) && draftP.length > 0 &&
+    const draftLooksLegacy =
+      Array.isArray(draftP) &&
+      draftP.length > 0 &&
       !draftP.some((p) => p && p.id === 'short-boost');
-    products = (!draftP || draftLooksLegacy)
-      ? structuredClone(defP)
-      : draftP;
-    zones = loadJSON(LS.zones, null) || structuredClone(defZ);
-    texts = loadJSON(LS.texts, null) || structuredClone(defT);
-    images = loadJSON(LS.images, null) || structuredClone(defI);
+
+    // Base priority: valid local draft → remote published → code defaults
+    let baseProducts;
+    if (draftP && !draftLooksLegacy) {
+      baseProducts = draftP;
+    } else if (remote && Array.isArray(remote.products) && remote.products.length) {
+      baseProducts = structuredClone(remote.products);
+    } else {
+      baseProducts = structuredClone(defP);
+    }
+
+    products = baseProducts;
+    zones =
+      loadJSON(LS.zones, null) ||
+      (remote && Array.isArray(remote.zones) ? structuredClone(remote.zones) : null) ||
+      structuredClone(defZ);
+    texts =
+      loadJSON(LS.texts, null) ||
+      (remote && remote.texts ? structuredClone(remote.texts) : null) ||
+      structuredClone(defT);
+    images =
+      loadJSON(LS.images, null) ||
+      (remote && remote.images ? structuredClone(remote.images) : null) ||
+      structuredClone(defI);
     media = loadJSON(LS.media, []) || [];
 
-    // Merge colours / sizes from defaults when draft is older (missing fields)
-    if (Array.isArray(defP) && defP.length) {
-      const byId = Object.fromEntries(defP.map((p) => [p.id, p]));
-      products = products.map((p) => {
-        const d = byId[p.id];
-        if (!d) return { ...p, colors: Array.isArray(p.colors) ? p.colors : [] };
-        const next = { ...p };
-        if (!Array.isArray(next.colors) || next.colors.length === 0) {
-          if (Array.isArray(d.colors) && d.colors.length) next.colors = [...d.colors];
-          else next.colors = [];
-        }
-        if (!Array.isArray(next.sizes) || next.sizes.length === 0) {
-          if (Array.isArray(d.sizes) && d.sizes.length) next.sizes = [...d.sizes];
-        }
-        // Keep staff images if already set
-        if (!next.image && d.image) next.image = d.image;
-        return next;
-      });
+    // Enrich from remote (images!) then defaults
+    if (remote && Array.isArray(remote.products)) {
+      products = mergeProductLists(products, remote.products);
     }
+    if (Array.isArray(defP) && defP.length) {
+      products = mergeProductLists(products, defP);
+    }
+
+    // If draft has empty images but remote has them, already filled above.
+    // Seed media picker from known URLs so new phones can re-assign without re-upload.
+    if (!media.length) seedMediaFromCatalog();
+
     normalizeOrders();
   }
 
