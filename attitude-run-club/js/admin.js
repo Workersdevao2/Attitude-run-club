@@ -245,6 +245,21 @@
       structuredClone(defI);
     media = loadJSON(LS.media, []) || [];
 
+    // Seed missing brand keys / image slots from defaults (never overwrite staff values)
+    texts = texts || { pt: {}, en: {} };
+    if (!texts.pt) texts.pt = {};
+    if (!texts.en) texts.en = {};
+    ['pt', 'en'].forEach((lang) => {
+      const src = (defT && defT[lang]) || {};
+      Object.keys(src).forEach((k) => {
+        if (texts[lang][k] == null) texts[lang][k] = src[k];
+      });
+    });
+    images = images || {};
+    Object.keys(defI || {}).forEach((k) => {
+      if (images[k] == null || images[k] === '') images[k] = defI[k];
+    });
+
     // Enrich from remote (images!) then defaults
     if (remote && Array.isArray(remote.products)) {
       products = mergeProductLists(products, remote.products);
@@ -966,39 +981,61 @@
 
   // ── Texts ───────────────────────────────────────────────────────────────
   function renderTexts() {
-    const keys = [
-      { k: 'hero.title1', label: 'Hero título linha 1' },
-      { k: 'hero.title2', label: 'Hero título linha 2 (itálico)' },
-      { k: 'hero.sub', label: 'Hero subtítulo' },
-      { k: 'loja.title', label: 'Loja título' },
-      { k: 'loja.sub', label: 'Loja subtítulo' },
+    const groups = window.TEXT_GROUPS || [
+      {
+        label: 'Textos',
+        keys: [
+          { k: 'hero.title1', label: 'Hero título linha 1' },
+          { k: 'hero.title2', label: 'Hero título linha 2' },
+          { k: 'hero.sub', label: 'Hero subtítulo' },
+          { k: 'loja.title', label: 'Loja título' },
+          { k: 'loja.sub', label: 'Loja subtítulo' },
+        ],
+      },
     ];
     const el = $('#textsGrid');
     if (!el) return;
     if (!texts.pt) texts.pt = {};
     if (!texts.en) texts.en = {};
-    el.innerHTML = keys.map(({ k, label }) => `
-      <div class="text-block" data-key="${esc(k)}">
-        <h3>${esc(label)} <code style="font-weight:400;color:var(--muted)">${esc(k)}</code></h3>
-        <div class="field">
-          <label>PT</label>
-          <textarea data-lang="pt" rows="2">${esc(texts.pt[k] || '')}</textarea>
-        </div>
-        <div class="field">
-          <label>EN</label>
-          <textarea data-lang="en" rows="2">${esc(texts.en[k] || '')}</textarea>
-        </div>
-      </div>
-    `).join('');
+
+    el.innerHTML = groups
+      .map((g) => {
+        const blocks = (g.keys || [])
+          .map(({ k, label }) => {
+            const rows = String(texts.pt[k] || texts.en[k] || '').length > 80 ? 3 : 2;
+            return `
+          <div class="text-block" data-key="${esc(k)}">
+            <h3>${esc(label)} <code>${esc(k)}</code></h3>
+            <div class="field">
+              <label>PT</label>
+              <textarea data-lang="pt" rows="${rows}">${esc(texts.pt[k] || '')}</textarea>
+            </div>
+            <div class="field">
+              <label>EN</label>
+              <textarea data-lang="en" rows="${rows}">${esc(texts.en[k] || '')}</textarea>
+            </div>
+          </div>`;
+          })
+          .join('');
+        return `
+        <details class="text-group" open>
+          <summary class="text-group-summary">${esc(g.label)} <span class="text-group-count">${(g.keys || []).length}</span></summary>
+          <div class="text-group-body">${blocks}</div>
+        </details>`;
+      })
+      .join('');
+
     el.querySelectorAll('textarea').forEach((ta) => {
-      ta.addEventListener('change', () => {
+      const sync = () => {
         const key = ta.closest('[data-key]')?.dataset.key;
         const lang = ta.dataset.lang;
         if (key && lang) {
           if (!texts[lang]) texts[lang] = {};
           texts[lang][key] = ta.value;
         }
-      });
+      };
+      ta.addEventListener('change', sync);
+      ta.addEventListener('input', sync);
     });
   }
 
