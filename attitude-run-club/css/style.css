@@ -786,7 +786,7 @@ section { padding: 120px 48px; }
   line-height: 1.45;
 }
 .plan-features li::before {
-  content: '—';
+  content: '';
   position: absolute;
   left: 0;
   color: var(--accent);
@@ -3371,4 +3371,10 @@ body.qv-open { overflow: hidden; }
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.supp-card.reveal,
+.supp-card.reveal.visible {
+  opacity: 1;
+  transform: none;
 }

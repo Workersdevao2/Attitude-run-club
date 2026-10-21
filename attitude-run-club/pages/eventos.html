@@ -1,231 +1,231 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#0a0a0a">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Eventos — Attitude Run Club</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/style.css">
-  <link rel="icon" href="../images/logo.jpg" type="image/jpeg">
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="theme-color" content="#0a0a0a">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <title>Eventos · Attitude Run Club</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="../css/style.css">
+ <link rel="icon" href="../images/logo.jpg" type="image/jpeg">
 </head>
 <body>
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-ring" id="cursorRing"></div>
+ <div class="cursor" id="cursor"></div>
+ <div class="cursor-ring" id="cursorRing"></div>
 
-  <nav>
-    <a href="../index.html" class="nav-logo">
-      <img src="../images/logo.jpg" data-site-img="logo" alt="Attitude Run Club" style="height:32px; border-radius:4px;">
-      ATTITUDE <span>RUN</span> CLUB
-    </a>
-    <ul class="nav-links">
-      <li><a href="../index.html" data-i18n="nav.home">Início</a></li>
-      <li><a href="../index.html#pilares" data-i18n="nav.pilares">Pilares</a></li>
-      <li><a href="planos.html" data-i18n="nav.planos">Planos</a></li>
-      <li><a href="loja.html" data-i18n="nav.loja">Loja</a></li>
-      <li><a href="suplementacao.html" data-i18n="nav.suplementacao">Suplementação</a></li>
-      <li><a href="eventos.html" class="active" data-i18n="nav.eventos">Eventos</a></li>
-      <li><a href="roadmap.html" data-i18n="nav.roadmap">Roadmap</a></li>
-      <li><a href="contacto.html" data-i18n="nav.contacto">Contacto</a></li>
-    </ul>
-    <div class="nav-right">
-      <div class="lang-toggle">
-        <button data-lang="pt" class="active">PT</button>
-        <button data-lang="en">EN</button>
-      </div>
-      <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="nav-cta" target="_blank" rel="noopener">Juntar ao Clube</a>
-      <button class="hamburger" id="hamburger" aria-label="Menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-  </nav>
+ <nav>
+ <a href="../index.html" class="nav-logo">
+ <img src="../images/logo.jpg" data-site-img="logo" alt="Attitude Run Club" style="height:32px; border-radius:4px;">
+ ATTITUDE <span>RUN</span> CLUB
+ </a>
+ <ul class="nav-links">
+ <li><a href="../index.html" data-i18n="nav.home">Início</a></li>
+ <li><a href="../index.html#pilares" data-i18n="nav.pilares">Pilares</a></li>
+ <li><a href="planos.html" data-i18n="nav.planos">Planos</a></li>
+ <li><a href="loja.html" data-i18n="nav.loja">Loja</a></li>
+ <li><a href="suplementacao.html" data-i18n="nav.suplementacao">Suplementação</a></li>
+ <li><a href="eventos.html" class="active" data-i18n="nav.eventos">Eventos</a></li>
+ <li><a href="roadmap.html" data-i18n="nav.roadmap">Roadmap</a></li>
+ <li><a href="contacto.html" data-i18n="nav.contacto">Contacto</a></li>
+ </ul>
+ <div class="nav-right">
+ <div class="lang-toggle">
+ <button data-lang="pt" class="active">PT</button>
+ <button data-lang="en">EN</button>
+ </div>
+ <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="nav-cta" target="_blank" rel="noopener">Juntar ao Clube</a>
+ <button class="hamburger" id="hamburger" aria-label="Menu">
+ <span></span>
+ <span></span>
+ <span></span>
+ </button>
+ </div>
+ </nav>
 
-  <!-- MOBILE MENU -->
-  <div class="mobile-menu" id="mobileMenu">
-    <button class="mobile-close" id="mobileClose" aria-label="Fechar menu">
-      <span></span>
-      <span></span>
-    </button>
-    <a href="../index.html" data-i18n="nav.home">Início</a>
-    <a href="../index.html#pilares" data-i18n="nav.pilares">Pilares</a>
-    <a href="planos.html" data-i18n="nav.planos">Planos</a>
-    <a href="loja.html" data-i18n="nav.loja">Loja</a>
-    <a href="suplementacao.html" data-i18n="nav.suplementacao">Suplementação</a>
-    <a href="eventos.html" data-i18n="nav.eventos">Eventos</a>
-    <a href="roadmap.html" data-i18n="nav.roadmap">Roadmap</a>
-    <a href="contacto.html" data-i18n="nav.contacto">Contacto</a>
-    <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="mobile-cta" data-i18n="nav.cta" target="_blank" rel="noopener">Juntar ao Clube</a>
-  </div>
+ <!-- MOBILE MENU -->
+ <div class="mobile-menu" id="mobileMenu">
+ <button class="mobile-close" id="mobileClose" aria-label="Fechar menu">
+ <span></span>
+ <span></span>
+ </button>
+ <a href="../index.html" data-i18n="nav.home">Início</a>
+ <a href="../index.html#pilares" data-i18n="nav.pilares">Pilares</a>
+ <a href="planos.html" data-i18n="nav.planos">Planos</a>
+ <a href="loja.html" data-i18n="nav.loja">Loja</a>
+ <a href="suplementacao.html" data-i18n="nav.suplementacao">Suplementação</a>
+ <a href="eventos.html" data-i18n="nav.eventos">Eventos</a>
+ <a href="roadmap.html" data-i18n="nav.roadmap">Roadmap</a>
+ <a href="contacto.html" data-i18n="nav.contacto">Contacto</a>
+ <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="mobile-cta" data-i18n="nav.cta" target="_blank" rel="noopener">Juntar ao Clube</a>
+ </div>
 
-  <section class="page-hero has-bg" data-site-img-bg="eventos-hero" style="background-image: url('../images/start-02.jpg');">
-    <p class="section-label reveal" data-i18n="eventos.label">Eventos</p>
-    <h1 class="section-title reveal reveal-delay-1" data-i18n="eventos.title">Histórico<br>&amp; próximos.</h1>
-    <p class="page-hero-sub reveal reveal-delay-2" data-i18n="eventos.sub">O que já vivemos e o que vem a seguir. Cada corrida deixa marca — e a próxima já está marcada.</p>
-  </section>
+ <section class="page-hero has-bg" data-site-img-bg="eventos-hero" style="background-image: url('../images/start-02.jpg');">
+ <p class="section-label reveal" data-i18n="eventos.label">Eventos</p>
+ <h1 class="section-title reveal reveal-delay-1" data-i18n="eventos.title">Histórico<br>&amp; próximos.</h1>
+ <p class="page-hero-sub reveal reveal-delay-2" data-i18n="eventos.sub">O que já vivemos e o que vem a seguir. Cada corrida deixa marca · e a próxima já está marcada.</p>
+ </section>
 
-  <section style="padding-top:0;">
-    <!-- PAST EVENTS CAROUSEL -->
-    <div class="past-events-wrap reveal">
-      <div class="past-events-header">
-        <h2 class="events-col-title" data-i18n="eventos.past.title">Eventos passados</h2>
-        <div class="carousel-nav">
-          <button class="carousel-btn" id="pastPrev" aria-label="Anterior">
-            <span></span>
-          </button>
-          <button class="carousel-btn" id="pastNext" aria-label="Seguinte">
-            <span></span>
-          </button>
-        </div>
-      </div>
+ <section style="padding-top:0;">
+ <!-- PAST EVENTS CAROUSEL -->
+ <div class="past-events-wrap reveal">
+ <div class="past-events-header">
+ <h2 class="events-col-title" data-i18n="eventos.past.title">Eventos passados</h2>
+ <div class="carousel-nav">
+ <button class="carousel-btn" id="pastPrev" aria-label="Anterior">
+ <span></span>
+ </button>
+ <button class="carousel-btn" id="pastNext" aria-label="Seguinte">
+ <span></span>
+ </button>
+ </div>
+ </div>
 
-      <div class="past-carousel" id="pastCarousel">
-        <div class="past-track" id="pastTrack">
+ <div class="past-carousel" id="pastCarousel">
+ <div class="past-track" id="pastTrack">
 
-          <article class="past-slide">
-            <div class="past-slide-img">
-              <img src="../images/start-01.jpg" data-site-img="event-past-1" alt="Night Run — Neon Edition">
-            </div>
-            <div class="past-slide-body">
-              <p class="calendar-date" data-i18n="eventos.past.1.date">Agosto 2025 · Luanda</p>
-              <h3 class="calendar-name" data-i18n="eventos.past.1.name">Night Run — Neon Edition</h3>
-              <p class="calendar-meta" data-i18n="eventos.past.1.meta">LED Run · DJ no ponto final · Best outfit</p>
-              <p class="calendar-recap" data-i18n="eventos.past.1.recap">Noite cheia de energia. Dezenas de Attituders em neon, percurso iluminado e vibe de tribo do início ao fim. Resumo: comunidade a 100%.</p>
-            </div>
-          </article>
+ <article class="past-slide">
+ <div class="past-slide-img">
+ <img src="../images/start-01.jpg" data-site-img="event-past-1" alt="Night Run · Neon Edition">
+ </div>
+ <div class="past-slide-body">
+ <p class="calendar-date" data-i18n="eventos.past.1.date">Agosto 2025 · Luanda</p>
+ <h3 class="calendar-name" data-i18n="eventos.past.1.name">Night Run · Neon Edition</h3>
+ <p class="calendar-meta" data-i18n="eventos.past.1.meta">LED Run · DJ no ponto final · Best outfit</p>
+ <p class="calendar-recap" data-i18n="eventos.past.1.recap">Noite cheia de energia. Dezenas de Attituders em neon, percurso iluminado e vibe de tribo do início ao fim. Resumo: comunidade a 100%.</p>
+ </div>
+ </article>
 
-          <article class="past-slide">
-            <div class="past-slide-img">
-              <img src="../images/run-02.jpg" data-site-img="event-past-2" alt="Sunset Run + Networking">
-            </div>
-            <div class="past-slide-body">
-              <p class="calendar-date" data-i18n="eventos.past.2.date">Julho 2025 · Luanda</p>
-              <h3 class="calendar-name" data-i18n="eventos.past.2.name">Sunset Run + Networking</h3>
-              <p class="calendar-meta" data-i18n="eventos.past.2.meta">Pace social · Vista · Música</p>
-              <p class="calendar-recap" data-i18n="eventos.past.2.recap">O pôr do sol mais bonito da semana. Corrida leve, conversas fortes e novas amizades no clube. Ideal para quem estava a começar.</p>
-            </div>
-          </article>
+ <article class="past-slide">
+ <div class="past-slide-img">
+ <img src="../images/run-02.jpg" data-site-img="event-past-2" alt="Sunset Run + Networking">
+ </div>
+ <div class="past-slide-body">
+ <p class="calendar-date" data-i18n="eventos.past.2.date">Julho 2025 · Luanda</p>
+ <h3 class="calendar-name" data-i18n="eventos.past.2.name">Sunset Run + Networking</h3>
+ <p class="calendar-meta" data-i18n="eventos.past.2.meta">Pace social · Vista · Música</p>
+ <p class="calendar-recap" data-i18n="eventos.past.2.recap">O pôr do sol mais bonito da semana. Corrida leve, conversas fortes e novas amizades no clube. Ideal para quem estava a começar.</p>
+ </div>
+ </article>
 
-          <article class="past-slide">
-            <div class="past-slide-img">
-              <img src="../images/community-01.jpg" data-site-img="event-past-3" alt="Run + Brunch">
-            </div>
-            <div class="past-slide-body">
-              <p class="calendar-date" data-i18n="eventos.past.3.date">Junho 2025 · Luanda</p>
-              <h3 class="calendar-name" data-i18n="eventos.past.3.name">Run + Brunch</h3>
-              <p class="calendar-meta" data-i18n="eventos.past.3.meta">5 km · Recovery · Café</p>
-              <p class="calendar-recap" data-i18n="eventos.past.3.recap">Treino + mesa partilhada. Smoothies, café e networking depois dos 5 km. Formato que a tribo pediu para voltar.</p>
-            </div>
-          </article>
+ <article class="past-slide">
+ <div class="past-slide-img">
+ <img src="../images/community-01.jpg" data-site-img="event-past-3" alt="Run + Brunch">
+ </div>
+ <div class="past-slide-body">
+ <p class="calendar-date" data-i18n="eventos.past.3.date">Junho 2025 · Luanda</p>
+ <h3 class="calendar-name" data-i18n="eventos.past.3.name">Run + Brunch</h3>
+ <p class="calendar-meta" data-i18n="eventos.past.3.meta">5 km · Recovery · Café</p>
+ <p class="calendar-recap" data-i18n="eventos.past.3.recap">Treino + mesa partilhada. Smoothies, café e networking depois dos 5 km. Formato que a tribo pediu para voltar.</p>
+ </div>
+ </article>
 
-          <article class="past-slide">
-            <div class="past-slide-img">
-              <img src="../images/start-01.jpg" alt="Night Run atmosphere">
-            </div>
-            <div class="past-slide-body">
-              <p class="calendar-date">Maio 2025 · Luanda</p>
-              <h3 class="calendar-name">First Night Run</h3>
-              <p class="calendar-meta">LED · Comunidade · Energia</p>
-              <p class="calendar-recap">O início de tudo. A primeira noite em que a tribo correu junta sob as luzes da cidade.</p>
-            </div>
-          </article>
+ <article class="past-slide">
+ <div class="past-slide-img">
+ <img src="../images/start-01.jpg" alt="Night Run atmosphere">
+ </div>
+ <div class="past-slide-body">
+ <p class="calendar-date">Maio 2025 · Luanda</p>
+ <h3 class="calendar-name">First Night Run</h3>
+ <p class="calendar-meta">LED · Comunidade · Energia</p>
+ <p class="calendar-recap">O início de tudo. A primeira noite em que a tribo correu junta sob as luzes da cidade.</p>
+ </div>
+ </article>
 
-          <article class="past-slide">
-            <div class="past-slide-img">
-              <img src="../images/run-01.jpg" alt="Sunset Run">
-            </div>
-            <div class="past-slide-body">
-              <p class="calendar-date">Abril 2025 · Luanda</p>
-              <h3 class="calendar-name">Sunset Run</h3>
-              <p class="calendar-meta">Pace social · Vista · Música</p>
-              <p class="calendar-recap">Treinos ao pôr do sol que se tornaram o ritual semanal da comunidade.</p>
-            </div>
-          </article>
+ <article class="past-slide">
+ <div class="past-slide-img">
+ <img src="../images/run-01.jpg" alt="Sunset Run">
+ </div>
+ <div class="past-slide-body">
+ <p class="calendar-date">Abril 2025 · Luanda</p>
+ <h3 class="calendar-name">Sunset Run</h3>
+ <p class="calendar-meta">Pace social · Vista · Música</p>
+ <p class="calendar-recap">Treinos ao pôr do sol que se tornaram o ritual semanal da comunidade.</p>
+ </div>
+ </article>
 
-        </div>
-      </div>
+ </div>
+ </div>
 
-      <div class="carousel-dots" id="pastDots"></div>
-    </div>
+ <div class="carousel-dots" id="pastDots"></div>
+ </div>
 
-    <!-- UPCOMING EVENTS -->
-    <div class="events-split" style="margin-top: 64px;">
-      <div class="col-upcoming reveal" style="grid-column: 1 / -1; max-width: 520px; margin: 0 auto;">
-        <h2 class="events-col-title" data-i18n="eventos.upcoming.title">Próximos eventos</h2>
-        <div class="calendar-list">
-          <article class="calendar-card featured">
-            <img src="../images/event-lets-go.jpg" data-site-img="event-up-1" alt="Attituders Let's Go" class="calendar-poster">
-            <p class="days-badge"><span class="js-days-to-event">—</span> <span data-i18n="stat.dias">Dias para o evento</span></p>
-            <p class="calendar-date" data-i18n="eventos.up.1.date">Sexta · 30 Outubro · 19h</p>
-            <h3 class="calendar-name" data-i18n="eventos.up.1.name">Attituders Let's Go</h3>
-            <p class="calendar-meta" data-i18n="eventos.up.1.meta">Save the date · Ingressos disponíveis · ticket.ao</p>
-            <p class="calendar-recap" data-i18n="eventos.up.1.recap">O próximo grande encontro da tribo. Energia, corrida e atitude. Não fiques de fora.</p>
-            <div class="calendar-actions">
-              <a href="https://ticket.ao/event/attituders-lets-go/" class="primary" target="_blank" rel="noopener" data-i18n="eventos.up.1.btn">Comprar ingresso</a>
-              <a href="https://wa.me/244932826818" target="_blank" rel="noopener">WhatsApp</a>
-            </div>
-          </article>
-        </div>
-      </div>
-    </div>
+ <!-- UPCOMING EVENTS -->
+ <div class="events-split" style="margin-top: 64px;">
+ <div class="col-upcoming reveal" style="grid-column: 1 / -1; max-width: 520px; margin: 0 auto;">
+ <h2 class="events-col-title" data-i18n="eventos.upcoming.title">Próximos eventos</h2>
+ <div class="calendar-list">
+ <article class="calendar-card featured">
+ <img src="../images/event-lets-go.jpg" data-site-img="event-up-1" alt="Attituders Let's Go" class="calendar-poster">
+ <p class="days-badge"><span class="js-days-to-event">·</span> <span data-i18n="stat.dias">Dias para o evento</span></p>
+ <p class="calendar-date" data-i18n="eventos.up.1.date">Sexta · 30 Outubro · 19h</p>
+ <h3 class="calendar-name" data-i18n="eventos.up.1.name">Attituders Let's Go</h3>
+ <p class="calendar-meta" data-i18n="eventos.up.1.meta">Save the date · Ingressos disponíveis · ticket.ao</p>
+ <p class="calendar-recap" data-i18n="eventos.up.1.recap">O próximo grande encontro da tribo. Energia, corrida e atitude. Não fiques de fora.</p>
+ <div class="calendar-actions">
+ <a href="https://ticket.ao/event/attituders-lets-go/" class="primary" target="_blank" rel="noopener" data-i18n="eventos.up.1.btn">Comprar ingresso</a>
+ <a href="https://wa.me/244932826818" target="_blank" rel="noopener">WhatsApp</a>
+ </div>
+ </article>
+ </div>
+ </div>
+ </div>
 
-  </section>
+ </section>
 
-  <section class="cta-section has-bg" data-site-img-bg="cta-eventos" style="min-height:50vh; background-image: url('../images/cta-community.jpg');">
-    <p class="cta-eyebrow" data-i18n="eventos.cta.eyebrow">Não percas o próximo</p>
-    <h2 class="cta-title" data-i18n="eventos.cta.title">Junta-te<br>à tribo.</h2>
-    <div class="cta-actions">
-      <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="btn-large" target="_blank" rel="noopener" data-i18n="eventos.cta.btn">Quero Participar</a>
-    </div>
-  </section>
+ <section class="cta-section has-bg" data-site-img-bg="cta-eventos" style="min-height:50vh; background-image: url('../images/cta-community.jpg');">
+ <p class="cta-eyebrow" data-i18n="eventos.cta.eyebrow">Não percas o próximo</p>
+ <h2 class="cta-title" data-i18n="eventos.cta.title">Junta-te<br>à tribo.</h2>
+ <div class="cta-actions">
+ <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="btn-large" target="_blank" rel="noopener" data-i18n="eventos.cta.btn">Quero Participar</a>
+ </div>
+ </section>
 
-  <footer>
-    <div class="footer-top">
-      <div>
-        <div class="footer-logo">ATTITUDE <span>RUN</span> CLUB</div>
-        <p class="footer-tagline" data-i18n="footer.tagline">Move With Purpose · Corre Com Atitude</p>
-      </div>
-      <div class="footer-links">
-        <div class="footer-col">
-          <h4 data-i18n="footer.nav">Navegação</h4>
-          <a href="../index.html" data-i18n="nav.home">Início</a>
-          <a href="planos.html" data-i18n="nav.planos">Planos</a>
-          <a href="loja.html" data-i18n="nav.loja">Loja</a>
-          <a href="suplementacao.html" data-i18n="nav.suplementacao">Suplementação</a>
-          <a href="eventos.html" data-i18n="nav.eventos">Eventos</a>
-          <a href="roadmap.html" data-i18n="nav.roadmap">Roadmap</a>
-          <a href="contacto.html" data-i18n="nav.contacto">Contacto</a>
-        </div>
-        <div class="footer-col">
-          <h4 data-i18n="footer.contacto">Contacto</h4>
-          <a href="mailto:attituderunclub@gmail.com">attituderunclub@gmail.com</a>
-          <a href="https://wa.me/244932826818" target="_blank" rel="noopener">WhatsApp: 932 826 818</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p class="footer-copy"><span data-i18n="footer.rights">© 2025 Attitude Run Club · Attitude Sportwear</span></p>
-      <div class="footer-social">
-        <a href="https://www.instagram.com/attituderunclub" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://wa.me/244932826818" target="_blank" rel="noopener">WhatsApp</a>
-      </div>
-    </div>
-  </footer>
+ <footer>
+ <div class="footer-top">
+ <div>
+ <div class="footer-logo">ATTITUDE <span>RUN</span> CLUB</div>
+ <p class="footer-tagline" data-i18n="footer.tagline">Move With Purpose · Corre Com Atitude</p>
+ </div>
+ <div class="footer-links">
+ <div class="footer-col">
+ <h4 data-i18n="footer.nav">Navegação</h4>
+ <a href="../index.html" data-i18n="nav.home">Início</a>
+ <a href="planos.html" data-i18n="nav.planos">Planos</a>
+ <a href="loja.html" data-i18n="nav.loja">Loja</a>
+ <a href="suplementacao.html" data-i18n="nav.suplementacao">Suplementação</a>
+ <a href="eventos.html" data-i18n="nav.eventos">Eventos</a>
+ <a href="roadmap.html" data-i18n="nav.roadmap">Roadmap</a>
+ <a href="contacto.html" data-i18n="nav.contacto">Contacto</a>
+ </div>
+ <div class="footer-col">
+ <h4 data-i18n="footer.contacto">Contacto</h4>
+ <a href="mailto:attituderunclub@gmail.com">attituderunclub@gmail.com</a>
+ <a href="https://wa.me/244932826818" target="_blank" rel="noopener">WhatsApp: 932 826 818</a>
+ </div>
+ </div>
+ </div>
+ <div class="footer-bottom">
+ <p class="footer-copy"><span data-i18n="footer.rights">© 2025 Attitude Run Club · Attitude Sportwear</span></p>
+ <div class="footer-social">
+ <a href="https://www.instagram.com/attituderunclub" target="_blank" rel="noopener">Instagram</a>
+ <a href="https://wa.me/244932826818" target="_blank" rel="noopener">WhatsApp</a>
+ </div>
+ </div>
+ </footer>
 
-  <script src="../js/products.js"></script>
-  <script src="../js/catalog.js"></script>
-  <script src="../js/main.js"></script>
-  <script>
-    (async function () {
-      if (!window.ARCCatalog) return;
-      const cat = await ARCCatalog.loadCatalog();
-      ARCCatalog.applyTexts(cat.texts);
-      ARCCatalog.applySiteImages(cat.images);
-    })();
-  </script>
+ <script src="../js/products.js"></script>
+ <script src="../js/catalog.js"></script>
+ <script src="../js/main.js"></script>
+ <script>
+ (async function () {
+ if (!window.ARCCatalog) return;
+ const cat = await ARCCatalog.loadCatalog();
+ ARCCatalog.applyTexts(cat.texts);
+ ARCCatalog.applySiteImages(cat.images);
+ })();
+ </script>
 </body>
 </html>

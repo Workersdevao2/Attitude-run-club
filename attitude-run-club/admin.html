@@ -1,473 +1,473 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#0a0a0a">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="robots" content="noindex, nofollow">
-  <title>Admin — Attitude Run Club</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/admin.css">
-  <link rel="icon" href="images/logo.jpg" type="image/jpeg">
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="theme-color" content="#0a0a0a">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <meta name="robots" content="noindex, nofollow">
+ <title>Admin · Attitude Run Club</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="css/admin.css">
+ <link rel="icon" href="images/logo.jpg" type="image/jpeg">
 </head>
 <body class="no-sticky-pad">
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+ <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <!-- LOGIN -->
-  <div class="login-wrap" id="loginScreen">
-    <form class="login-card" id="loginForm" autocomplete="on">
-      <h1>Attitude Admin</h1>
-      <p>Painel da equipa — produtos, textos, imagens e publicação.</p>
-      <label for="adminPassword">Password</label>
-      <div class="password-field">
-        <input type="password" id="adminPassword" name="password" required autocomplete="current-password" inputmode="text">
-        <button type="button" class="password-toggle" id="passwordToggle" aria-label="Mostrar password" title="Mostrar password">
-          <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-            <circle cx="12" cy="12" r="3"/>
-          </svg>
-          <svg class="icon-eye-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden>
-            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-            <line x1="1" y1="1" x2="23" y2="23"/>
-          </svg>
-        </button>
-      </div>
-      <div class="login-error" id="loginError"></div>
-      <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:0.85rem;margin-bottom:16px;cursor:pointer;">
-        <input type="checkbox" id="rememberMe" style="width:auto;margin:0;"> Manter sessão neste dispositivo
-      </label>
-      <button type="submit" class="btn btn-primary" style="width:100%;">Entrar</button>
-    </form>
-  </div>
+ <!-- LOGIN -->
+ <div class="login-wrap" id="loginScreen">
+ <form class="login-card" id="loginForm" autocomplete="on">
+ <h1>Attitude Admin</h1>
+ <p>Painel da equipa · produtos, textos, imagens e publicação.</p>
+ <label for="adminPassword">Password</label>
+ <div class="password-field">
+ <input type="password" id="adminPassword" name="password" required autocomplete="current-password" inputmode="text">
+ <button type="button" class="password-toggle" id="passwordToggle" aria-label="Mostrar password" title="Mostrar password">
+ <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+ <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+ <circle cx="12" cy="12" r="3"/>
+ </svg>
+ <svg class="icon-eye-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden>
+ <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+ <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+ <line x1="1" y1="1" x2="23" y2="23"/>
+ </svg>
+ </button>
+ </div>
+ <div class="login-error" id="loginError"></div>
+ <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:0.85rem;margin-bottom:16px;cursor:pointer;">
+ <input type="checkbox" id="rememberMe" style="width:auto;margin:0;"> Manter sessão neste dispositivo
+ </label>
+ <button type="submit" class="btn btn-primary" style="width:100%;">Entrar</button>
+ </form>
+ </div>
 
-  <!-- APP -->
-  <div id="adminApp" hidden>
-    <header class="admin-header">
-      <div>
-        <h1>Attitude Admin</h1>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span class="badge" id="statPublishBadge">Staff</span>
-        <button type="button" class="logout-btn" id="logoutBtn">Sair</button>
-      </div>
-    </header>
+ <!-- APP -->
+ <div id="adminApp" hidden>
+ <header class="admin-header">
+ <div>
+ <h1>Attitude Admin</h1>
+ </div>
+ <div style="display:flex;align-items:center;gap:8px;">
+ <span class="badge" id="statPublishBadge">Staff</span>
+ <button type="button" class="logout-btn" id="logoutBtn">Sair</button>
+ </div>
+ </header>
 
-    <nav class="admin-nav" aria-label="Secções">
-      <button type="button" data-panel="dashboard" class="active">Painel</button>
-      <button type="button" data-panel="inbox">Pedidos <span class="nav-badge" id="navInboxBadge" hidden>0</span></button>
-      <button type="button" data-panel="products">Produtos</button>
-      <button type="button" data-panel="supplements">Suplementação</button>
-      <button type="button" data-panel="zones">Zonas</button>
-      <button type="button" data-panel="texts">Textos</button>
-      <button type="button" data-panel="images">Imagens</button>
-      <button type="button" data-panel="media">Média</button>
-    </nav>
+ <nav class="admin-nav" aria-label="Secções">
+ <button type="button" data-panel="dashboard" class="active">Painel</button>
+ <button type="button" data-panel="inbox">Pedidos <span class="nav-badge" id="navInboxBadge" hidden>0</span></button>
+ <button type="button" data-panel="products">Produtos</button>
+ <button type="button" data-panel="supplements">Suplementação</button>
+ <button type="button" data-panel="zones">Zonas</button>
+ <button type="button" data-panel="texts">Textos</button>
+ <button type="button" data-panel="images">Imagens</button>
+ <button type="button" data-panel="media">Média</button>
+ </nav>
 
-    <div class="publish-strip" id="publishStrip" aria-live="polite">
-      <span class="publish-dot" id="publishDot"></span>
-      <span id="publishStripText">A verificar estado…</span>
-      <button type="button" class="btn btn-ghost btn-sm" id="btnUndoDraft" hidden>Desfazer rascunho</button>
-    </div>
+ <div class="publish-strip" id="publishStrip" aria-live="polite">
+ <span class="publish-dot" id="publishDot"></span>
+ <span id="publishStripText">A verificar estado…</span>
+ <button type="button" class="btn btn-ghost btn-sm" id="btnUndoDraft" hidden>Desfazer rascunho</button>
+ </div>
 
-    <main class="admin-main">
-      <!-- DASHBOARD -->
-      <section class="panel active" id="panel-dashboard">
-        <div class="panel-head">
-          <div>
-            <h2>Painel</h2>
-            <p>Resumo e guia rápido para a equipa.</p>
-          </div>
-        </div>
-        <div class="stats-row">
-          <div class="stat-card"><div class="num is-loading" id="statInbox">—</div><div class="lbl">Pedidos novos</div></div>
-          <div class="stat-card"><div class="num is-loading" id="statProducts">—</div><div class="lbl">Produtos ativos</div></div>
-          <div class="stat-card"><div class="num is-loading" id="statZones">—</div><div class="lbl">Zonas</div></div>
-          <div class="stat-card"><div class="num is-loading" id="statMedia">—</div><div class="lbl">Média</div></div>
-        </div>
-        <div class="guide">
-          <h3>Como trabalhar</h3>
-          <ol>
-            <li><strong>Edita</strong> produtos, zonas, textos ou imagens do site.</li>
-            <li><strong>Guardar rascunho</strong> — só neste telemóvel/computador (podes pré-visualizar a loja no mesmo browser).</li>
-            <li><strong>Publicar na loja</strong> — envia o catálogo para todos os visitantes.</li>
-          </ol>
-          <h3>Dicas mobile</h3>
-          <ol>
-            <li>Os botões Guardar / Publicar ficam fixos em baixo.</li>
-            <li>Usa “Carregar” ou “Escolher da média” — não precisas de colar URLs.</li>
-            <li>Se algo falhar após publicar, contacta o programador.</li>
-          </ol>
-          <p style="margin-top:16px;">
-            <button type="button" class="btn btn-ghost btn-sm" id="btnChangePw">Alterar password</button>
-            <a class="btn btn-ghost btn-sm" href="pages/loja.html" target="_blank" rel="noopener">Abrir loja ↗</a>
-          </p>
-        </div>
-      </section>
+ <main class="admin-main">
+ <!-- DASHBOARD -->
+ <section class="panel active" id="panel-dashboard">
+ <div class="panel-head">
+ <div>
+ <h2>Painel</h2>
+ <p>Resumo e guia rápido para a equipa.</p>
+ </div>
+ </div>
+ <div class="stats-row">
+ <div class="stat-card"><div class="num is-loading" id="statInbox">·</div><div class="lbl">Pedidos novos</div></div>
+ <div class="stat-card"><div class="num is-loading" id="statProducts">·</div><div class="lbl">Produtos ativos</div></div>
+ <div class="stat-card"><div class="num is-loading" id="statZones">·</div><div class="lbl">Zonas</div></div>
+ <div class="stat-card"><div class="num is-loading" id="statMedia">·</div><div class="lbl">Média</div></div>
+ </div>
+ <div class="guide">
+ <h3>Como trabalhar</h3>
+ <ol>
+ <li><strong>Edita</strong> produtos, zonas, textos ou imagens do site.</li>
+ <li><strong>Guardar rascunho</strong> · só neste telemóvel/computador (podes pré-visualizar a loja no mesmo browser).</li>
+ <li><strong>Publicar na loja</strong> · envia o catálogo para todos os visitantes.</li>
+ </ol>
+ <h3>Dicas mobile</h3>
+ <ol>
+ <li>Os botões Guardar / Publicar ficam fixos em baixo.</li>
+ <li>Usa “Carregar” ou “Escolher da média” · não precisas de colar URLs.</li>
+ <li>Se algo falhar após publicar, contacta o programador.</li>
+ </ol>
+ <p style="margin-top:16px;">
+ <button type="button" class="btn btn-ghost btn-sm" id="btnChangePw">Alterar password</button>
+ <a class="btn btn-ghost btn-sm" href="pages/loja.html" target="_blank" rel="noopener">Abrir loja ↗</a>
+ </p>
+ </div>
+ </section>
 
-      <!-- PRODUCTS -->
-      <section class="panel" id="panel-products">
-        <div class="panel-head">
-          <div>
-            <h2>Produtos</h2>
-            <p>Catálogo da Attitude Sportwear. Preços em Kz.</p>
-          </div>
-          <div class="panel-head-actions">
-            <button type="button" class="btn btn-ghost btn-sm" id="btnExportCsv" title="Exportar CSV">CSV</button>
-            <button type="button" class="btn btn-ghost btn-sm" id="btnDensity" title="Densidade">Compacto</button>
-            <button type="button" class="btn btn-primary" id="btnAddProduct">+ Produto</button>
-          </div>
-        </div>
+ <!-- PRODUCTS -->
+ <section class="panel" id="panel-products">
+ <div class="panel-head">
+ <div>
+ <h2>Produtos</h2>
+ <p>Catálogo da Attitude Sportwear. Preços em Kz.</p>
+ </div>
+ <div class="panel-head-actions">
+ <button type="button" class="btn btn-ghost btn-sm" id="btnExportCsv" title="Exportar CSV">CSV</button>
+ <button type="button" class="btn btn-ghost btn-sm" id="btnDensity" title="Densidade">Compacto</button>
+ <button type="button" class="btn btn-primary" id="btnAddProduct">+ Produto</button>
+ </div>
+ </div>
 
-        <div class="admin-toolbar" id="productToolbar">
-          <div class="admin-search-wrap">
-            <input type="search" id="productSearch" class="admin-search" placeholder="Pesquisar nome ou ID…" autocomplete="off">
-          </div>
-          <select id="productFilterStatus" class="admin-select" aria-label="Estado">
-            <option value="all">Todos os estados</option>
-            <option value="active">Ativos</option>
-            <option value="inactive">Inativos</option>
-            <option value="noimage">Sem foto</option>
-            <option value="soldout">Esgotados</option>
-          </select>
-          <select id="productFilterCat" class="admin-select" aria-label="Categoria">
-            <option value="all">Todas as categorias</option>
-          </select>
-          <span class="admin-filter-count" id="productFilterCount"></span>
-        </div>
+ <div class="admin-toolbar" id="productToolbar">
+ <div class="admin-search-wrap">
+ <input type="search" id="productSearch" class="admin-search" placeholder="Pesquisar nome ou ID…" autocomplete="off">
+ </div>
+ <select id="productFilterStatus" class="admin-select" aria-label="Estado">
+ <option value="all">Todos os estados</option>
+ <option value="active">Ativos</option>
+ <option value="inactive">Inativos</option>
+ <option value="noimage">Sem foto</option>
+ <option value="soldout">Esgotados</option>
+ </select>
+ <select id="productFilterCat" class="admin-select" aria-label="Categoria">
+ <option value="all">Todas as categorias</option>
+ </select>
+ <span class="admin-filter-count" id="productFilterCount"></span>
+ </div>
 
-        <div class="bulk-bar" id="bulkBar" hidden>
-          <span id="bulkCount">0 selecionados</span>
-          <button type="button" class="btn btn-ghost btn-sm" data-bulk="activate">Ativar</button>
-          <button type="button" class="btn btn-ghost btn-sm" data-bulk="deactivate">Desativar</button>
-          <button type="button" class="btn btn-ghost btn-sm" data-bulk="soldout">Marcar esgotado</button>
-          <button type="button" class="btn btn-ghost btn-sm" data-bulk="unsoldout">Tirar esgotado</button>
-          <select id="bulkCategory" class="admin-select" aria-label="Definir categoria">
-            <option value="">Categoria…</option>
-            <option value="shorts">Shorts</option>
-            <option value="conjuntos">Conjuntos</option>
-            <option value="tops">Tops</option>
-            <option value="bottoms">Calças &amp; Leggings</option>
-            <option value="outerwear">Casacos</option>
-            <option value="acessorios">Acessórios</option>
-            <option value="kids">Kids &amp; Teens</option>
-            <option value="outros">Outros</option>
-          </select>
-          <button type="button" class="btn btn-ghost btn-sm" data-bulk="clear">Limpar</button>
-        </div>
+ <div class="bulk-bar" id="bulkBar" hidden>
+ <span id="bulkCount">0 selecionados</span>
+ <button type="button" class="btn btn-ghost btn-sm" data-bulk="activate">Ativar</button>
+ <button type="button" class="btn btn-ghost btn-sm" data-bulk="deactivate">Desativar</button>
+ <button type="button" class="btn btn-ghost btn-sm" data-bulk="soldout">Marcar esgotado</button>
+ <button type="button" class="btn btn-ghost btn-sm" data-bulk="unsoldout">Tirar esgotado</button>
+ <select id="bulkCategory" class="admin-select" aria-label="Definir categoria">
+ <option value="">Categoria…</option>
+ <option value="shorts">Shorts</option>
+ <option value="conjuntos">Conjuntos</option>
+ <option value="tops">Tops</option>
+ <option value="bottoms">Calças &amp; Leggings</option>
+ <option value="outerwear">Casacos</option>
+ <option value="acessorios">Acessórios</option>
+ <option value="kids">Kids &amp; Teens</option>
+ <option value="outros">Outros</option>
+ </select>
+ <button type="button" class="btn btn-ghost btn-sm" data-bulk="clear">Limpar</button>
+ </div>
 
-        <div class="product-list" id="productList"></div>
-        <div class="product-table-wrap">
-          <table class="product-table" id="productTable">
-            <thead>
-              <tr>
-                <th class="col-check"><input type="checkbox" id="selectAllProducts" aria-label="Selecionar todos"></th>
-                <th></th>
-                <th>Nome</th>
-                <th>Cat.</th>
-                <th>Preço</th>
-                <th>Tamanhos</th>
-                <th>Cores</th>
-                <th>Estado</th>
-                <th>Ordem</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="productTableBody"></tbody>
-          </table>
-        </div>
-      </section>
+ <div class="product-list" id="productList"></div>
+ <div class="product-table-wrap">
+ <table class="product-table" id="productTable">
+ <thead>
+ <tr>
+ <th class="col-check"><input type="checkbox" id="selectAllProducts" aria-label="Selecionar todos"></th>
+ <th></th>
+ <th>Nome</th>
+ <th>Cat.</th>
+ <th>Preço</th>
+ <th>Tamanhos</th>
+ <th>Cores</th>
+ <th>Estado</th>
+ <th>Ordem</th>
+ <th></th>
+ </tr>
+ </thead>
+ <tbody id="productTableBody"></tbody>
+ </table>
+ </div>
+ </section>
 
-      <!-- SUPPLEMENTS -->
-      <section class="panel" id="panel-supplements">
-        <div class="panel-head">
-          <div>
-            <h2>Suplementação</h2>
-            <p>Placeholders da página Suplementação. Sem preços — só nomes, descrições e (opcional) foto.</p>
-          </div>
-          <div class="panel-head-actions">
-            <a class="btn btn-ghost btn-sm" href="pages/suplementacao.html" target="_blank" rel="noopener">Ver página ↗</a>
-            <button type="button" class="btn btn-primary" id="btnAddSupplement">+ Suplemento</button>
-          </div>
-        </div>
-        <div class="product-list" id="suppList"></div>
-      </section>
+ <!-- SUPPLEMENTS -->
+ <section class="panel" id="panel-supplements">
+ <div class="panel-head">
+ <div>
+ <h2>Suplementação</h2>
+ <p>Placeholders da página Suplementação. Sem preços · só nomes, descrições e (opcional) foto.</p>
+ </div>
+ <div class="panel-head-actions">
+ <a class="btn btn-ghost btn-sm" href="pages/suplementacao.html" target="_blank" rel="noopener">Ver página ↗</a>
+ <button type="button" class="btn btn-primary" id="btnAddSupplement">+ Suplemento</button>
+ </div>
+ </div>
+ <div class="product-list" id="suppList"></div>
+ </section>
 
-      <!-- ZONES -->
-      <section class="panel" id="panel-zones">
-        <div class="panel-head">
-          <div>
-            <h2>Zonas de entrega</h2>
-            <p>Opcional. Preço 0 = a combinar / levantamento.</p>
-          </div>
-          <button type="button" class="btn btn-primary" id="btnAddZone">+ Zona</button>
-        </div>
-        <div class="zone-list" id="zoneList"></div>
-      </section>
+ <!-- ZONES -->
+ <section class="panel" id="panel-zones">
+ <div class="panel-head">
+ <div>
+ <h2>Zonas de entrega</h2>
+ <p>Opcional. Preço 0 = a combinar / levantamento.</p>
+ </div>
+ <button type="button" class="btn btn-primary" id="btnAddZone">+ Zona</button>
+ </div>
+ <div class="zone-list" id="zoneList"></div>
+ </section>
 
-      <!-- TEXTS -->
-      <section class="panel" id="panel-texts">
-        <div class="panel-head">
-          <div>
-            <h2>Textos do site</h2>
-            <p>Conteúdo de marca PT / EN — heroes, secções, planos, eventos, CTAs e footer. Após publicar, o site inteiro atualiza.</p>
-          </div>
-          <div class="panel-head-actions">
-            <button type="button" class="btn btn-ghost btn-sm" id="btnTextsCollapse" title="Fechar todos">Fechar</button>
-            <button type="button" class="btn btn-ghost btn-sm" id="btnTextsExpand" title="Abrir todos">Abrir</button>
-          </div>
-        </div>
-        <div class="texts-toolbar" id="textsToolbar">
-          <div class="admin-search-wrap">
-            <input type="search" id="textSearch" class="admin-search" placeholder="Pesquisar texto ou chave…" autocomplete="off">
-          </div>
-          <div class="texts-lang-toggle" role="group" aria-label="Idioma a editar">
-            <button type="button" class="chip active" data-text-lang="both">PT + EN</button>
-            <button type="button" class="chip" data-text-lang="pt">Só PT</button>
-            <button type="button" class="chip" data-text-lang="en">Só EN</button>
-          </div>
-          <span class="admin-filter-count" id="textFilterCount"></span>
-        </div>
-        <div class="texts-chips" id="textsChips" role="tablist" aria-label="Secções"></div>
-        <div class="texts-grid" id="textsGrid"></div>
-      </section>
+ <!-- TEXTS -->
+ <section class="panel" id="panel-texts">
+ <div class="panel-head">
+ <div>
+ <h2>Textos do site</h2>
+ <p>Conteúdo de marca PT / EN · heroes, secções, planos, eventos, CTAs e footer. Após publicar, o site inteiro atualiza.</p>
+ </div>
+ <div class="panel-head-actions">
+ <button type="button" class="btn btn-ghost btn-sm" id="btnTextsCollapse" title="Fechar todos">Fechar</button>
+ <button type="button" class="btn btn-ghost btn-sm" id="btnTextsExpand" title="Abrir todos">Abrir</button>
+ </div>
+ </div>
+ <div class="texts-toolbar" id="textsToolbar">
+ <div class="admin-search-wrap">
+ <input type="search" id="textSearch" class="admin-search" placeholder="Pesquisar texto ou chave…" autocomplete="off">
+ </div>
+ <div class="texts-lang-toggle" role="group" aria-label="Idioma a editar">
+ <button type="button" class="chip active" data-text-lang="both">PT + EN</button>
+ <button type="button" class="chip" data-text-lang="pt">Só PT</button>
+ <button type="button" class="chip" data-text-lang="en">Só EN</button>
+ </div>
+ <span class="admin-filter-count" id="textFilterCount"></span>
+ </div>
+ <div class="texts-chips" id="textsChips" role="tablist" aria-label="Secções"></div>
+ <div class="texts-grid" id="textsGrid"></div>
+ </section>
 
-      <!-- SITE IMAGES -->
-      <section class="panel" id="panel-images">
-        <div class="panel-head">
-          <div>
-            <h2>Imagens do site</h2>
-            <p>Logo, heroes, pilares, galeria, cartazes de eventos e CTAs. Carrega ou escolhe da biblioteca de média.</p>
-          </div>
-        </div>
-        <div class="slots-grid" id="slotsGrid"></div>
-      </section>
+ <!-- SITE IMAGES -->
+ <section class="panel" id="panel-images">
+ <div class="panel-head">
+ <div>
+ <h2>Imagens do site</h2>
+ <p>Logo, heroes, pilares, galeria, cartazes de eventos e CTAs. Carrega ou escolhe da biblioteca de média.</p>
+ </div>
+ </div>
+ <div class="slots-grid" id="slotsGrid"></div>
+ </section>
 
-      <!-- INBOX / PEDIDOS -->
-      <section class="panel" id="panel-inbox">
-        <div class="panel-head">
-          <div>
-            <h2>Pedidos & contactos</h2>
-            <p>Mensagens do site e encomendas da loja. WhatsApp continua disponível como atalho.</p>
-          </div>
-          <button type="button" class="btn btn-ghost" id="btnRefreshInbox">Atualizar</button>
-        </div>
-        <div class="inbox-filters" id="inboxFilters">
-          <button type="button" class="chip active" data-filter="all">Todos</button>
-          <button type="button" class="chip" data-filter="new">Novos</button>
-          <button type="button" class="chip" data-filter="order">Encomendas</button>
-          <button type="button" class="chip" data-filter="contact">Contactos</button>
-          <button type="button" class="chip" data-filter="done">Concluídos</button>
-        </div>
-        <div id="inboxList" class="inbox-list">
-          <p class="inbox-empty">A carregar…</p>
-        </div>
-      </section>
+ <!-- INBOX / PEDIDOS -->
+ <section class="panel" id="panel-inbox">
+ <div class="panel-head">
+ <div>
+ <h2>Pedidos & contactos</h2>
+ <p>Mensagens do site e encomendas da loja. WhatsApp continua disponível como atalho.</p>
+ </div>
+ <button type="button" class="btn btn-ghost" id="btnRefreshInbox">Atualizar</button>
+ </div>
+ <div class="inbox-filters" id="inboxFilters">
+ <button type="button" class="chip active" data-filter="all">Todos</button>
+ <button type="button" class="chip" data-filter="new">Novos</button>
+ <button type="button" class="chip" data-filter="order">Encomendas</button>
+ <button type="button" class="chip" data-filter="contact">Contactos</button>
+ <button type="button" class="chip" data-filter="done">Concluídos</button>
+ </div>
+ <div id="inboxList" class="inbox-list">
+ <p class="inbox-empty">A carregar…</p>
+ </div>
+ </section>
 
-      <!-- MEDIA -->
-      <section class="panel" id="panel-media">
-        <div class="panel-head">
-          <div>
-            <h2>Biblioteca de média</h2>
-            <p>Upload para Cloudinary (preset unsigned). Apagar aqui só remove da lista local.</p>
-          </div>
-        </div>
-        <div class="upload-zone" id="uploadZone">
-          Toca ou arrasta imagens aqui
-          <input type="file" id="mediaFileInput" accept="image/*" multiple class="sr-only">
-        </div>
-        <div class="media-grid" id="mediaGrid"></div>
-      </section>
-    </main>
+ <!-- MEDIA -->
+ <section class="panel" id="panel-media">
+ <div class="panel-head">
+ <div>
+ <h2>Biblioteca de média</h2>
+ <p>Upload para Cloudinary (preset unsigned). Apagar aqui só remove da lista local.</p>
+ </div>
+ </div>
+ <div class="upload-zone" id="uploadZone">
+ Toca ou arrasta imagens aqui
+ <input type="file" id="mediaFileInput" accept="image/*" multiple class="sr-only">
+ </div>
+ <div class="media-grid" id="mediaGrid"></div>
+ </section>
+ </main>
 
-    <div class="sticky-actions">
-      <button type="button" class="btn btn-ghost" id="btnSaveDraft">Guardar rascunho</button>
-      <button type="button" class="btn btn-primary" id="btnPublish">Publicar na loja</button>
-    </div>
-  </div>
+ <div class="sticky-actions">
+ <button type="button" class="btn btn-ghost" id="btnSaveDraft">Guardar rascunho</button>
+ <button type="button" class="btn btn-primary" id="btnPublish">Publicar na loja</button>
+ </div>
+ </div>
 
-  <!-- Product modal -->
-  <div class="modal-backdrop" id="productModal">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modal-head">
-        <h2 id="modalTitle">Produto</h2>
-        <button type="button" class="modal-close" data-close-modal="productModal" aria-label="Fechar">×</button>
-      </div>
-      <div class="field">
-        <label>ID (único)</label>
-        <div class="id-row">
-          <input type="text" id="f_id" placeholder="ex: pala-run-attitude" autocomplete="off">
-          <button type="button" class="btn btn-ghost btn-sm" id="btnCopyId" title="Copiar ID">Copiar</button>
-        </div>
-        <p class="field-hint" id="f_id_hint">Só editável em produtos novos. Usa letras, números e hífen.</p>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Nome PT</label>
-          <input type="text" id="f_name_pt">
-        </div>
-        <div class="field">
-          <label>Nome EN</label>
-          <input type="text" id="f_name_en">
-        </div>
-      </div>
-      <div class="field">
-        <label>Descrição PT</label>
-        <textarea id="f_desc_pt" rows="2"></textarea>
-      </div>
-      <div class="field">
-        <label>Descrição EN</label>
-        <textarea id="f_desc_en" rows="2"></textarea>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Preço (Kz)</label>
-          <input type="number" id="f_price" inputmode="decimal" min="0" step="100">
-        </div>
-        <div class="field">
-          <label>Ordem</label>
-          <input type="number" id="f_order" inputmode="numeric" min="0">
-        </div>
-      </div>
-      <div class="field">
-        <label>Tamanhos (separados por vírgula)</label>
-        <input type="text" id="f_sizes" placeholder="S, M, L, XL">
-      </div>
-      <div class="field">
-        <label>Cores (separadas por vírgula)</label>
-        <input type="text" id="f_colors" placeholder="Preto, Branco, Azul">
-      </div>
-      <div class="field">
-        <label>Imagem</label>
-        <input type="text" id="f_image" placeholder="URL ou images/…">
-        <img id="f_image_preview" src="images/logo.jpg" alt="" style="width:80px;height:80px;object-fit:cover;border-radius:8px;margin-top:8px;background:#1c1c1c;">
-        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
-          <button type="button" class="btn btn-ghost btn-sm" id="btnUploadProductImage">Carregar</button>
-          <button type="button" class="btn btn-ghost btn-sm" id="btnPickProductImage">Escolher da média</button>
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Categoria</label>
-          <select id="f_category">
-            <option value="">— Auto (pelo nome) —</option>
-            <option value="shorts">Shorts</option>
-            <option value="conjuntos">Conjuntos</option>
-            <option value="tops">Tops</option>
-            <option value="bottoms">Calças &amp; Leggings</option>
-            <option value="outerwear">Casacos</option>
-            <option value="acessorios">Acessórios</option>
-            <option value="kids">Kids &amp; Teens</option>
-            <option value="outros">Outros</option>
-          </select>
-        </div>
-        <div class="field">
-          <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:0.9rem;cursor:pointer;margin-top:22px;">
-            <input type="checkbox" id="f_active" checked style="width:auto;margin:0;"> Ativo na loja
-          </label>
-          <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:0.9rem;cursor:pointer;margin-top:10px;">
-            <input type="checkbox" id="f_soldout" style="width:auto;margin:0;"> Esgotado
-          </label>
-        </div>
-      </div>
-      <div class="modal-foot">
-        <button type="button" class="btn btn-ghost" data-close-modal="productModal">Cancelar</button>
-        <button type="button" class="btn btn-ghost" id="btnDupProduct" hidden>Duplicar</button>
-        <button type="button" class="btn btn-primary" id="btnSaveProduct">Guardar produto</button>
-      </div>
-    </div>
-  </div>
+ <!-- Product modal -->
+ <div class="modal-backdrop" id="productModal">
+ <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+ <div class="modal-head">
+ <h2 id="modalTitle">Produto</h2>
+ <button type="button" class="modal-close" data-close-modal="productModal" aria-label="Fechar">×</button>
+ </div>
+ <div class="field">
+ <label>ID (único)</label>
+ <div class="id-row">
+ <input type="text" id="f_id" placeholder="ex: pala-run-attitude" autocomplete="off">
+ <button type="button" class="btn btn-ghost btn-sm" id="btnCopyId" title="Copiar ID">Copiar</button>
+ </div>
+ <p class="field-hint" id="f_id_hint">Só editável em produtos novos. Usa letras, números e hífen.</p>
+ </div>
+ <div class="field-row">
+ <div class="field">
+ <label>Nome PT</label>
+ <input type="text" id="f_name_pt">
+ </div>
+ <div class="field">
+ <label>Nome EN</label>
+ <input type="text" id="f_name_en">
+ </div>
+ </div>
+ <div class="field">
+ <label>Descrição PT</label>
+ <textarea id="f_desc_pt" rows="2"></textarea>
+ </div>
+ <div class="field">
+ <label>Descrição EN</label>
+ <textarea id="f_desc_en" rows="2"></textarea>
+ </div>
+ <div class="field-row">
+ <div class="field">
+ <label>Preço (Kz)</label>
+ <input type="number" id="f_price" inputmode="decimal" min="0" step="100">
+ </div>
+ <div class="field">
+ <label>Ordem</label>
+ <input type="number" id="f_order" inputmode="numeric" min="0">
+ </div>
+ </div>
+ <div class="field">
+ <label>Tamanhos (separados por vírgula)</label>
+ <input type="text" id="f_sizes" placeholder="S, M, L, XL">
+ </div>
+ <div class="field">
+ <label>Cores (separadas por vírgula)</label>
+ <input type="text" id="f_colors" placeholder="Preto, Branco, Azul">
+ </div>
+ <div class="field">
+ <label>Imagem</label>
+ <input type="text" id="f_image" placeholder="URL ou images/…">
+ <img id="f_image_preview" src="images/logo.jpg" alt="" style="width:80px;height:80px;object-fit:cover;border-radius:8px;margin-top:8px;background:#1c1c1c;">
+ <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+ <button type="button" class="btn btn-ghost btn-sm" id="btnUploadProductImage">Carregar</button>
+ <button type="button" class="btn btn-ghost btn-sm" id="btnPickProductImage">Escolher da média</button>
+ </div>
+ </div>
+ <div class="field-row">
+ <div class="field">
+ <label>Categoria</label>
+ <select id="f_category">
+ <option value="">· Auto (pelo nome) ·</option>
+ <option value="shorts">Shorts</option>
+ <option value="conjuntos">Conjuntos</option>
+ <option value="tops">Tops</option>
+ <option value="bottoms">Calças &amp; Leggings</option>
+ <option value="outerwear">Casacos</option>
+ <option value="acessorios">Acessórios</option>
+ <option value="kids">Kids &amp; Teens</option>
+ <option value="outros">Outros</option>
+ </select>
+ </div>
+ <div class="field">
+ <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:0.9rem;cursor:pointer;margin-top:22px;">
+ <input type="checkbox" id="f_active" checked style="width:auto;margin:0;"> Ativo na loja
+ </label>
+ <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:0.9rem;cursor:pointer;margin-top:10px;">
+ <input type="checkbox" id="f_soldout" style="width:auto;margin:0;"> Esgotado
+ </label>
+ </div>
+ </div>
+ <div class="modal-foot">
+ <button type="button" class="btn btn-ghost" data-close-modal="productModal">Cancelar</button>
+ <button type="button" class="btn btn-ghost" id="btnDupProduct" hidden>Duplicar</button>
+ <button type="button" class="btn btn-primary" id="btnSaveProduct">Guardar produto</button>
+ </div>
+ </div>
+ </div>
 
-  <!-- Supplement modal -->
-  <div class="modal-backdrop" id="suppModal">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="suppModalTitle">
-      <div class="modal-head">
-        <h2 id="suppModalTitle">Suplemento</h2>
-        <button type="button" class="modal-close" data-close-modal="suppModal" aria-label="Fechar">×</button>
-      </div>
-      <div class="field">
-        <label>ID (único)</label>
-        <input type="text" id="s_id" placeholder="ex: supp-whey" autocomplete="off">
-        <p class="field-hint">Só editável em itens novos.</p>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Nome PT</label>
-          <input type="text" id="s_name_pt">
-        </div>
-        <div class="field">
-          <label>Nome EN</label>
-          <input type="text" id="s_name_en">
-        </div>
-      </div>
-      <div class="field">
-        <label>Descrição PT</label>
-        <textarea id="s_desc_pt" rows="2"></textarea>
-      </div>
-      <div class="field">
-        <label>Descrição EN</label>
-        <textarea id="s_desc_en" rows="2"></textarea>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Categoria</label>
-          <select id="s_category">
-            <option value="protein">Proteína</option>
-            <option value="creatine">Creatina</option>
-            <option value="bcaa">Aminoácidos</option>
-            <option value="pre">Pré-treino</option>
-            <option value="electro">Hidratação</option>
-            <option value="vitamin">Vitaminas</option>
-            <option value="outros">Outros</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Ordem</label>
-          <input type="number" id="s_order" inputmode="numeric" min="0">
-        </div>
-      </div>
-      <div class="field">
-        <label>Imagem (opcional — vazio = pote em branco)</label>
-        <input type="text" id="s_image" placeholder="URL ou vazio">
-        <img id="s_image_preview" src="" alt="" style="width:80px;height:80px;object-fit:cover;border-radius:8px;margin-top:8px;background:#1c1c1c;display:none;">
-        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
-          <button type="button" class="btn btn-ghost btn-sm" id="btnUploadSuppImage">Carregar</button>
-          <button type="button" class="btn btn-ghost btn-sm" id="btnPickSuppImage">Escolher da média</button>
-          <button type="button" class="btn btn-ghost btn-sm" id="btnClearSuppImage">Limpar foto</button>
-        </div>
-      </div>
-      <div class="field">
-        <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:0.9rem;cursor:pointer;">
-          <input type="checkbox" id="s_active" checked style="width:auto;margin:0;"> Visível na página
-        </label>
-      </div>
-      <p class="field-hint" style="margin-top:4px;">Sem campo de preço — a página pública mostra “Preço em breve”.</p>
-      <div class="modal-foot">
-        <button type="button" class="btn btn-ghost" data-close-modal="suppModal">Cancelar</button>
-        <button type="button" class="btn btn-ghost" id="btnDeleteSupp" hidden style="color:#f66;">Apagar</button>
-        <button type="button" class="btn btn-primary" id="btnSaveSupp">Guardar</button>
-      </div>
-    </div>
-  </div>
+ <!-- Supplement modal -->
+ <div class="modal-backdrop" id="suppModal">
+ <div class="modal" role="dialog" aria-modal="true" aria-labelledby="suppModalTitle">
+ <div class="modal-head">
+ <h2 id="suppModalTitle">Suplemento</h2>
+ <button type="button" class="modal-close" data-close-modal="suppModal" aria-label="Fechar">×</button>
+ </div>
+ <div class="field">
+ <label>ID (único)</label>
+ <input type="text" id="s_id" placeholder="ex: supp-whey" autocomplete="off">
+ <p class="field-hint">Só editável em itens novos.</p>
+ </div>
+ <div class="field-row">
+ <div class="field">
+ <label>Nome PT</label>
+ <input type="text" id="s_name_pt">
+ </div>
+ <div class="field">
+ <label>Nome EN</label>
+ <input type="text" id="s_name_en">
+ </div>
+ </div>
+ <div class="field">
+ <label>Descrição PT</label>
+ <textarea id="s_desc_pt" rows="2"></textarea>
+ </div>
+ <div class="field">
+ <label>Descrição EN</label>
+ <textarea id="s_desc_en" rows="2"></textarea>
+ </div>
+ <div class="field-row">
+ <div class="field">
+ <label>Categoria</label>
+ <select id="s_category">
+ <option value="protein">Proteína</option>
+ <option value="creatine">Creatina</option>
+ <option value="bcaa">Aminoácidos</option>
+ <option value="pre">Pré-treino</option>
+ <option value="electro">Hidratação</option>
+ <option value="vitamin">Vitaminas</option>
+ <option value="outros">Outros</option>
+ </select>
+ </div>
+ <div class="field">
+ <label>Ordem</label>
+ <input type="number" id="s_order" inputmode="numeric" min="0">
+ </div>
+ </div>
+ <div class="field">
+ <label>Imagem (opcional · vazio = pote em branco)</label>
+ <input type="text" id="s_image" placeholder="URL ou vazio">
+ <img id="s_image_preview" src="" alt="" style="width:80px;height:80px;object-fit:cover;border-radius:8px;margin-top:8px;background:#1c1c1c;display:none;">
+ <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+ <button type="button" class="btn btn-ghost btn-sm" id="btnUploadSuppImage">Carregar</button>
+ <button type="button" class="btn btn-ghost btn-sm" id="btnPickSuppImage">Escolher da média</button>
+ <button type="button" class="btn btn-ghost btn-sm" id="btnClearSuppImage">Limpar foto</button>
+ </div>
+ </div>
+ <div class="field">
+ <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:0.9rem;cursor:pointer;">
+ <input type="checkbox" id="s_active" checked style="width:auto;margin:0;"> Visível na página
+ </label>
+ </div>
+ <p class="field-hint" style="margin-top:4px;">Sem campo de preço · a página pública mostra “Preço em breve”.</p>
+ <div class="modal-foot">
+ <button type="button" class="btn btn-ghost" data-close-modal="suppModal">Cancelar</button>
+ <button type="button" class="btn btn-ghost" id="btnDeleteSupp" hidden style="color:#f66;">Apagar</button>
+ <button type="button" class="btn btn-primary" id="btnSaveSupp">Guardar</button>
+ </div>
+ </div>
+ </div>
 
-  <!-- Media picker modal -->
-  <div class="modal-backdrop" id="pickerModal">
-    <div class="modal" role="dialog" aria-modal="true">
-      <div class="modal-head">
-        <h2>Escolher da média</h2>
-        <button type="button" class="modal-close" data-close-modal="pickerModal" aria-label="Fechar">×</button>
-      </div>
-      <div class="picker-grid" id="pickerGrid"></div>
-      <div class="modal-foot">
-        <button type="button" class="btn btn-ghost" data-close-modal="pickerModal">Fechar</button>
-      </div>
-    </div>
-  </div>
+ <!-- Media picker modal -->
+ <div class="modal-backdrop" id="pickerModal">
+ <div class="modal" role="dialog" aria-modal="true">
+ <div class="modal-head">
+ <h2>Escolher da média</h2>
+ <button type="button" class="modal-close" data-close-modal="pickerModal" aria-label="Fechar">×</button>
+ </div>
+ <div class="picker-grid" id="pickerGrid"></div>
+ <div class="modal-foot">
+ <button type="button" class="btn btn-ghost" data-close-modal="pickerModal">Fechar</button>
+ </div>
+ </div>
+ </div>
 
-  <script src="js/products.js"></script>
-  <script src="js/admin.js"></script>
+ <script src="js/products.js"></script>
+ <script src="js/admin.js"></script>
 </body>
 </html>
