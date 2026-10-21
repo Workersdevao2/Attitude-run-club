@@ -1032,6 +1032,10 @@
     Roadmap: 'pages/roadmap.html',
     Contacto: 'pages/contacto.html',
     Loja: 'pages/loja.html',
+    'Loja (carrinho)': 'pages/loja.html',
+    'Loja (checkout form)': 'pages/checkout.html',
+    Checkout: 'pages/checkout.html',
+    Navegação: 'index.html',
     Footer: 'index.html',
   };
 
