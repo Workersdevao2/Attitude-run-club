@@ -129,12 +129,14 @@
   async function loadCatalog() {
     const defaults = {
       products: global.DEFAULT_PRODUCTS || [],
+      supplements: global.DEFAULT_SUPPLEMENTS || [],
       zones: global.DEFAULT_ZONES || [],
       texts: global.DEFAULT_TEXTS || { pt: {}, en: {} },
       images: global.DEFAULT_SITE_IMAGES || {},
     };
 
     const draftProducts = readLS(LS.products);
+    const draftSupplements = readLS(LS.supplements);
     const draftZones = readLS(LS.zones);
     const draftTexts = readLS(LS.texts);
     const draftImages = readLS(LS.images);
@@ -155,6 +157,7 @@
 
     const base = remote || publishedLocal || defaults;
     const useDraftProducts = Array.isArray(draftProducts) && draftProducts.length > 0;
+    const useDraftSupplements = Array.isArray(draftSupplements) && draftSupplements.length > 0;
     const useDraftZones = Array.isArray(draftZones) && draftZones.length > 0;
 
     const defById = Object.fromEntries((defaults.products || []).map((p) => [p.id, p]));
@@ -181,9 +184,16 @@
     }
 
     const rawProducts = useDraftProducts ? draftProducts : base.products || defaults.products;
+    const rawSupplements = useDraftSupplements
+      ? draftSupplements
+      : base.supplements || defaults.supplements;
 
     return {
       products: enrich(rawProducts).filter((p) => p.active !== false),
+      supplements: (rawSupplements || [])
+        .filter((s) => s && s.active !== false)
+        .slice()
+        .sort((a, b) => (a.order || 0) - (b.order || 0)),
       zones: useDraftZones ? draftZones : base.zones || defaults.zones,
       texts: draftTexts && typeof draftTexts === 'object' ? draftTexts : base.texts || defaults.texts,
       images:
@@ -363,11 +373,63 @@
     grid.dispatchEvent(new CustomEvent('arc:products-rendered'));
   }
 
+  function suppCatLabel(cat, lang) {
+    const map = global.SUPP_CATEGORY_LABELS || {};
+    const row = map[cat];
+    if (!row) return cat || '';
+    return row[lang] || row.pt || row.en || cat;
+  }
+
+  function supplementCardHTML(s, lang) {
+    const name = (lang === 'en' ? s.name_en || s.name_pt : s.name_pt || s.name_en) || s.id;
+    const desc = (lang === 'en' ? s.desc_en || s.desc_pt : s.desc_pt || s.desc_en) || '';
+    const cat = suppCatLabel(s.category, lang);
+    const img = (s.image || '').trim();
+    const visual = img
+      ? '<div class="supp-visual"><img class="supp-photo" src="' +
+        esc(resolveSiteUrl(img)) +
+        '" alt="' +
+        esc(name) +
+        '" loading="lazy"></div>'
+      : '<div class="supp-visual" aria-hidden="true"><div class="supp-jar"><div class="supp-jar-lid"></div><div class="supp-jar-body"></div></div></div>';
+    const priceTbd =
+      (global.translations &&
+        global.translations[lang] &&
+        global.translations[lang]['supp.priceTbd']) ||
+      (lang === 'en' ? 'Price soon' : 'Preço em breve');
+    return (
+      '<article class="supp-card reveal">' +
+      visual +
+      '<div class="supp-body">' +
+      (cat ? '<p class="supp-cat">' + esc(cat) + '</p>' : '') +
+      '<h3 class="supp-name">' +
+      esc(name) +
+      '</h3>' +
+      (desc ? '<p class="supp-desc">' + esc(desc) + '</p>' : '') +
+      '<p class="supp-price-tbd">' +
+      esc(priceTbd) +
+      '</p>' +
+      '</div></article>'
+    );
+  }
+
+  function renderSupplementsGrid(list, opts) {
+    const grid = document.getElementById((opts && opts.gridId) || 'suppGrid');
+    if (!grid) return;
+    const lang = global.currentLang || document.documentElement.lang || 'pt';
+    const items = (list || []).filter((s) => s && s.active !== false);
+    grid.innerHTML = items.map((s) => supplementCardHTML(s, lang)).join('') || '';
+    if (typeof global.setLanguage === 'function' && global.currentLang) {
+      global.setLanguage(global.currentLang);
+    }
+  }
+
   global.ARCCatalog = {
     loadCatalog,
     applySiteImages,
     applyTexts,
     renderProductGrid,
+    renderSupplementsGrid,
     productCardHTML,
     inferCategory,
     colorHex,

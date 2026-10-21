@@ -950,6 +950,7 @@ const DEFAULT_TEXTS = {
     "nav.pilares": "Pilares",
     "nav.planos": "Planos",
     "nav.roadmap": "Roadmap",
+    "nav.suplementacao": "Suplementação",
     "pillar.1.desc": "Treinos semanais para todos os níveis. Pace groups, longões, night runs e treinos técnicos que te tornam melhor a cada semana.",
     "pillar.1.title": "Corrida",
     "pillar.2.desc": "Brunch pós-corrida, sunset runs, run + música, run + fotografia. O treino é só o começo da experiência.",
@@ -1037,7 +1038,34 @@ const DEFAULT_TEXTS = {
     "stat.cidades": "Cidades",
     "stat.dias": "Dias para o evento",
     "stat.impacto": "Pessoas",
-    "stat.pilares": "Pilares"
+    "stat.pilares": "Pilares",
+    "supp.cat.bcaa": "Aminoácidos",
+    "supp.cat.creatine": "Creatina",
+    "supp.cat.electro": "Hidratação",
+    "supp.cat.pre": "Pré-treino",
+    "supp.cat.protein": "Proteína",
+    "supp.cat.vitamin": "Vitaminas",
+    "supp.cta.btn": "Contactar",
+    "supp.cta.eyebrow": "Em breve",
+    "supp.cta.sub": "Queres ser avisado quando o catálogo abrir? Fala connosco.",
+    "supp.cta.title": "Produtos reais<br>a caminho.",
+    "supp.label": "Suplementação",
+    "supp.note": "Catálogo em construção. Os espaços abaixo são placeholders — produtos reais e valores chegam em breve.",
+    "supp.p1.desc": "Pote placeholder · em breve",
+    "supp.p1.name": "Whey Protein",
+    "supp.p2.desc": "Pote placeholder · em breve",
+    "supp.p2.name": "Creatina Monohidratada",
+    "supp.p3.desc": "Pote placeholder · em breve",
+    "supp.p3.name": "BCAA",
+    "supp.p4.desc": "Pote placeholder · em breve",
+    "supp.p4.name": "Pré-treino",
+    "supp.p5.desc": "Pote placeholder · em breve",
+    "supp.p5.name": "Eletrólitos",
+    "supp.p6.desc": "Pote placeholder · em breve",
+    "supp.p6.name": "Multivitamínico",
+    "supp.priceTbd": "Preço em breve",
+    "supp.sub": "Em breve: proteína, creatina e mais. Espaço reservado — ainda sem preços nem marcas.",
+    "supp.title": "Combustível<br>para a tribo."
   },
   en: {
     "checkout.back": "← Back to shop",
@@ -1217,6 +1245,7 @@ const DEFAULT_TEXTS = {
     "nav.pilares": "Pillars",
     "nav.planos": "Plans",
     "nav.roadmap": "Roadmap",
+    "nav.suplementacao": "Supplements",
     "pillar.1.desc": "Weekly training for every level. Pace groups, long runs, night runs and technical sessions that make you better every week.",
     "pillar.1.title": "Running",
     "pillar.2.desc": "Post-run brunch, sunset runs, run + music, run + photography. Training is only the start of the experience.",
@@ -1304,7 +1333,34 @@ const DEFAULT_TEXTS = {
     "stat.cidades": "Cities",
     "stat.dias": "Days to the event",
     "stat.impacto": "People",
-    "stat.pilares": "Pillars"
+    "stat.pilares": "Pillars",
+    "supp.cat.bcaa": "Amino acids",
+    "supp.cat.creatine": "Creatine",
+    "supp.cat.electro": "Hydration",
+    "supp.cat.pre": "Pre-workout",
+    "supp.cat.protein": "Protein",
+    "supp.cat.vitamin": "Vitamins",
+    "supp.cta.btn": "Contact",
+    "supp.cta.eyebrow": "Coming soon",
+    "supp.cta.sub": "Want to be notified when the catalogue opens? Get in touch.",
+    "supp.cta.title": "Real products<br>on the way.",
+    "supp.label": "Supplements",
+    "supp.note": "Catalogue in progress. The slots below are placeholders — real products and prices coming soon.",
+    "supp.p1.desc": "Placeholder jar · coming soon",
+    "supp.p1.name": "Whey Protein",
+    "supp.p2.desc": "Placeholder jar · coming soon",
+    "supp.p2.name": "Creatine Monohydrate",
+    "supp.p3.desc": "Placeholder jar · coming soon",
+    "supp.p3.name": "BCAA",
+    "supp.p4.desc": "Placeholder jar · coming soon",
+    "supp.p4.name": "Pre-workout",
+    "supp.p5.desc": "Placeholder jar · coming soon",
+    "supp.p5.name": "Electrolytes",
+    "supp.p6.desc": "Placeholder jar · coming soon",
+    "supp.p6.name": "Multivitamin",
+    "supp.priceTbd": "Price soon",
+    "supp.sub": "Coming soon: protein, creatine and more. Placeholder space — no prices or brands yet.",
+    "supp.title": "Fuel<br>for the tribe."
   }
 };
 
@@ -1645,6 +1701,38 @@ const TEXT_GROUPS = [
     ]
   },
   {
+    label: "Suplementação",
+    keys: [
+      { k: "supp.label", label: "Supp · label" },
+      { k: "supp.title", label: "Supp · título" },
+      { k: "supp.sub", label: "Supp · subtítulo" },
+      { k: "supp.note", label: "Supp · nota" },
+      { k: "supp.priceTbd", label: "Supp · preço em breve" },
+      { k: "supp.cat.protein", label: "Cat · Proteína" },
+      { k: "supp.cat.creatine", label: "Cat · Creatina" },
+      { k: "supp.cat.bcaa", label: "Cat · Aminoácidos" },
+      { k: "supp.cat.pre", label: "Cat · Pré-treino" },
+      { k: "supp.cat.electro", label: "Cat · Hidratação" },
+      { k: "supp.cat.vitamin", label: "Cat · Vitaminas" },
+      { k: "supp.p1.name", label: "Produto 1 · nome" },
+      { k: "supp.p1.desc", label: "Produto 1 · desc" },
+      { k: "supp.p2.name", label: "Produto 2 · nome" },
+      { k: "supp.p2.desc", label: "Produto 2 · desc" },
+      { k: "supp.p3.name", label: "Produto 3 · nome" },
+      { k: "supp.p3.desc", label: "Produto 3 · desc" },
+      { k: "supp.p4.name", label: "Produto 4 · nome" },
+      { k: "supp.p4.desc", label: "Produto 4 · desc" },
+      { k: "supp.p5.name", label: "Produto 5 · nome" },
+      { k: "supp.p5.desc", label: "Produto 5 · desc" },
+      { k: "supp.p6.name", label: "Produto 6 · nome" },
+      { k: "supp.p6.desc", label: "Produto 6 · desc" },
+      { k: "supp.cta.eyebrow", label: "CTA · eyebrow" },
+      { k: "supp.cta.title", label: "CTA · título" },
+      { k: "supp.cta.sub", label: "CTA · subtítulo" },
+      { k: "supp.cta.btn", label: "CTA · botão" }
+    ]
+  },
+  {
     label: "Navegação",
     keys: [
       { k: "nav.home", label: "Nav · Início" },
@@ -1654,7 +1742,8 @@ const TEXT_GROUPS = [
       { k: "nav.eventos", label: "Nav · Eventos" },
       { k: "nav.roadmap", label: "Nav · Roadmap" },
       { k: "nav.contacto", label: "Nav · Contacto" },
-      { k: "nav.cta", label: "Nav · botão CTA" }
+      { k: "nav.cta", label: "Nav · botão CTA" },
+      { k: "nav.suplementacao", label: "Nav · Suplementação" }
     ]
   },
   {
@@ -1705,6 +1794,8 @@ const DEFAULT_SITE_IMAGES = {
   "cta-roadmap": "images/cta-community.jpg",
   "contacto-hero": "images/contacto-hero.jpg",
   "loja-hero": "images/hero-team.jpg",
+  "suplementacao-hero": "images/plank.jpg",
+  "cta-suplementacao": "images/cta-energy.jpg",
 };
 
 /** Slot definitions for admin UI */
@@ -1737,7 +1828,90 @@ const SITE_IMAGE_SLOTS = [
   { key: "cta-roadmap", label: "Roadmap · CTA", hint: "Fundo CTA Roadmap" },
   { key: "contacto-hero", label: "Contacto · Hero", hint: "Fundo do hero Contacto" },
   { key: "loja-hero", label: "Loja · Hero", hint: "Fundo do hero Loja" },
+  { key: "suplementacao-hero", label: "Suplementação · Hero", hint: "Fundo do hero Suplementação" },
+  { key: "cta-suplementacao", label: "Suplementação · CTA", hint: "Fundo CTA Suplementação" },
 ];
+
+
+/** Default supplement placeholders (no prices — admin can edit names/desc/image) */
+const DEFAULT_SUPPLEMENTS = [
+  {
+    id: "supp-whey",
+    name_pt: "Whey Protein",
+    name_en: "Whey Protein",
+    desc_pt: "Pote placeholder · em breve",
+    desc_en: "Placeholder jar · coming soon",
+    category: "protein",
+    image: "",
+    active: true,
+    order: 1
+  },
+  {
+    id: "supp-creatine",
+    name_pt: "Creatina Monohidratada",
+    name_en: "Creatine Monohydrate",
+    desc_pt: "Pote placeholder · em breve",
+    desc_en: "Placeholder jar · coming soon",
+    category: "creatine",
+    image: "",
+    active: true,
+    order: 2
+  },
+  {
+    id: "supp-bcaa",
+    name_pt: "BCAA",
+    name_en: "BCAA",
+    desc_pt: "Pote placeholder · em breve",
+    desc_en: "Placeholder jar · coming soon",
+    category: "bcaa",
+    image: "",
+    active: true,
+    order: 3
+  },
+  {
+    id: "supp-pre",
+    name_pt: "Pré-treino",
+    name_en: "Pre-workout",
+    desc_pt: "Pote placeholder · em breve",
+    desc_en: "Placeholder jar · coming soon",
+    category: "pre",
+    image: "",
+    active: true,
+    order: 4
+  },
+  {
+    id: "supp-electro",
+    name_pt: "Eletrólitos",
+    name_en: "Electrolytes",
+    desc_pt: "Pote placeholder · em breve",
+    desc_en: "Placeholder jar · coming soon",
+    category: "electro",
+    image: "",
+    active: true,
+    order: 5
+  },
+  {
+    id: "supp-multi",
+    name_pt: "Multivitamínico",
+    name_en: "Multivitamin",
+    desc_pt: "Pote placeholder · em breve",
+    desc_en: "Placeholder jar · coming soon",
+    category: "vitamin",
+    image: "",
+    active: true,
+    order: 6
+  }
+];
+
+const SUPP_CATEGORY_LABELS = {
+  protein: { pt: "Proteína", en: "Protein" },
+  creatine: { pt: "Creatina", en: "Creatine" },
+  bcaa: { pt: "Aminoácidos", en: "Amino acids" },
+  pre: { pt: "Pré-treino", en: "Pre-workout" },
+  electro: { pt: "Hidratação", en: "Hydration" },
+  vitamin: { pt: "Vitaminas", en: "Vitamins" },
+  outros: { pt: "Outros", en: "Other" },
+};
 
 // Export for modules / global
 if (typeof window !== 'undefined') {
@@ -1752,4 +1926,6 @@ if (typeof window !== 'undefined') {
   window.DEFAULT_SITE_IMAGES = DEFAULT_SITE_IMAGES;
   window.SITE_IMAGE_SLOTS = SITE_IMAGE_SLOTS;
   window.TEXT_GROUPS = TEXT_GROUPS;
+  window.DEFAULT_SUPPLEMENTS = DEFAULT_SUPPLEMENTS;
+  window.SUPP_CATEGORY_LABELS = SUPP_CATEGORY_LABELS;
 }

@@ -13,6 +13,7 @@
   const LS = {
     auth: 'arc_admin_auth',
     products: 'arc_products_override',
+    supplements: 'arc_supplements_override',
     zones: 'arc_zones_override',
     texts: 'arc_texts_override',
     images: 'arc_images_override',
@@ -21,6 +22,7 @@
 
   // ── State ───────────────────────────────────────────────────────────────
   let products = [];
+  let supplements = [];
   let zones = [];
   let texts = { pt: {}, en: {} };
   let images = {};
@@ -28,7 +30,8 @@
   let inboxItems = [];
   let inboxFilter = 'all';
   let editingId = null;
-  let pickerTarget = null; // { type: 'product'|'slot', id/key }
+  let editingSuppId = null;
+  let pickerTarget = null; // { type: 'product'|'slot'|'supplement', id/key }
 
   function adminPassword() {
     return localStorage.getItem('arc_admin_pw') || DEFAULT_ADMIN_PASSWORD;
@@ -231,6 +234,15 @@
     }
 
     products = baseProducts;
+    const defS = window.DEFAULT_SUPPLEMENTS || [];
+    const draftS = loadJSON(LS.supplements, null);
+    if (Array.isArray(draftS) && draftS.length) {
+      supplements = draftS;
+    } else if (remote && Array.isArray(remote.supplements) && remote.supplements.length) {
+      supplements = structuredClone(remote.supplements);
+    } else {
+      supplements = structuredClone(defS);
+    }
     zones =
       loadJSON(LS.zones, null) ||
       (remote && Array.isArray(remote.zones) ? structuredClone(remote.zones) : null) ||
@@ -282,6 +294,7 @@
     try {
       undoSnapshot = {
         products: loadJSON(LS.products, null),
+        supplements: loadJSON(LS.supplements, null),
         zones: loadJSON(LS.zones, null),
         texts: loadJSON(LS.texts, null),
         images: loadJSON(LS.images, null),
@@ -291,6 +304,7 @@
       undoSnapshot = null;
     }
     saveJSON(LS.products, products);
+    saveJSON(LS.supplements, supplements);
     saveJSON(LS.zones, zones);
     saveJSON(LS.texts, texts);
     saveJSON(LS.images, images);
@@ -308,10 +322,12 @@
       return;
     }
     if (undoSnapshot.products) products = undoSnapshot.products;
+    if (undoSnapshot.supplements) supplements = undoSnapshot.supplements;
     if (undoSnapshot.zones) zones = undoSnapshot.zones;
     if (undoSnapshot.texts) texts = undoSnapshot.texts;
     if (undoSnapshot.images) images = undoSnapshot.images;
     saveJSON(LS.products, products);
+    saveJSON(LS.supplements, supplements);
     saveJSON(LS.zones, zones);
     saveJSON(LS.texts, texts);
     saveJSON(LS.images, images);
@@ -978,6 +994,217 @@
 
 
   // ── Zones ───────────────────────────────────────────────────────────────
+  // ── Supplements ─────────────────────────────────────────────────────────
+  function suppCatLabel(cat) {
+    const map = window.SUPP_CATEGORY_LABELS || {};
+    const row = map[cat];
+    return (row && (row.pt || row.en)) || cat || '—';
+  }
+
+  function normalizeSuppOrders() {
+    supplements
+      .slice()
+      .sort((a, b) => (a.order || 0) - (b.order || 0))
+      .forEach((s, i) => {
+        s.order = i + 1;
+      });
+  }
+
+  function renderSupplements() {
+    const list = document.getElementById('suppList');
+    if (!list) return;
+    const sorted = supplements
+      .slice()
+      .sort((a, b) => (a.order || 0) - (b.order || 0) || String(a.id).localeCompare(String(b.id)));
+    list.innerHTML =
+      sorted
+        .map((s) => {
+          const hasImg = !!(s.image && String(s.image).trim());
+          const thumb = hasImg
+            ? '<img src="' +
+              esc(resolveImg(s.image)) +
+              '" alt="" loading="lazy" onerror="this.style.display=\'none\'">'
+            : '<div class="supp-admin-blank" title="Pote em branco"></div>';
+          return (
+            '<div class="product-card-admin ' +
+            (s.active === false ? 'inactive ' : '') +
+            (!hasImg ? 'no-image ' : '') +
+            '" data-supp-id="' +
+            esc(s.id) +
+            '">' +
+            thumb +
+            '<div class="meta"><h3>' +
+            esc(s.name_pt || s.name_en || s.id) +
+            (s.active === false ? ' <span class="tag">Off</span>' : '') +
+            (!hasImg ? ' <span class="tag tag-warn">Sem foto</span>' : '') +
+            '</h3><p>#' +
+            (s.order || '—') +
+            ' · ' +
+            esc(suppCatLabel(s.category)) +
+            ' · sem preço</p></div><div class="actions">' +
+            '<button type="button" class="btn btn-ghost btn-sm" data-supp-move="' +
+            esc(s.id) +
+            '" data-dir="-1" title="Subir">↑</button>' +
+            '<button type="button" class="btn btn-ghost btn-sm" data-supp-move="' +
+            esc(s.id) +
+            '" data-dir="1" title="Descer">↓</button>' +
+            '<button type="button" class="btn btn-ghost btn-sm" data-supp-edit="' +
+            esc(s.id) +
+            '">Editar</button>' +
+            '<button type="button" class="btn btn-danger btn-sm" data-supp-del="' +
+            esc(s.id) +
+            '">Apagar</button></div></div>'
+          );
+        })
+        .join('') ||
+      '<p style="color:var(--muted)">Nenhum suplemento. Clica em “+ Suplemento” para criar placeholders.</p>';
+
+    list.querySelectorAll('[data-supp-edit]').forEach((b) =>
+      b.addEventListener('click', () => openSuppModal(b.dataset.suppEdit))
+    );
+    list.querySelectorAll('[data-supp-del]').forEach((b) =>
+      b.addEventListener('click', () => deleteSupplement(b.dataset.suppDel))
+    );
+    list.querySelectorAll('[data-supp-move]').forEach((b) =>
+      b.addEventListener('click', () => moveSupplement(b.dataset.suppMove, parseInt(b.dataset.dir, 10)))
+    );
+  }
+
+  function openSuppModal(id) {
+    editingSuppId = id || null;
+    const s = id ? supplements.find((x) => x.id === id) : null;
+    const isNew = !s;
+    $('#suppModalTitle').textContent = isNew ? 'Novo suplemento' : 'Editar suplemento';
+    const idInput = $('#s_id');
+    idInput.value = s ? s.id : '';
+    idInput.readOnly = !isNew;
+    idInput.style.opacity = isNew ? '1' : '0.6';
+    $('#s_name_pt').value = s ? s.name_pt || '' : '';
+    $('#s_name_en').value = s ? s.name_en || '' : '';
+    $('#s_desc_pt').value = s ? s.desc_pt || '' : '';
+    $('#s_desc_en').value = s ? s.desc_en || '' : '';
+    $('#s_category').value = (s && s.category) || 'protein';
+    $('#s_order').value = s ? s.order || supplements.length + 1 : supplements.length + 1;
+    const img = (s && s.image) || '';
+    $('#s_image').value = img;
+    const prev = $('#s_image_preview');
+    if (prev) {
+      if (img) {
+        prev.src = resolveImg(img);
+        prev.style.display = 'block';
+      } else {
+        prev.removeAttribute('src');
+        prev.style.display = 'none';
+      }
+    }
+    $('#s_active').checked = !s || s.active !== false;
+    const delBtn = $('#btnDeleteSupp');
+    if (delBtn) delBtn.hidden = isNew;
+    openModal('suppModal');
+  }
+
+  function saveSupplementFromModal() {
+    let id = ($('#s_id').value || '').trim().toLowerCase().replace(/[^a-z0-9-_]/g, '-');
+    if (!id) {
+      id = 'supp-' + Date.now().toString(36);
+    }
+    const namePt = ($('#s_name_pt').value || '').trim();
+    if (!namePt) {
+      toast('Nome PT é obrigatório', 'error');
+      return;
+    }
+    const payload = {
+      id,
+      name_pt: namePt,
+      name_en: ($('#s_name_en').value || '').trim() || namePt,
+      desc_pt: ($('#s_desc_pt').value || '').trim(),
+      desc_en: ($('#s_desc_en').value || '').trim(),
+      category: $('#s_category').value || 'outros',
+      order: parseInt($('#s_order').value, 10) || supplements.length + 1,
+      image: ($('#s_image').value || '').trim(),
+      active: $('#s_active').checked,
+    };
+    if (editingSuppId) {
+      const idx = supplements.findIndex((x) => x.id === editingSuppId);
+      if (idx >= 0) {
+        // keep original id when editing
+        payload.id = editingSuppId;
+        supplements[idx] = payload;
+      } else {
+        supplements.push(payload);
+      }
+    } else {
+      if (supplements.some((x) => x.id === id)) {
+        toast('Já existe um suplemento com este ID', 'error');
+        return;
+      }
+      supplements.push(payload);
+    }
+    normalizeSuppOrders();
+    closeModal('suppModal');
+    editingSuppId = null;
+    renderSupplements();
+    saveDraft({ silent: true });
+    toast('Suplemento guardado no rascunho', 'ok');
+  }
+
+  function deleteSupplement(id) {
+    if (!confirm('Apagar este suplemento do rascunho?')) return;
+    supplements = supplements.filter((x) => x.id !== id);
+    normalizeSuppOrders();
+    closeModal('suppModal');
+    renderSupplements();
+    saveDraft({ silent: true });
+    toast('Suplemento apagado', 'ok');
+  }
+
+  function moveSupplement(id, dir) {
+    normalizeSuppOrders();
+    const sorted = supplements.slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+    const i = sorted.findIndex((x) => x.id === id);
+    if (i < 0) return;
+    const j = i + dir;
+    if (j < 0 || j >= sorted.length) return;
+    const tmp = sorted[i].order;
+    sorted[i].order = sorted[j].order;
+    sorted[j].order = tmp;
+    renderSupplements();
+    saveDraft({ silent: true });
+  }
+
+  document.getElementById('btnAddSupplement')?.addEventListener('click', () => openSuppModal(null));
+  document.getElementById('btnSaveSupp')?.addEventListener('click', saveSupplementFromModal);
+  document.getElementById('btnDeleteSupp')?.addEventListener('click', () => {
+    if (editingSuppId) deleteSupplement(editingSuppId);
+  });
+  document.getElementById('btnClearSuppImage')?.addEventListener('click', () => {
+    $('#s_image').value = '';
+    const prev = $('#s_image_preview');
+    if (prev) {
+      prev.removeAttribute('src');
+      prev.style.display = 'none';
+    }
+  });
+  document.getElementById('btnUploadSuppImage')?.addEventListener('click', () => {
+    pickerTarget = { type: 'supplement' };
+    document.getElementById('mediaFileInput')?.click();
+  });
+  document.getElementById('btnPickSuppImage')?.addEventListener('click', () => {
+    openMediaPicker('supplement');
+  });
+  document.getElementById('s_image')?.addEventListener('input', () => {
+    const url = ($('#s_image').value || '').trim();
+    const prev = $('#s_image_preview');
+    if (!prev) return;
+    if (url) {
+      prev.src = resolveImg(url);
+      prev.style.display = 'block';
+    } else {
+      prev.removeAttribute('src');
+      prev.style.display = 'none';
+    }
+  });
+
   function renderZones() {
     const el = $('#zoneList');
     if (!el) return;
@@ -1035,6 +1262,7 @@
     'Loja (carrinho)': 'pages/loja.html',
     'Loja (checkout form)': 'pages/checkout.html',
     Checkout: 'pages/checkout.html',
+    Suplementação: 'pages/suplementacao.html',
     Navegação: 'index.html',
     Footer: 'index.html',
   };
@@ -1494,6 +1722,13 @@
       if (pickerTarget?.type === 'product') {
         $('#f_image').value = url;
         $('#f_image_preview').src = url;
+      } else if (pickerTarget?.type === 'supplement') {
+        $('#s_image').value = url;
+        const prev = $('#s_image_preview');
+        if (prev) {
+          prev.src = url;
+          prev.style.display = 'block';
+        }
       } else if (pickerTarget?.type === 'slot' && pickerTarget.key) {
         images[pickerTarget.key] = url;
         renderSlots();
@@ -1525,7 +1760,9 @@
   }
 
   function openMediaPicker(type, key) {
-    pickerTarget = type === 'slot' ? { type: 'slot', key } : { type: 'product' };
+    if (type === 'slot') pickerTarget = { type: 'slot', key };
+    else if (type === 'supplement') pickerTarget = { type: 'supplement' };
+    else pickerTarget = { type: 'product' };
     const grid = $('#pickerGrid');
     if (grid) {
       grid.innerHTML = media.map((m, i) => `
@@ -1540,6 +1777,13 @@
           if (pickerTarget?.type === 'product') {
             $('#f_image').value = url;
             $('#f_image_preview').src = url;
+          } else if (pickerTarget?.type === 'supplement') {
+            $('#s_image').value = url;
+            const prev = $('#s_image_preview');
+            if (prev) {
+              prev.src = url;
+              prev.style.display = 'block';
+            }
           } else if (pickerTarget?.type === 'slot' && pickerTarget.key) {
             images[pickerTarget.key] = url;
             renderSlots();
@@ -1567,6 +1811,7 @@
     return {
       updatedAt: new Date().toISOString(),
       products: products.filter((p) => p.active !== false),
+      supplements: supplements.filter((s) => s.active !== false),
       zones,
       texts,
       images,
@@ -1596,6 +1841,7 @@
 
     // Always save draft first
     saveJSON(LS.products, products);
+    saveJSON(LS.supplements, supplements);
     saveJSON(LS.zones, zones);
     saveJSON(LS.texts, texts);
     saveJSON(LS.images, images);
@@ -1862,6 +2108,7 @@
   function renderAll() {
     bindTextsToolbar();
     renderProducts();
+    renderSupplements();
     renderZones();
     renderTexts();
     renderSlots();

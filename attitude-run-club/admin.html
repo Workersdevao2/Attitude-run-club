@@ -60,6 +60,7 @@
       <button type="button" data-panel="dashboard" class="active">Painel</button>
       <button type="button" data-panel="inbox">Pedidos <span class="nav-badge" id="navInboxBadge" hidden>0</span></button>
       <button type="button" data-panel="products">Produtos</button>
+      <button type="button" data-panel="supplements">Suplementação</button>
       <button type="button" data-panel="zones">Zonas</button>
       <button type="button" data-panel="texts">Textos</button>
       <button type="button" data-panel="images">Imagens</button>
@@ -178,6 +179,21 @@
             <tbody id="productTableBody"></tbody>
           </table>
         </div>
+      </section>
+
+      <!-- SUPPLEMENTS -->
+      <section class="panel" id="panel-supplements">
+        <div class="panel-head">
+          <div>
+            <h2>Suplementação</h2>
+            <p>Placeholders da página Suplementação. Sem preços — só nomes, descrições e (opcional) foto.</p>
+          </div>
+          <div class="panel-head-actions">
+            <a class="btn btn-ghost btn-sm" href="pages/suplementacao.html" target="_blank" rel="noopener">Ver página ↗</a>
+            <button type="button" class="btn btn-primary" id="btnAddSupplement">+ Suplemento</button>
+          </div>
+        </div>
+        <div class="product-list" id="suppList"></div>
       </section>
 
       <!-- ZONES -->
@@ -361,6 +377,78 @@
         <button type="button" class="btn btn-ghost" data-close-modal="productModal">Cancelar</button>
         <button type="button" class="btn btn-ghost" id="btnDupProduct" hidden>Duplicar</button>
         <button type="button" class="btn btn-primary" id="btnSaveProduct">Guardar produto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supplement modal -->
+  <div class="modal-backdrop" id="suppModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="suppModalTitle">
+      <div class="modal-head">
+        <h2 id="suppModalTitle">Suplemento</h2>
+        <button type="button" class="modal-close" data-close-modal="suppModal" aria-label="Fechar">×</button>
+      </div>
+      <div class="field">
+        <label>ID (único)</label>
+        <input type="text" id="s_id" placeholder="ex: supp-whey" autocomplete="off">
+        <p class="field-hint">Só editável em itens novos.</p>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Nome PT</label>
+          <input type="text" id="s_name_pt">
+        </div>
+        <div class="field">
+          <label>Nome EN</label>
+          <input type="text" id="s_name_en">
+        </div>
+      </div>
+      <div class="field">
+        <label>Descrição PT</label>
+        <textarea id="s_desc_pt" rows="2"></textarea>
+      </div>
+      <div class="field">
+        <label>Descrição EN</label>
+        <textarea id="s_desc_en" rows="2"></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Categoria</label>
+          <select id="s_category">
+            <option value="protein">Proteína</option>
+            <option value="creatine">Creatina</option>
+            <option value="bcaa">Aminoácidos</option>
+            <option value="pre">Pré-treino</option>
+            <option value="electro">Hidratação</option>
+            <option value="vitamin">Vitaminas</option>
+            <option value="outros">Outros</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Ordem</label>
+          <input type="number" id="s_order" inputmode="numeric" min="0">
+        </div>
+      </div>
+      <div class="field">
+        <label>Imagem (opcional — vazio = pote em branco)</label>
+        <input type="text" id="s_image" placeholder="URL ou vazio">
+        <img id="s_image_preview" src="" alt="" style="width:80px;height:80px;object-fit:cover;border-radius:8px;margin-top:8px;background:#1c1c1c;display:none;">
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+          <button type="button" class="btn btn-ghost btn-sm" id="btnUploadSuppImage">Carregar</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="btnPickSuppImage">Escolher da média</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="btnClearSuppImage">Limpar foto</button>
+        </div>
+      </div>
+      <div class="field">
+        <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:0.9rem;cursor:pointer;">
+          <input type="checkbox" id="s_active" checked style="width:auto;margin:0;"> Visível na página
+        </label>
+      </div>
+      <p class="field-hint" style="margin-top:4px;">Sem campo de preço — a página pública mostra “Preço em breve”.</p>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close-modal="suppModal">Cancelar</button>
+        <button type="button" class="btn btn-ghost" id="btnDeleteSupp" hidden style="color:#f66;">Apagar</button>
+        <button type="button" class="btn btn-primary" id="btnSaveSupp">Guardar</button>
       </div>
     </div>
   </div>

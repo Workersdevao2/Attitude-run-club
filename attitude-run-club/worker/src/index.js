@@ -168,6 +168,7 @@ async function handlePublish(request, env) {
   const payload = {
     updatedAt: catalog.updatedAt || new Date().toISOString(),
     products: Array.isArray(catalog.products) ? catalog.products : [],
+    supplements: Array.isArray(catalog.supplements) ? catalog.supplements : [],
     zones: Array.isArray(catalog.zones) ? catalog.zones : [],
     texts: catalog.texts && typeof catalog.texts === 'object' ? catalog.texts : { pt: {}, en: {} },
     images: catalog.images && typeof catalog.images === 'object' ? catalog.images : {},
