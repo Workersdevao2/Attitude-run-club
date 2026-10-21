@@ -213,6 +213,16 @@
     </div>
   </footer>
 
+  <script src="../js/products.js"></script>
+  <script src="../js/catalog.js"></script>
   <script src="../js/main.js"></script>
+  <script>
+    (async function () {
+      if (!window.ARCCatalog) return;
+      const cat = await ARCCatalog.loadCatalog();
+      ARCCatalog.applyTexts(cat.texts);
+      ARCCatalog.applySiteImages(cat.images);
+    })();
+  </script>
 </body>
 </html>
