@@ -90,8 +90,9 @@ nav.scrolled {
   display: flex;
   align-items: center;
   gap: 10px;
-  min-width: 0; /* allow shrink so hamburger is never pushed off-screen */
-  flex-shrink: 1;
+  flex-shrink: 0; /* brand never compresses under links */
+  white-space: nowrap;
+  z-index: 2;
 }
 .nav-logo img {
   height: 36px;
@@ -101,9 +102,14 @@ nav.scrolled {
 .nav-logo span { color: var(--accent); }
 .nav-links {
   display: flex;
-  gap: 32px;
+  gap: clamp(12px, 1.6vw, 32px);
   list-style: none;
   align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0 12px;
+  padding: 0;
 }
 .nav-links a {
   font-family: var(--font-cond);
@@ -114,6 +120,7 @@ nav.scrolled {
   color: var(--muted);
   text-decoration: none;
   transition: color 0.2s;
+  white-space: nowrap;
 }
 .nav-links a:hover,
 .nav-links a.active { color: var(--white); }
@@ -122,6 +129,7 @@ nav.scrolled {
   align-items: center;
   gap: 20px;
   flex-shrink: 0; /* never compress lang + hamburger */
+  z-index: 2;
 }
 .lang-toggle {
   display: flex;
@@ -1528,6 +1536,85 @@ footer {
 .reveal-delay-3 { transition-delay: 0.3s; }
 
 /* RESPONSIVE */
+
+/* Wide-but-not-huge desktops: tighten link spacing before collision */
+@media (max-width: 1320px) {
+  nav {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+  .nav-logo {
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    gap: 8px;
+  }
+  .nav-logo img {
+    height: 32px;
+  }
+  .nav-links {
+    gap: clamp(10px, 1.2vw, 20px);
+    margin: 0 8px;
+  }
+  .nav-links a {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+  }
+  .nav-right {
+    gap: 12px;
+  }
+  .nav-cta {
+    padding: 9px 16px;
+    letter-spacing: 0.14em;
+    font-size: 12px;
+  }
+}
+
+/* Hide wordmark text if still tight — keep logo mark only */
+@media (max-width: 1240px) {
+  .nav-logo {
+    font-size: 0; /* hide "ATTITUDE RUN CLUB" text, keep image */
+    gap: 0;
+  }
+  .nav-logo img {
+    height: 34px;
+  }
+  .nav-links a {
+    letter-spacing: 0.1em;
+  }
+}
+
+/*
+ * Switch to hamburger before links can overlap the brand.
+ * (Previously 900px — too late for 7 uppercase nav items + CTA.)
+ */
+@media (max-width: 1180px) {
+  nav {
+    padding: 12px 20px;
+    padding-top: max(12px, env(safe-area-inset-top, 0px));
+    gap: 8px;
+  }
+  .nav-logo {
+    font-size: 16px; /* restore wordmark on mobile bar (image + short text ok) */
+    letter-spacing: 0.06em;
+    gap: 8px;
+  }
+  .nav-logo img {
+    height: 28px;
+  }
+  .nav-links { display: none !important; }
+  .nav-cta { display: none !important; }
+  .hamburger {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  .mobile-menu { display: flex; }
+  .nav-right {
+    gap: 8px;
+  }
+  .lang-toggle { margin-right: 0; }
+}
+
 @media (max-width: 1100px) {
   .pillars-grid { grid-template-columns: repeat(3, 1fr); }
   .pillar { min-height: 400px; }
@@ -1550,14 +1637,7 @@ footer {
   .nav-logo img {
     height: 28px;
   }
-  .nav-links { display: none !important; }
-  .nav-cta { display: none !important; }
-  .hamburger {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-  .mobile-menu { display: flex; }
+  /* nav-links / hamburger already handled at 1180px */
   .nav-right {
     gap: 8px;
   }
