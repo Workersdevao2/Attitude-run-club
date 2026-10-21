@@ -181,6 +181,7 @@
         return next;
       });
     }
+    normalizeOrders();
   }
 
   let undoSnapshot = null;
@@ -336,6 +337,23 @@
     return !!(p && p.image && String(p.image).trim());
   }
 
+  /** Force unique sequential order 1…n (stable by current order, then name). */
+  function normalizeOrders() {
+    const sorted = [...products].sort((a, b) => {
+      const ao = a.order || 0;
+      const bo = b.order || 0;
+      if (ao !== bo) return ao - bo;
+      const an = (a.name_pt || a.name_en || a.id || '').toLowerCase();
+      const bn = (b.name_pt || b.name_en || b.id || '').toLowerCase();
+      return an.localeCompare(bn, 'pt');
+    });
+    sorted.forEach((p, i) => {
+      p.order = i + 1;
+    });
+    products = sorted;
+  }
+
+
   function normalizeQ(s) {
     return String(s || '')
       .toLowerCase()
@@ -446,6 +464,9 @@
               (p.soldOut ? ' <span class="tag tag-sold">Esgotado</span>' : '') +
               (p.active === false ? ' <span class="tag">Off</span>' : '') +
               '</h3><p>' +
+              '#' +
+              (p.order || '—') +
+              ' · ' +
               formatKz(p.price) +
               ' · ' +
               esc(CAT_LABELS[cat] || cat) +
@@ -454,6 +475,7 @@
               ' · ' +
               ((p.colors || []).join(', ') || '—') +
               '</p></div><div class="actions">' +
+
               '<button type="button" class="btn btn-ghost btn-sm" data-move="' +
               esc(p.id) +
               '" data-dir="-1" title="Subir">↑</button>' +
@@ -560,22 +582,18 @@
   }
 
   function moveProduct(id, dir) {
+    normalizeOrders();
     const sorted = [...products].sort((a, b) => (a.order || 0) - (b.order || 0));
     const idx = sorted.findIndex((p) => p.id === id);
     if (idx < 0) return;
     const j = idx + dir;
     if (j < 0 || j >= sorted.length) return;
-    const a = sorted[idx];
-    const b = sorted[j];
-    const ao = a.order || 0;
-    const bo = b.order || 0;
-    a.order = bo;
-    b.order = ao;
-    if (a.order === b.order) {
-      sorted.forEach((p, i) => {
-        p.order = i + 1;
-      });
-    }
+    const tmp = sorted[idx];
+    sorted[idx] = sorted[j];
+    sorted[j] = tmp;
+    sorted.forEach((p, i) => {
+      p.order = i + 1;
+    });
     products = sorted;
     renderProducts();
     updatePublishStrip();
