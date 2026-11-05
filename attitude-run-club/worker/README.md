@@ -16,6 +16,12 @@ Live: `https://attitude-run-club-publish.workersdevao.workers.dev`
 - Deploy output should list: `env.INBOX (…)  KV Namespace`
 - Submit/list responses should include `"storage":"kv"`
 
+### Catalog payload (must include all of these)
+
+`products` · `supplements` · `corredores` · `attituders` · `zones` · `texts` · `images`
+
+If the Worker is outdated and omits `corredores` / `attituders` / `supplements`, admin changes will not appear on the public site. Redeploy after pulling this repo.
+
 ## Deploy
 
 ```bash

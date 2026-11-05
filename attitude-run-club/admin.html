@@ -71,7 +71,7 @@
  <div class="publish-strip" id="publishStrip" aria-live="polite">
  <span class="publish-dot" id="publishDot"></span>
  <span id="publishStripText">A verificar estado…</span>
- <button type="button" class="btn btn-ghost btn-sm" id="btnUndoDraft" hidden>Desfazer rascunho</button>
+ <button type="button" class="btn btn-ghost btn-sm" id="btnUndoDraft" hidden>Desfazer última gravação</button>
  </div>
 
  <main class="admin-main">
@@ -94,22 +94,22 @@
  <div class="guide">
  <h3>Como trabalhar</h3>
  <ol>
- <li><strong>Edita</strong> produtos, corredores, attituders, textos ou imagens do site.</li>
- <li><strong>Guardar rascunho</strong> · só neste telemóvel/computador (pré-visualiza no mesmo browser).</li>
- <li><strong>Publicar na loja</strong> · envia tudo para todos os visitantes.</li>
+ <li><strong>Edita</strong> produtos, corredores, attituders, textos ou imagens.</li>
+ <li>Clica <strong>Guardar</strong> no formulário — a alteração é publicada na loja de seguida.</li>
+ <li>Ou usa o botão fixo <strong>Guardar e publicar</strong> em baixo.</li>
  </ol>
  <h3>Corredores &amp; Attituders</h3>
  <ol>
  <li>Abre o separador <strong>Corredores &amp; Attituders</strong>.</li>
  <li>Clica <strong>+ Corredor</strong> ou <strong>+ Attituder</strong>.</li>
- <li>Mete o <strong>nome</strong> (primeiro e último) e carrega a <strong>foto</strong>.</li>
- <li>Guarda o rascunho e depois <strong>Publicar</strong> — a página pública atualiza sozinha.</li>
+ <li>Mete o <strong>nome</strong> e a <strong>foto</strong> → Guardar.</li>
+ <li>A página pública atualiza no próximo carregamento.</li>
  </ol>
  <h3>Dicas mobile</h3>
  <ol>
- <li>Os botões Guardar / Publicar ficam fixos em baixo.</li>
+ <li>O botão <strong>Guardar e publicar</strong> fica fixo em baixo.</li>
  <li>Usa “Carregar” ou “Escolher da média” · não precisas de colar URLs.</li>
- <li>Se algo falhar após publicar, contacta o programador.</li>
+ <li>Se a publicação falhar, tenta outra vez ou contacta o programador.</li>
  </ol>
  <p style="margin-top:16px;">
  <button type="button" class="btn btn-ghost btn-sm" id="btnChangePw">Alterar password</button>
@@ -328,8 +328,7 @@
  </main>
 
  <div class="sticky-actions">
- <button type="button" class="btn btn-ghost" id="btnSaveDraft">Guardar rascunho</button>
- <button type="button" class="btn btn-primary" id="btnPublish">Publicar na loja</button>
+ <button type="button" class="btn btn-primary" id="btnPublish">Guardar e publicar</button>
  </div>
  </div>
 
@@ -420,7 +419,7 @@
  <div class="modal-foot">
  <button type="button" class="btn btn-ghost" data-close-modal="productModal">Cancelar</button>
  <button type="button" class="btn btn-ghost" id="btnDupProduct" hidden>Duplicar</button>
- <button type="button" class="btn btn-primary" id="btnSaveProduct">Guardar produto</button>
+ <button type="button" class="btn btn-primary" id="btnSaveProduct">Guardar e publicar</button>
  </div>
  </div>
  </div>
@@ -492,7 +491,7 @@
  <div class="modal-foot">
  <button type="button" class="btn btn-ghost" data-close-modal="suppModal">Cancelar</button>
  <button type="button" class="btn btn-ghost" id="btnDeleteSupp" hidden style="color:#f66;">Apagar</button>
- <button type="button" class="btn btn-primary" id="btnSaveSupp">Guardar</button>
+ <button type="button" class="btn btn-primary" id="btnSaveSupp">Guardar e publicar</button>
  </div>
  </div>
  </div>
@@ -535,7 +534,7 @@
  <div class="modal-foot">
  <button type="button" class="btn btn-ghost" data-close-modal="personModal">Cancelar</button>
  <button type="button" class="btn btn-ghost" id="btnDeletePerson" hidden style="color:#f66;">Apagar</button>
- <button type="button" class="btn btn-primary" id="btnSavePerson">Guardar</button>
+ <button type="button" class="btn btn-primary" id="btnSavePerson">Guardar e publicar</button>
  </div>
  </div>
  </div>

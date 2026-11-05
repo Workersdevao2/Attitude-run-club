@@ -1,6 +1,7 @@
 /**
  * Attitude Run Club · Admin panel logic
- * Drafts in localStorage · Publish via Worker → Cloudinary catalog.json
+ * Edits publish live via Worker → Cloudinary catalog.json
+ * localStorage keeps a backup / offline copy
  */
 (function () {
  'use strict';
@@ -334,7 +335,7 @@
  saveJSON(LS.texts, texts);
  saveJSON(LS.images, images);
  saveJSON(LS.media, media);
- if (!silent) toast('Rascunho guardado neste browser', 'ok');
+ if (!silent) toast('Cópia local guardada', 'ok');
  updatePublishStrip();
  updateStats();
  const undoBtn = document.getElementById('btnUndoDraft');
@@ -419,12 +420,18 @@
  const liveProducts = published && Array.isArray(published.products) ? published.products : [];
  const liveTexts = published && published.texts ? published.texts : { pt: {}, en: {} };
  const liveImages = published && published.images ? published.images : {};
+ const liveCor = published && Array.isArray(published.corredores) ? published.corredores : [];
+ const liveAtt = published && Array.isArray(published.attituders) ? published.attituders : [];
  const dirtyProducts = catalogFingerprint(products) !== catalogFingerprint(liveProducts);
  const dirtyTexts = textsFingerprint(texts) !== textsFingerprint(liveTexts);
  const dirtyImages = imagesFingerprint(images) !== imagesFingerprint(liveImages);
- const dirty = dirtyProducts || dirtyTexts || dirtyImages;
+ const dirtyPeople =
+ catalogFingerprint(corredores) !== catalogFingerprint(liveCor) ||
+ catalogFingerprint(attituders) !== catalogFingerprint(liveAtt);
+ const dirty = dirtyProducts || dirtyTexts || dirtyImages || dirtyPeople;
  const parts = [];
  if (dirtyProducts) parts.push('produtos');
+ if (dirtyPeople) parts.push('pessoas');
  if (dirtyTexts) parts.push('textos');
  if (dirtyImages) parts.push('imagens');
  const lastLabel = last
@@ -435,7 +442,7 @@
  dot.classList.toggle('is-clean', !dirty);
  }
  text.textContent = dirty
- ? 'Alterações por publicar (' + parts.join(', ') + ') · Última publicação: ' + lastLabel
+ ? 'Há alterações locais · clica “Guardar e publicar” · Última: ' + lastLabel
  : 'Loja sincronizada · Última publicação: ' + lastLabel;
  }
 
@@ -865,17 +872,17 @@
  renderProducts();
  updateStats();
  updatePublishStrip();
- toast('Produto atualizado (rascunho)', 'ok');
+ saveAndPublish('Produto guardado e publicado');
  }
 
  function deleteProduct(id) {
- if (!confirm('Apagar este produto do rascunho?')) return;
+ if (!confirm('Apagar este produto da loja?')) return;
  products = products.filter((x) => x.id !== id);
  selectedIds.delete(id);
  renderProducts();
  updateStats();
  updatePublishStrip();
- toast('Produto removido do rascunho');
+ saveAndPublish('Produto apagado e publicado');
  }
 
  function duplicateProduct(id) {
@@ -924,7 +931,7 @@
  }
  renderProducts();
  updatePublishStrip();
- toast('Atualizado em lote (rascunho)', 'ok');
+ saveAndPublish('Atualizado em lote e publicado');
  }
 
  function exportCsv() {
@@ -1173,18 +1180,16 @@
  closeModal('suppModal');
  editingSuppId = null;
  renderSupplements();
- saveDraft({ silent: true });
- toast('Suplemento guardado no rascunho', 'ok');
+ saveAndPublish('Suplemento guardado e publicado');
  }
 
  function deleteSupplement(id) {
- if (!confirm('Apagar este suplemento do rascunho?')) return;
+ if (!confirm('Apagar este suplemento da loja?')) return;
  supplements = supplements.filter((x) => x.id !== id);
  normalizeSuppOrders();
  closeModal('suppModal');
  renderSupplements();
- saveDraft({ silent: true });
- toast('Suplemento apagado', 'ok');
+ saveAndPublish('Suplemento apagado e publicado');
  }
 
  function moveSupplement(id, dir) {
@@ -1198,7 +1203,7 @@
  sorted[i].order = sorted[j].order;
  sorted[j].order = tmp;
  renderSupplements();
- saveDraft({ silent: true });
+ saveAndPublish('Ordem atualizada e publicada');
  }
 
  document.getElementById('btnAddSupplement')?.addEventListener('click', () => openSuppModal(null));
@@ -1366,11 +1371,10 @@
  closeModal('personModal');
  editingPersonId = null;
  renderPeople();
- saveDraft({ silent: true });
- toast('Guardado no rascunho', 'ok');
+ saveAndPublish('Guardado e publicado');
  }
  function deletePerson(group, id) {
- if (!confirm('Apagar esta pessoa do rascunho?')) return;
+ if (!confirm('Apagar esta pessoa da loja?')) return;
  setPeopleList(
  group,
  peopleList(group).filter((x) => x.id !== id)
@@ -1378,8 +1382,7 @@
  normalizePeopleOrders(group);
  closeModal('personModal');
  renderPeople();
- saveDraft({ silent: true });
- toast('Apagado', 'ok');
+ saveAndPublish('Apagado e publicado');
  }
  function movePerson(group, id, dir) {
  const list = peopleList(group)
@@ -1397,7 +1400,7 @@
  });
  setPeopleList(group, list);
  renderPeople();
- saveDraft({ silent: true });
+ saveAndPublish('Ordem atualizada e publicada');
  }
 
  document.getElementById('btnAddCorredor')?.addEventListener('click', () => openPersonModal('corredores', null));
@@ -1889,7 +1892,7 @@
  const key = b.dataset.slotReset;
  delete images[key];
  renderSlots();
- toast('Slot reposto ao original');
+ saveAndPublish('Imagem reposta e publicada');
  });
  });
  }
@@ -1984,6 +1987,7 @@
  } else if (pickerTarget?.type === 'slot' && pickerTarget.key) {
  images[pickerTarget.key] = url;
  renderSlots();
+ saveAndPublish('Imagem do site publicada');
  }
  pickerTarget = null;
  }
@@ -2047,6 +2051,10 @@
  } else if (pickerTarget?.type === 'slot' && pickerTarget.key) {
  images[pickerTarget.key] = url;
  renderSlots();
+ closeModal('pickerModal');
+ pickerTarget = null;
+ saveAndPublish('Imagem do site publicada');
+ return;
  }
  closeModal('pickerModal');
  pickerTarget = null;
@@ -2080,40 +2088,25 @@
  };
  }
 
- async function publish() {
+ let publishInFlight = false;
+
+ /**
+ * Save local state + publish catalog to the live store.
+ * @param {{ quiet?: boolean, skipConfirm?: boolean, successMsg?: string }} opts
+ * quiet/skipConfirm: used after modal saves (no confirm dialog)
+ */
+ async function publish(opts = {}) {
+ const quiet = !!(opts.quiet || opts.skipConfirm);
  const catalog = buildCatalog();
  const n = catalog.products.length;
  const z = catalog.zones.length;
  const missingName = products.filter((p) => !((p.name_pt || p.name_en || '').trim()));
- const missingPrice = products.filter((p) => p.active !== false && !(Number(p.price) > 0));
- const noImg = products.filter((p) => p.active !== false && !hasImage(p));
  if (missingName.length) {
  toast(missingName.length + ' produto(s) sem nome · corrige antes de publicar', 'error');
- return;
+ return false;
  }
- let okGo = true;
- if (missingPrice.length) {
- okGo = confirm(missingPrice.length + ' produto(s) ativos com preço 0. Publicar na mesma?');
- } else if (noImg.length) {
- okGo = confirm(noImg.length + ' produto(s) ativos sem foto. Publicar na mesma?\n\n• ' + n + ' produtos\n• ' + z + ' zonas');
- } else {
- const nCor = catalog.corredores.length;
- const nAtt = catalog.attituders.length;
- okGo = confirm(
- 'Publicar na loja?\n\n• ' +
- n +
- ' produtos\n• ' +
- nCor +
- ' corredores\n• ' +
- nAtt +
- ' attituders\n• ' +
- z +
- ' zonas\n• textos + imagens do site\n\nTodos os visitantes verão estas alterações no próximo carregamento.'
- );
- }
- if (!okGo) return;
 
- // Always save draft first
+ // Persist local copy first (backup if network fails)
  saveJSON(LS.products, products);
  saveJSON(LS.supplements, supplements);
  saveJSON(LS.corredores, corredores);
@@ -2121,19 +2114,34 @@
  saveJSON(LS.zones, zones);
  saveJSON(LS.texts, texts);
  saveJSON(LS.images, images);
+ saveJSON(LS.media, media);
 
- const password = sessionStorage.getItem('arc_publish_pw') || localStorage.getItem('arc_admin_pw') || DEFAULT_ADMIN_PASSWORD;
-
- // Fallback: local signed path if no Worker URL (desktop only · not for shared phones)
- if (!PUBLISH_URL) {
- // Store catalog in localStorage as "published" preview for this browser
- localStorage.setItem('arc_catalog_published', JSON.stringify(catalog));
- toast('Sem PUBLISH_URL · catálogo guardado só neste browser. Configura o Worker.', 'error');
- updateStats();
- return;
+ if (publishInFlight) {
+ toast('Já a publicar… espera um segundo', 'error');
+ return false;
  }
 
- toast('A publicar…');
+ const password =
+ sessionStorage.getItem('arc_publish_pw') ||
+ localStorage.getItem('arc_admin_pw') ||
+ DEFAULT_ADMIN_PASSWORD;
+
+ if (!PUBLISH_URL) {
+ localStorage.setItem('arc_catalog_published', JSON.stringify(catalog));
+ toast('Sem PUBLISH_URL · guardado só neste browser. Configura o Worker.', 'error');
+ updateStats();
+ updatePublishStrip();
+ return false;
+ }
+
+ publishInFlight = true;
+ const btn = document.getElementById('btnPublish');
+ if (btn) {
+ btn.disabled = true;
+ btn.textContent = 'A publicar…';
+ }
+ if (!quiet) toast('A publicar…');
+
  try {
  const res = await fetch(PUBLISH_URL, {
  method: 'POST',
@@ -2142,20 +2150,32 @@
  });
  const data = await res.json().catch(() => ({}));
  if (!res.ok || !data.ok) {
- throw new Error(data.error || ('HTTP ' + res.status));
+ throw new Error(data.error || 'HTTP ' + res.status);
  }
  localStorage.setItem('arc_catalog_published', JSON.stringify(catalog));
  localStorage.setItem('arc_last_publish', data.updatedAt || catalog.updatedAt);
- toast('Publicado com sucesso', 'ok');
+ toast(opts.successMsg || 'Publicado na loja', 'ok');
  updateStats();
  updatePublishStrip();
+ return true;
  } catch (err) {
  toast('Publicar falhou: ' + (err.message || err), 'error');
+ return false;
+ } finally {
+ publishInFlight = false;
+ if (btn) {
+ btn.disabled = false;
+ btn.textContent = 'Guardar e publicar';
+ }
  }
  }
 
- $('#btnSaveDraft')?.addEventListener('click', saveDraft);
- $('#btnPublish')?.addEventListener('click', publish);
+ /** After a modal edit: save + publish without confirm */
+ async function saveAndPublish(successMsg) {
+ return publish({ quiet: true, skipConfirm: true, successMsg: successMsg || 'Guardado e publicado' });
+ }
+
+ $('#btnPublish')?.addEventListener('click', () => publish({ quiet: false }));
 
  // Change password (simple)
  $('#btnChangePw')?.addEventListener('click', () => {
@@ -2404,7 +2424,7 @@
  }
  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') {
  e.preventDefault();
- if (isAuthed()) saveDraft();
+ if (isAuthed()) publish({ quiet: true, successMsg: 'Guardado e publicado' });
  }
  });
 

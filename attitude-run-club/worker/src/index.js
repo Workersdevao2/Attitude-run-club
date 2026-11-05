@@ -169,6 +169,8 @@ async function handlePublish(request, env) {
     updatedAt: catalog.updatedAt || new Date().toISOString(),
     products: Array.isArray(catalog.products) ? catalog.products : [],
     supplements: Array.isArray(catalog.supplements) ? catalog.supplements : [],
+    corredores: Array.isArray(catalog.corredores) ? catalog.corredores : [],
+    attituders: Array.isArray(catalog.attituders) ? catalog.attituders : [],
     zones: Array.isArray(catalog.zones) ? catalog.zones : [],
     texts: catalog.texts && typeof catalog.texts === 'object' ? catalog.texts : { pt: {}, en: {} },
     images: catalog.images && typeof catalog.images === 'object' ? catalog.images : {},
@@ -183,6 +185,9 @@ async function handlePublish(request, env) {
       url: cloudJson.secure_url || cloudJson.url || null,
       public_id: cloudJson.public_id || publicId,
       products: payload.products.length,
+      supplements: payload.supplements.length,
+      corredores: payload.corredores.length,
+      attituders: payload.attituders.length,
       zones: payload.zones.length,
     });
   } catch (err) {
