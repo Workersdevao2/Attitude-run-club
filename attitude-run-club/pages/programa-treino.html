@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <meta name="theme-color" content="#0a0a0a">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <title>Programa de Treino · Attitude Run Club</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="../css/style.css">
+ <link rel="icon" href="../images/logo.jpg" type="image/jpeg">
+</head>
+<body>
+ <div class="cursor" id="cursor"></div>
+ <div class="cursor-ring" id="cursorRing"></div>
+
+ <nav>
+ <a href="../index.html" class="nav-logo">
+ <img src="../images/logo.jpg" data-site-img="logo" alt="Attitude Run Club" style="height:32px; border-radius:4px;">
+ ATTITUDE <span>RUN</span> CLUB
+ </a>
+ <ul class="nav-links">
+ <li><a href="../index.html" data-i18n="nav.home">Início</a></li>
+ <li><a href="../index.html#pilares" data-i18n="nav.pilares">Pilares</a></li>
+ <li><a href="planos.html" data-i18n="nav.planos">Planos</a></li>
+ <li><a href="programa-treino.html" class="active" data-i18n="nav.programa">Treino</a></li>
+ <li><a href="corredores.html" data-i18n="nav.corredores">Corredores</a></li>
+ <li><a href="atitudes.html" data-i18n="nav.atitudes">Atitudes</a></li>
+ <li><a href="loja.html" data-i18n="nav.loja">Loja</a></li>
+ <li><a href="suplementacao.html" data-i18n="nav.suplementacao">Suplementação</a></li>
+ <li><a href="eventos.html" data-i18n="nav.eventos">Eventos</a></li>
+ <li><a href="roadmap.html" data-i18n="nav.roadmap">Roadmap</a></li>
+ <li><a href="contacto.html" data-i18n="nav.contacto">Contacto</a></li>
+ </ul>
+ <div class="nav-right">
+ <div class="lang-toggle">
+ <button data-lang="pt" class="active">PT</button>
+ <button data-lang="en">EN</button>
+ </div>
+ <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="nav-cta" data-i18n="nav.cta" target="_blank" rel="noopener">Juntar ao Clube</a>
+ <button class="hamburger" id="hamburger" aria-label="Menu">
+ <span></span>
+ <span></span>
+ <span></span>
+ </button>
+ </div>
+ </nav>
+
+ <div class="mobile-menu" id="mobileMenu">
+ <button class="mobile-close" id="mobileClose" aria-label="Fechar menu">
+ <span></span>
+ <span></span>
+ </button>
+ <a href="../index.html" data-i18n="nav.home">Início</a>
+ <a href="../index.html#pilares" data-i18n="nav.pilares">Pilares</a>
+ <a href="planos.html" data-i18n="nav.planos">Planos</a>
+ <a href="programa-treino.html" data-i18n="nav.programa">Treino</a>
+ <a href="corredores.html" data-i18n="nav.corredores">Corredores</a>
+ <a href="atitudes.html" data-i18n="nav.atitudes">Atitudes</a>
+ <a href="loja.html" data-i18n="nav.loja">Loja</a>
+ <a href="suplementacao.html" data-i18n="nav.suplementacao">Suplementação</a>
+ <a href="eventos.html" data-i18n="nav.eventos">Eventos</a>
+ <a href="roadmap.html" data-i18n="nav.roadmap">Roadmap</a>
+ <a href="contacto.html" data-i18n="nav.contacto">Contacto</a>
+ <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="mobile-cta" data-i18n="nav.cta" target="_blank" rel="noopener">Juntar ao Clube</a>
+ </div>
+
+ <section class="page-hero has-bg" style="background-image: url('../images/plank.jpg');">
+ <p class="section-label reveal" data-i18n="programa.label">Programa de Treino</p>
+ <h1 class="section-title reveal reveal-delay-1" data-i18n="programa.title">Treina com<br>propósito.</h1>
+ <p class="page-hero-sub reveal reveal-delay-2" data-i18n="programa.sub">Estrutura clara para evoluíres — do primeiro quilómetro até às maratonas.</p>
+ </section>
+
+ <section style="padding-top:0;">
+ <div class="programa-wrap">
+ <div class="programa-card reveal">
+ <span class="programa-num">01</span>
+ <h3 class="programa-title" data-i18n="programa.1.title">Base &amp; Consistência</h3>
+ <p class="programa-desc" data-i18n="programa.1.desc">Construção de volume, técnica de corrida e hábitos. Ideal para quem está a começar ou a voltar.</p>
+ <ul class="programa-list">
+ <li data-i18n="programa.1.i1">2–3 treinos de corrida / semana</li>
+ <li data-i18n="programa.1.i2">Foco em ritmo confortável</li>
+ <li data-i18n="programa.1.i3">Mobilidade e prevenção de lesões</li>
+ </ul>
+ </div>
+ <div class="programa-card reveal reveal-delay-1">
+ <span class="programa-num">02</span>
+ <h3 class="programa-title" data-i18n="programa.2.title">Performance</h3>
+ <p class="programa-desc" data-i18n="programa.2.desc">Intervalados, long runs e trabalho de velocidade. Para quem já corre e quer baixar tempos.</p>
+ <ul class="programa-list">
+ <li data-i18n="programa.2.i1">4–5 treinos / semana</li>
+ <li data-i18n="programa.2.i2">Intervalados + tempo runs</li>
+ <li data-i18n="programa.2.i3">Preparação para 10K / half</li>
+ </ul>
+ </div>
+ <div class="programa-card reveal reveal-delay-2">
+ <span class="programa-num">03</span>
+ <h3 class="programa-title" data-i18n="programa.3.title">Maratona &amp; Ultra</h3>
+ <p class="programa-desc" data-i18n="programa.3.desc">Planos específicos para 42K e além. Volume, recuperação e estratégia de prova.</p>
+ <ul class="programa-list">
+ <li data-i18n="programa.3.i1">Ciclos de 12–16 semanas</li>
+ <li data-i18n="programa.3.i2">Long runs progressivos</li>
+ <li data-i18n="programa.3.i3">Acompanhamento próximo</li>
+ </ul>
+ </div>
+ </div>
+ <p class="people-note" data-i18n="programa.note">Detalhe completo do programa será publicado em breve. Fala connosco para começar já.</p>
+ </section>
+
+ <section class="cta-section has-bg" style="background-image: url('../images/cta-energy.jpg');">
+ <p class="cta-label" data-i18n="programa.cta.label">Pronto para treinar?</p>
+ <h2 class="cta-title" data-i18n="programa.cta.title">Entra no<br>programa.</h2>
+ <div class="cta-actions">
+ <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="btn-large" target="_blank" rel="noopener" data-i18n="programa.cta.btn">Juntar ao Clube</a>
+ <a href="contacto.html" class="btn-secondary" data-i18n="programa.cta.contact">Falar connosco</a>
+ </div>
+ </section>
+
+ <footer>
+ <div class="footer-top">
+ <div>
+ <div class="footer-logo">ATTITUDE <span>RUN</span> CLUB</div>
+ <p class="footer-tagline" data-i18n="footer.tagline">Move With Purpose · Corre Com Atitude</p>
+ </div>
+ <div class="footer-links">
+ <div class="footer-col">
+ <h4 data-i18n="footer.nav">Navegação</h4>
+ <a href="../index.html" data-i18n="nav.home">Início</a>
+ <a href="planos.html" data-i18n="nav.planos">Planos</a>
+ <a href="programa-treino.html" data-i18n="nav.programa">Treino</a>
+ <a href="corredores.html" data-i18n="nav.corredores">Corredores</a>
+ <a href="atitudes.html" data-i18n="nav.atitudes">Atitudes</a>
+ <a href="loja.html" data-i18n="nav.loja">Loja</a>
+ <a href="eventos.html" data-i18n="nav.eventos">Eventos</a>
+ <a href="contacto.html" data-i18n="nav.contacto">Contacto</a>
+ </div>
+ <div class="footer-col">
+ <h4 data-i18n="footer.local">Localização</h4>
+ <p>Benfica, Rua Direita do BFA</p>
+ <p>Defronte ao Condomínio Ville Vermont</p>
+ <p>Luanda, Angola</p>
+ </div>
+ <div class="footer-col">
+ <h4 data-i18n="footer.contacto">Contacto</h4>
+ <a href="mailto:attituderunclub@gmail.com">attituderunclub@gmail.com</a>
+ <a href="https://wa.me/244932826818" target="_blank" rel="noopener">WhatsApp: 932 826 818</a>
+ </div>
+ </div>
+ </div>
+ <div class="footer-bottom">
+ <p class="footer-copy"><span data-i18n="footer.rights">© 2025 Attitude Run Club · Attitude Sportwear</span></p>
+ <div class="footer-social">
+ <a href="https://www.instagram.com/attituderunclub" target="_blank" rel="noopener">IG Clube</a>
+ <a href="https://www.instagram.com/attitude_sportwear/" target="_blank" rel="noopener">IG Sportwear</a>
+ <a href="https://www.instagram.com/wakandatraining/" target="_blank" rel="noopener">IG Wakanda</a>
+ <a href="https://wa.me/244932826818" target="_blank" rel="noopener">WhatsApp</a>
+ </div>
+ </div>
+ </footer>
+
+ <script src="../js/products.js"></script>
+ <script src="../js/catalog.js"></script>
+ <script src="../js/main.js"></script>
+ <script>
+ (async function () {
+ if (!window.ARCCatalog) return;
+ const cat = await ARCCatalog.loadCatalog();
+ ARCCatalog.applyTexts(cat.texts);
+ ARCCatalog.applySiteImages(cat.images);
+ })();
+ </script>
+</body>
+</html>
