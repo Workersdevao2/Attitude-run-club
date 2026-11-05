@@ -456,7 +456,9 @@ body.no-sticky-pad { padding-bottom: 0; }
     margin: 0 -8px;
     padding: 0 8px;
   }
-  .product-list { display: none; }
+  /* Only hide the card list inside Products (desktop uses the table).
+     Corredores / Attituders / Suplementos only have .product-list — must stay visible. */
+  #panel-products .product-list { display: none; }
   .admin-main { max-width: 1280px; }
 }
 
@@ -1307,4 +1309,11 @@ body.admin-compact .product-table td {
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+.people-empty-msg {
+  color: var(--muted, #888);
+  padding: 20px 4px;
+  font-size: 0.95rem;
+  line-height: 1.45;
 }

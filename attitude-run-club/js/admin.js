@@ -246,24 +246,38 @@
  products = baseProducts;
  const defS = window.DEFAULT_SUPPLEMENTS || [];
  const draftS = loadJSON(LS.supplements, null);
- if (Array.isArray(draftS) && draftS.length) {
- supplements = draftS;
- } else if (remote && Array.isArray(remote.supplements) && remote.supplements.length) {
+ if (Array.isArray(draftS) && draftS.length > 0) {
+ supplements = structuredClone(draftS);
+ } else if (remote && Array.isArray(remote.supplements) && remote.supplements.length > 0) {
  supplements = structuredClone(remote.supplements);
  } else {
+ supplements = structuredClone(defS);
+ }
+ if (!supplements.length && defS.length) {
  supplements = structuredClone(defS);
  }
 
  function loadPeopleList(lsKey, remoteKey, defaults) {
  const draft = loadJSON(lsKey, null);
- if (Array.isArray(draft) && draft.length) return draft;
- if (remote && Array.isArray(remote[remoteKey]) && remote[remoteKey].length) {
- return structuredClone(remote[remoteKey]);
- }
- return structuredClone(defaults || []);
+ const remoteList =
+ remote && Array.isArray(remote[remoteKey]) ? remote[remoteKey] : null;
+ // Non-empty local draft wins (staff mid-edit)
+ if (Array.isArray(draft) && draft.length > 0) return structuredClone(draft);
+ // Published catalog on Cloudinary
+ if (remoteList && remoteList.length > 0) return structuredClone(remoteList);
+ // Code defaults (placeholders)
+ if (Array.isArray(defaults) && defaults.length > 0) return structuredClone(defaults);
+ return [];
  }
  corredores = loadPeopleList(LS.corredores, 'corredores', window.DEFAULT_CORREDORES || []);
  attituders = loadPeopleList(LS.attituders, 'attituders', window.DEFAULT_ATTITUDERS || []);
+ // Safety: never leave admin empty if defaults exist
+ if (!corredores.length && (window.DEFAULT_CORREDORES || []).length) {
+ corredores = structuredClone(window.DEFAULT_CORREDORES);
+ }
+ if (!attituders.length && (window.DEFAULT_ATTITUDERS || []).length) {
+ attituders = structuredClone(window.DEFAULT_ATTITUDERS);
+ }
 
  zones =
  loadJSON(LS.zones, null) ||
@@ -1292,7 +1306,7 @@
  );
  })
  .join('') ||
- '<p style="color:var(--muted)">Lista vazia. Clica em “+” para adicionar.</p>';
+ '<p class="people-empty-msg">Lista vazia. Clica em <strong>+</strong> para adicionar, ou em <strong>Recarregar do servidor</strong> se já publicaste pessoas antes.</p>';
 
  listEl.querySelectorAll('[data-person-edit]').forEach((b) =>
  b.addEventListener('click', () => openPersonModal(b.dataset.personGroup, b.dataset.personEdit))
@@ -1422,6 +1436,52 @@
  document.getElementById('btnDeletePerson')?.addEventListener('click', () => {
  if (editingPersonId) deletePerson(editingPersonGroup, editingPersonId);
  });
+
+ async function reloadPeopleFromServer() {
+ try {
+ localStorage.removeItem(LS.corredores);
+ localStorage.removeItem(LS.attituders);
+ const remote = await fetchRemoteCatalog();
+ if (remote && Array.isArray(remote.corredores) && remote.corredores.length) {
+ corredores = structuredClone(remote.corredores);
+ } else {
+ corredores = structuredClone(window.DEFAULT_CORREDORES || []);
+ }
+ if (remote && Array.isArray(remote.attituders) && remote.attituders.length) {
+ attituders = structuredClone(remote.attituders);
+ } else {
+ attituders = structuredClone(window.DEFAULT_ATTITUDERS || []);
+ }
+ saveJSON(LS.corredores, corredores);
+ saveJSON(LS.attituders, attituders);
+ renderPeople();
+ updateStats();
+ updatePublishStrip();
+ toast('Carregados ' + corredores.length + ' corredores · ' + attituders.length + ' attituders', 'ok');
+ } catch (err) {
+ toast('Falha ao recarregar: ' + (err.message || err), 'error');
+ }
+ }
+ async function reloadSupplementsFromServer() {
+ try {
+ localStorage.removeItem(LS.supplements);
+ const remote = await fetchRemoteCatalog();
+ if (remote && Array.isArray(remote.supplements) && remote.supplements.length) {
+ supplements = structuredClone(remote.supplements);
+ } else {
+ supplements = structuredClone(window.DEFAULT_SUPPLEMENTS || []);
+ }
+ saveJSON(LS.supplements, supplements);
+ renderSupplements();
+ updateStats();
+ updatePublishStrip();
+ toast('Carregados ' + supplements.length + ' suplementos', 'ok');
+ } catch (err) {
+ toast('Falha ao recarregar: ' + (err.message || err), 'error');
+ }
+ }
+ document.getElementById('btnReloadPeople')?.addEventListener('click', reloadPeopleFromServer);
+ document.getElementById('btnReloadSupplements')?.addEventListener('click', reloadSupplementsFromServer);
  document.getElementById('btnUploadPersonImage')?.addEventListener('click', () => {
  pickerTarget = { type: 'person' };
  document.getElementById('mediaFileInput')?.click();
