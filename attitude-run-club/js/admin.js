@@ -14,6 +14,8 @@
  auth: 'arc_admin_auth',
  products: 'arc_products_override',
  supplements: 'arc_supplements_override',
+ corredores: 'arc_corredores_override',
+ attituders: 'arc_attituders_override',
  zones: 'arc_zones_override',
  texts: 'arc_texts_override',
  images: 'arc_images_override',
@@ -23,6 +25,8 @@
  // ── State ───────────────────────────────────────────────────────────────
  let products = [];
  let supplements = [];
+ let corredores = [];
+ let attituders = [];
  let zones = [];
  let texts = { pt: {}, en: {} };
  let images = {};
@@ -31,7 +35,9 @@
  let inboxFilter = 'all';
  let editingId = null;
  let editingSuppId = null;
- let pickerTarget = null; // { type: 'product'|'slot'|'supplement', id/key }
+ let editingPersonId = null;
+ let editingPersonGroup = 'corredores'; // 'corredores' | 'attituders'
+ let pickerTarget = null; // { type: 'product'|'slot'|'supplement'|'person', id/key }
 
  function adminPassword() {
  return localStorage.getItem('arc_admin_pw') || DEFAULT_ADMIN_PASSWORD;
@@ -199,6 +205,9 @@
  media.push({ url: u, at: new Date().toISOString(), seeded: true });
  };
  (products || []).forEach((p) => add(p && p.image));
+ (supplements || []).forEach((s) => add(s && s.image));
+ (corredores || []).forEach((p) => add(p && p.image));
+ (attituders || []).forEach((p) => add(p && p.image));
  Object.values(images || {}).forEach(add);
  if (media.length) saveJSON(LS.media, media);
  }
@@ -243,6 +252,18 @@
  } else {
  supplements = structuredClone(defS);
  }
+
+ function loadPeopleList(lsKey, remoteKey, defaults) {
+ const draft = loadJSON(lsKey, null);
+ if (Array.isArray(draft) && draft.length) return draft;
+ if (remote && Array.isArray(remote[remoteKey]) && remote[remoteKey].length) {
+ return structuredClone(remote[remoteKey]);
+ }
+ return structuredClone(defaults || []);
+ }
+ corredores = loadPeopleList(LS.corredores, 'corredores', window.DEFAULT_CORREDORES || []);
+ attituders = loadPeopleList(LS.attituders, 'attituders', window.DEFAULT_ATTITUDERS || []);
+
  zones =
  loadJSON(LS.zones, null) ||
  (remote && Array.isArray(remote.zones) ? structuredClone(remote.zones) : null) ||
@@ -295,6 +316,8 @@
  undoSnapshot = {
  products: loadJSON(LS.products, null),
  supplements: loadJSON(LS.supplements, null),
+ corredores: loadJSON(LS.corredores, null),
+ attituders: loadJSON(LS.attituders, null),
  zones: loadJSON(LS.zones, null),
  texts: loadJSON(LS.texts, null),
  images: loadJSON(LS.images, null),
@@ -305,6 +328,8 @@
  }
  saveJSON(LS.products, products);
  saveJSON(LS.supplements, supplements);
+ saveJSON(LS.corredores, corredores);
+ saveJSON(LS.attituders, attituders);
  saveJSON(LS.zones, zones);
  saveJSON(LS.texts, texts);
  saveJSON(LS.images, images);
@@ -323,11 +348,15 @@
  }
  if (undoSnapshot.products) products = undoSnapshot.products;
  if (undoSnapshot.supplements) supplements = undoSnapshot.supplements;
+ if (undoSnapshot.corredores) corredores = undoSnapshot.corredores;
+ if (undoSnapshot.attituders) attituders = undoSnapshot.attituders;
  if (undoSnapshot.zones) zones = undoSnapshot.zones;
  if (undoSnapshot.texts) texts = undoSnapshot.texts;
  if (undoSnapshot.images) images = undoSnapshot.images;
  saveJSON(LS.products, products);
  saveJSON(LS.supplements, supplements);
+ saveJSON(LS.corredores, corredores);
+ saveJSON(LS.attituders, attituders);
  saveJSON(LS.zones, zones);
  saveJSON(LS.texts, texts);
  saveJSON(LS.images, images);
@@ -1174,6 +1203,222 @@
 
  document.getElementById('btnAddSupplement')?.addEventListener('click', () => openSuppModal(null));
  document.getElementById('btnSaveSupp')?.addEventListener('click', saveSupplementFromModal);
+
+ // ── People (Corredores / Attituders) ─────────────────────────────────────
+ function peopleList(group) {
+ return group === 'attituders' ? attituders : corredores;
+ }
+ function setPeopleList(group, list) {
+ if (group === 'attituders') attituders = list;
+ else corredores = list;
+ }
+ function peoplePrefix(group) {
+ return group === 'attituders' ? 'att' : 'cor';
+ }
+ function normalizePeopleOrders(group) {
+ const list = peopleList(group);
+ list
+ .slice()
+ .sort((a, b) => (a.order || 0) - (b.order || 0))
+ .forEach((p, i) => {
+ p.order = i + 1;
+ });
+ }
+ function renderPeopleGroup(group) {
+ const listEl = document.getElementById(group === 'attituders' ? 'attitudersList' : 'corredoresList');
+ if (!listEl) return;
+ const list = peopleList(group)
+ .slice()
+ .sort((a, b) => (a.order || 0) - (b.order || 0) || String(a.id).localeCompare(String(b.id)));
+ listEl.innerHTML =
+ list
+ .map((p) => {
+ const hasImg = !!(p.image && String(p.image).trim());
+ const thumb = hasImg
+ ? '<img src="' +
+ esc(resolveImg(p.image)) +
+ '" alt="" loading="lazy" onerror="this.src=\'images/logo.jpg\'">'
+ : '<div class="supp-admin-blank" title="Sem foto"></div>';
+ return (
+ '<div class="product-card-admin ' +
+ (p.active === false ? 'inactive ' : '') +
+ (!hasImg ? 'no-image ' : '') +
+ '" data-person-id="' +
+ esc(p.id) +
+ '" data-person-group="' +
+ group +
+ '">' +
+ thumb +
+ '<div class="meta"><h3>' +
+ esc(p.name || p.id) +
+ (p.active === false ? ' <span class="tag">Off</span>' : '') +
+ (!hasImg ? ' <span class="tag tag-warn">Sem foto</span>' : '') +
+ '</h3><p>#' +
+ (p.order || ' · ') +
+ '</p></div><div class="actions">' +
+ '<button type="button" class="btn btn-ghost btn-sm" data-person-move="' +
+ esc(p.id) +
+ '" data-person-group="' +
+ group +
+ '" data-dir="-1" title="Subir">↑</button>' +
+ '<button type="button" class="btn btn-ghost btn-sm" data-person-move="' +
+ esc(p.id) +
+ '" data-person-group="' +
+ group +
+ '" data-dir="1" title="Descer">↓</button>' +
+ '<button type="button" class="btn btn-ghost btn-sm" data-person-edit="' +
+ esc(p.id) +
+ '" data-person-group="' +
+ group +
+ '">Editar</button>' +
+ '<button type="button" class="btn btn-danger btn-sm" data-person-del="' +
+ esc(p.id) +
+ '" data-person-group="' +
+ group +
+ '">Apagar</button></div></div>'
+ );
+ })
+ .join('') ||
+ '<p style="color:var(--muted)">Lista vazia. Clica em “+” para adicionar.</p>';
+
+ listEl.querySelectorAll('[data-person-edit]').forEach((b) =>
+ b.addEventListener('click', () => openPersonModal(b.dataset.personGroup, b.dataset.personEdit))
+ );
+ listEl.querySelectorAll('[data-person-del]').forEach((b) =>
+ b.addEventListener('click', () => deletePerson(b.dataset.personGroup, b.dataset.personDel))
+ );
+ listEl.querySelectorAll('[data-person-move]').forEach((b) =>
+ b.addEventListener('click', () =>
+ movePerson(b.dataset.personGroup, b.dataset.personMove, parseInt(b.dataset.dir, 10))
+ )
+ );
+ }
+ function renderPeople() {
+ renderPeopleGroup('corredores');
+ renderPeopleGroup('attituders');
+ }
+ function openPersonModal(group, id) {
+ editingPersonGroup = group === 'attituders' ? 'attituders' : 'corredores';
+ editingPersonId = id || null;
+ const list = peopleList(editingPersonGroup);
+ const p = id ? list.find((x) => x.id === id) : null;
+ const isNew = !p;
+ const label = editingPersonGroup === 'attituders' ? 'Attituder' : 'Corredor';
+ $('#personModalTitle').textContent = isNew ? 'Novo ' + label : 'Editar ' + label;
+ $('#p_group').value = editingPersonGroup;
+ const idInput = $('#p_id');
+ idInput.value = p ? p.id : '';
+ idInput.readOnly = !isNew;
+ idInput.style.opacity = isNew ? '1' : '0.6';
+ $('#p_name').value = p ? p.name || '' : '';
+ $('#p_order').value = p ? p.order || list.length + 1 : list.length + 1;
+ const img = (p && p.image) || '';
+ $('#p_image').value = img;
+ const prev = $('#p_image_preview');
+ if (prev) {
+ if (img) {
+ prev.src = resolveImg(img);
+ prev.style.display = 'block';
+ } else {
+ prev.removeAttribute('src');
+ prev.style.display = 'none';
+ }
+ }
+ $('#p_active').checked = !p || p.active !== false;
+ const delBtn = $('#btnDeletePerson');
+ if (delBtn) delBtn.hidden = isNew;
+ openModal('personModal');
+ }
+ function savePersonFromModal() {
+ const group = $('#p_group').value === 'attituders' ? 'attituders' : 'corredores';
+ const list = peopleList(group);
+ let id = ($('#p_id').value || '').trim().toLowerCase().replace(/[^a-z0-9-_]/g, '-');
+ if (!id) id = peoplePrefix(group) + '-' + Date.now().toString(36);
+ const name = ($('#p_name').value || '').trim();
+ if (!name) {
+ toast('Nome é obrigatório', 'error');
+ return;
+ }
+ const payload = {
+ id,
+ name,
+ order: parseInt($('#p_order').value, 10) || list.length + 1,
+ image: ($('#p_image').value || '').trim(),
+ active: $('#p_active').checked,
+ };
+ if (editingPersonId) {
+ const idx = list.findIndex((x) => x.id === editingPersonId);
+ if (idx >= 0) {
+ payload.id = editingPersonId;
+ list[idx] = payload;
+ } else {
+ list.push(payload);
+ }
+ } else {
+ if (list.some((x) => x.id === id)) {
+ toast('Já existe alguém com este ID', 'error');
+ return;
+ }
+ list.push(payload);
+ }
+ setPeopleList(group, list);
+ normalizePeopleOrders(group);
+ closeModal('personModal');
+ editingPersonId = null;
+ renderPeople();
+ saveDraft({ silent: true });
+ toast('Guardado no rascunho', 'ok');
+ }
+ function deletePerson(group, id) {
+ if (!confirm('Apagar esta pessoa do rascunho?')) return;
+ setPeopleList(
+ group,
+ peopleList(group).filter((x) => x.id !== id)
+ );
+ normalizePeopleOrders(group);
+ closeModal('personModal');
+ renderPeople();
+ saveDraft({ silent: true });
+ toast('Apagado', 'ok');
+ }
+ function movePerson(group, id, dir) {
+ const list = peopleList(group)
+ .slice()
+ .sort((a, b) => (a.order || 0) - (b.order || 0));
+ const idx = list.findIndex((x) => x.id === id);
+ if (idx < 0) return;
+ const j = idx + dir;
+ if (j < 0 || j >= list.length) return;
+ const tmp = list[idx];
+ list[idx] = list[j];
+ list[j] = tmp;
+ list.forEach((p, i) => {
+ p.order = i + 1;
+ });
+ setPeopleList(group, list);
+ renderPeople();
+ saveDraft({ silent: true });
+ }
+
+ document.getElementById('btnAddCorredor')?.addEventListener('click', () => openPersonModal('corredores', null));
+ document.getElementById('btnAddAttituder')?.addEventListener('click', () => openPersonModal('attituders', null));
+ document.getElementById('btnSavePerson')?.addEventListener('click', savePersonFromModal);
+ document.getElementById('btnDeletePerson')?.addEventListener('click', () => {
+ if (editingPersonId) deletePerson(editingPersonGroup, editingPersonId);
+ });
+ document.getElementById('btnUploadPersonImage')?.addEventListener('click', () => {
+ pickerTarget = { type: 'person' };
+ document.getElementById('mediaFileInput')?.click();
+ });
+ document.getElementById('btnPickPersonImage')?.addEventListener('click', () => openMediaPicker('person'));
+ document.getElementById('btnClearPersonImage')?.addEventListener('click', () => {
+ $('#p_image').value = '';
+ const prev = $('#p_image_preview');
+ if (prev) {
+ prev.removeAttribute('src');
+ prev.style.display = 'none';
+ }
+ });
  document.getElementById('btnDeleteSupp')?.addEventListener('click', () => {
  if (editingSuppId) deleteSupplement(editingSuppId);
  });
@@ -1729,6 +1974,13 @@
  prev.src = url;
  prev.style.display = 'block';
  }
+ } else if (pickerTarget?.type === 'person') {
+ $('#p_image').value = url;
+ const prev = $('#p_image_preview');
+ if (prev) {
+ prev.src = url;
+ prev.style.display = 'block';
+ }
  } else if (pickerTarget?.type === 'slot' && pickerTarget.key) {
  images[pickerTarget.key] = url;
  renderSlots();
@@ -1762,6 +2014,7 @@
  function openMediaPicker(type, key) {
  if (type === 'slot') pickerTarget = { type: 'slot', key };
  else if (type === 'supplement') pickerTarget = { type: 'supplement' };
+ else if (type === 'person') pickerTarget = { type: 'person' };
  else pickerTarget = { type: 'product' };
  const grid = $('#pickerGrid');
  if (grid) {
@@ -1780,6 +2033,13 @@
  } else if (pickerTarget?.type === 'supplement') {
  $('#s_image').value = url;
  const prev = $('#s_image_preview');
+ if (prev) {
+ prev.src = url;
+ prev.style.display = 'block';
+ }
+ } else if (pickerTarget?.type === 'person') {
+ $('#p_image').value = url;
+ const prev = $('#p_image_preview');
  if (prev) {
  prev.src = url;
  prev.style.display = 'block';
@@ -1812,6 +2072,8 @@
  updatedAt: new Date().toISOString(),
  products: products.filter((p) => p.active !== false),
  supplements: supplements.filter((s) => s.active !== false),
+ corredores: corredores.filter((p) => p.active !== false),
+ attituders: attituders.filter((p) => p.active !== false),
  zones,
  texts,
  images,
@@ -1835,13 +2097,27 @@
  } else if (noImg.length) {
  okGo = confirm(noImg.length + ' produto(s) ativos sem foto. Publicar na mesma?\n\n• ' + n + ' produtos\n• ' + z + ' zonas');
  } else {
- okGo = confirm('Publicar na loja?\n\n• ' + n + ' produtos\n• ' + z + ' zonas\n• textos + imagens do site\n\nTodos os visitantes verão estas alterações no próximo carregamento.');
+ const nCor = catalog.corredores.length;
+ const nAtt = catalog.attituders.length;
+ okGo = confirm(
+ 'Publicar na loja?\n\n• ' +
+ n +
+ ' produtos\n• ' +
+ nCor +
+ ' corredores\n• ' +
+ nAtt +
+ ' attituders\n• ' +
+ z +
+ ' zonas\n• textos + imagens do site\n\nTodos os visitantes verão estas alterações no próximo carregamento.'
+ );
  }
  if (!okGo) return;
 
  // Always save draft first
  saveJSON(LS.products, products);
  saveJSON(LS.supplements, supplements);
+ saveJSON(LS.corredores, corredores);
+ saveJSON(LS.attituders, attituders);
  saveJSON(LS.zones, zones);
  saveJSON(LS.texts, texts);
  saveJSON(LS.images, images);
@@ -2083,6 +2359,8 @@
  el.classList.toggle('is-loading', !!loading);
  };
  set('statProducts', products.filter((p) => p.active !== false).length);
+ set('statCorredores', corredores.filter((p) => p.active !== false).length);
+ set('statAttituders', attituders.filter((p) => p.active !== false).length);
  set('statZones', zones.length);
  set('statMedia', media.length);
  const newCount = inboxItems.filter((x) => x.status === 'new').length;
@@ -2109,6 +2387,7 @@
  bindTextsToolbar();
  renderProducts();
  renderSupplements();
+ renderPeople();
  renderZones();
  renderTexts();
  renderSlots();

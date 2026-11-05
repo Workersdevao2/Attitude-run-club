@@ -1288,3 +1288,23 @@ body.admin-compact .product-table td {
   border-radius: 4px;
   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
 }
+
+/* People admin (Corredores / Attituders) */
+.people-admin-block {
+  margin-bottom: 8px;
+}
+.people-admin-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.people-admin-head h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}

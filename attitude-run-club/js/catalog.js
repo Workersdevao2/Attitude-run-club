@@ -7,6 +7,9 @@
 
  const LS = {
  products: 'arc_products_override',
+ supplements: 'arc_supplements_override',
+ corredores: 'arc_corredores_override',
+ attituders: 'arc_attituders_override',
  zones: 'arc_zones_override',
  texts: 'arc_texts_override',
  images: 'arc_images_override',
@@ -130,6 +133,8 @@
  const defaults = {
  products: global.DEFAULT_PRODUCTS || [],
  supplements: global.DEFAULT_SUPPLEMENTS || [],
+ corredores: global.DEFAULT_CORREDORES || [],
+ attituders: global.DEFAULT_ATTITUDERS || [],
  zones: global.DEFAULT_ZONES || [],
  texts: global.DEFAULT_TEXTS || { pt: {}, en: {} },
  images: global.DEFAULT_SITE_IMAGES || {},
@@ -137,6 +142,8 @@
 
  const draftProducts = readLS(LS.products);
  const draftSupplements = readLS(LS.supplements);
+ const draftCorredores = readLS(LS.corredores);
+ const draftAttituders = readLS(LS.attituders);
  const draftZones = readLS(LS.zones);
  const draftTexts = readLS(LS.texts);
  const draftImages = readLS(LS.images);
@@ -191,12 +198,28 @@
  rawSupplements = defaults.supplements || [];
  }
 
+ function pickPeople(draft, remoteList, fallback) {
+ if (Array.isArray(draft) && draft.length) return draft;
+ if (Array.isArray(remoteList) && remoteList.length) return remoteList;
+ return fallback || [];
+ }
+ const rawCorredores = pickPeople(draftCorredores, base.corredores, defaults.corredores);
+ const rawAttituders = pickPeople(draftAttituders, base.attituders, defaults.attituders);
+ function sortPeople(list) {
+ return (list || [])
+ .filter((p) => p && p.active !== false)
+ .slice()
+ .sort((a, b) => (a.order || 0) - (b.order || 0));
+ }
+
  return {
  products: enrich(rawProducts).filter((p) => p.active !== false),
  supplements: (rawSupplements || [])
  .filter((s) => s && s.active !== false)
  .slice()
  .sort((a, b) => (a.order || 0) - (b.order || 0)),
+ corredores: sortPeople(rawCorredores),
+ attituders: sortPeople(rawAttituders),
  zones: useDraftZones ? draftZones : base.zones || defaults.zones,
  texts: draftTexts && typeof draftTexts === 'object' ? draftTexts : base.texts || defaults.texts,
  images:

@@ -61,6 +61,7 @@
  <button type="button" data-panel="inbox">Pedidos <span class="nav-badge" id="navInboxBadge" hidden>0</span></button>
  <button type="button" data-panel="products">Produtos</button>
  <button type="button" data-panel="supplements">Suplementação</button>
+ <button type="button" data-panel="people">Corredores &amp; Attituders</button>
  <button type="button" data-panel="zones">Zonas</button>
  <button type="button" data-panel="texts">Textos</button>
  <button type="button" data-panel="images">Imagens</button>
@@ -85,15 +86,24 @@
  <div class="stats-row">
  <div class="stat-card"><div class="num is-loading" id="statInbox">·</div><div class="lbl">Pedidos novos</div></div>
  <div class="stat-card"><div class="num is-loading" id="statProducts">·</div><div class="lbl">Produtos ativos</div></div>
+ <div class="stat-card"><div class="num is-loading" id="statCorredores">·</div><div class="lbl">Corredores</div></div>
+ <div class="stat-card"><div class="num is-loading" id="statAttituders">·</div><div class="lbl">Attituders</div></div>
  <div class="stat-card"><div class="num is-loading" id="statZones">·</div><div class="lbl">Zonas</div></div>
  <div class="stat-card"><div class="num is-loading" id="statMedia">·</div><div class="lbl">Média</div></div>
  </div>
  <div class="guide">
  <h3>Como trabalhar</h3>
  <ol>
- <li><strong>Edita</strong> produtos, zonas, textos ou imagens do site.</li>
- <li><strong>Guardar rascunho</strong> · só neste telemóvel/computador (podes pré-visualizar a loja no mesmo browser).</li>
- <li><strong>Publicar na loja</strong> · envia o catálogo para todos os visitantes.</li>
+ <li><strong>Edita</strong> produtos, corredores, attituders, textos ou imagens do site.</li>
+ <li><strong>Guardar rascunho</strong> · só neste telemóvel/computador (pré-visualiza no mesmo browser).</li>
+ <li><strong>Publicar na loja</strong> · envia tudo para todos os visitantes.</li>
+ </ol>
+ <h3>Corredores &amp; Attituders</h3>
+ <ol>
+ <li>Abre o separador <strong>Corredores &amp; Attituders</strong>.</li>
+ <li>Clica <strong>+ Corredor</strong> ou <strong>+ Attituder</strong>.</li>
+ <li>Mete o <strong>nome</strong> (primeiro e último) e carrega a <strong>foto</strong>.</li>
+ <li>Guarda o rascunho e depois <strong>Publicar</strong> — a página pública atualiza sozinha.</li>
  </ol>
  <h3>Dicas mobile</h3>
  <ol>
@@ -104,6 +114,8 @@
  <p style="margin-top:16px;">
  <button type="button" class="btn btn-ghost btn-sm" id="btnChangePw">Alterar password</button>
  <a class="btn btn-ghost btn-sm" href="pages/loja.html" target="_blank" rel="noopener">Abrir loja ↗</a>
+ <a class="btn btn-ghost btn-sm" href="pages/corredores.html" target="_blank" rel="noopener">Corredores ↗</a>
+ <a class="btn btn-ghost btn-sm" href="pages/attituders.html" target="_blank" rel="noopener">Attituders ↗</a>
  </p>
  </div>
  </section>
@@ -194,6 +206,38 @@
  </div>
  </div>
  <div class="product-list" id="suppList"></div>
+ </section>
+
+ <!-- PEOPLE: Corredores + Attituders -->
+ <section class="panel" id="panel-people">
+ <div class="panel-head">
+ <div>
+ <h2>Corredores &amp; Attituders</h2>
+ <p>Fotos e nomes das páginas Corredores e Attituders. Carrega a foto, mete o nome, publica.</p>
+ </div>
+ </div>
+
+ <div class="people-admin-block">
+ <div class="people-admin-head">
+ <h3>Corredores</h3>
+ <div class="panel-head-actions">
+ <a class="btn btn-ghost btn-sm" href="pages/corredores.html" target="_blank" rel="noopener">Ver página ↗</a>
+ <button type="button" class="btn btn-primary btn-sm" id="btnAddCorredor">+ Corredor</button>
+ </div>
+ </div>
+ <div class="product-list" id="corredoresList"></div>
+ </div>
+
+ <div class="people-admin-block" style="margin-top:32px;">
+ <div class="people-admin-head">
+ <h3>Attituders</h3>
+ <div class="panel-head-actions">
+ <a class="btn btn-ghost btn-sm" href="pages/attituders.html" target="_blank" rel="noopener">Ver página ↗</a>
+ <button type="button" class="btn btn-primary btn-sm" id="btnAddAttituder">+ Attituder</button>
+ </div>
+ </div>
+ <div class="product-list" id="attitudersList"></div>
+ </div>
  </section>
 
  <!-- ZONES -->
@@ -449,6 +493,49 @@
  <button type="button" class="btn btn-ghost" data-close-modal="suppModal">Cancelar</button>
  <button type="button" class="btn btn-ghost" id="btnDeleteSupp" hidden style="color:#f66;">Apagar</button>
  <button type="button" class="btn btn-primary" id="btnSaveSupp">Guardar</button>
+ </div>
+ </div>
+ </div>
+
+ <!-- Person modal (Corredores / Attituders) -->
+ <div class="modal-backdrop" id="personModal">
+ <div class="modal" role="dialog" aria-modal="true" aria-labelledby="personModalTitle">
+ <div class="modal-head">
+ <h2 id="personModalTitle">Pessoa</h2>
+ <button type="button" class="modal-close" data-close-modal="personModal" aria-label="Fechar">×</button>
+ </div>
+ <input type="hidden" id="p_group" value="corredores">
+ <div class="field">
+ <label>ID (automático)</label>
+ <input type="text" id="p_id" placeholder="ex: cor-1" autocomplete="off">
+ </div>
+ <div class="field">
+ <label>Nome (primeiro e último)</label>
+ <input type="text" id="p_name" placeholder="Ex: Wilson Benjamin" required>
+ </div>
+ <div class="field">
+ <label>Ordem</label>
+ <input type="number" id="p_order" inputmode="numeric" min="0">
+ </div>
+ <div class="field">
+ <label>Foto</label>
+ <input type="text" id="p_image" placeholder="URL da imagem">
+ <img id="p_image_preview" src="" alt="" style="width:96px;height:96px;object-fit:cover;border-radius:8px;margin-top:8px;background:#1c1c1c;display:none;">
+ <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+ <button type="button" class="btn btn-ghost btn-sm" id="btnUploadPersonImage">Carregar</button>
+ <button type="button" class="btn btn-ghost btn-sm" id="btnPickPersonImage">Escolher da média</button>
+ <button type="button" class="btn btn-ghost btn-sm" id="btnClearPersonImage">Limpar foto</button>
+ </div>
+ </div>
+ <div class="field">
+ <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:0.9rem;cursor:pointer;">
+ <input type="checkbox" id="p_active" checked style="width:auto;margin:0;"> Visível na página
+ </label>
+ </div>
+ <div class="modal-foot">
+ <button type="button" class="btn btn-ghost" data-close-modal="personModal">Cancelar</button>
+ <button type="button" class="btn btn-ghost" id="btnDeletePerson" hidden style="color:#f66;">Apagar</button>
+ <button type="button" class="btn btn-primary" id="btnSavePerson">Guardar</button>
  </div>
  </div>
  </div>

@@ -74,34 +74,8 @@
  </section>
 
  <section style="padding-top:0;">
- <div class="people-grid">
- <!-- Placeholders — fotos reais quando o cliente enviar -->
- <article class="person-card reveal">
- <div class="person-photo">
- <img src="../images/smile-01.jpg" alt="Atitude">
- </div>
- <p class="person-name">Nome Apellido</p>
- </article>
- <article class="person-card reveal reveal-delay-1">
- <div class="person-photo">
- <img src="../images/hero-team.jpg" alt="Atitude">
- </div>
- <p class="person-name">Nome Apellido</p>
- </article>
- <article class="person-card reveal reveal-delay-2">
- <div class="person-photo">
- <img src="../images/arms-up.jpg" alt="Atitude">
- </div>
- <p class="person-name">Nome Apellido</p>
- </article>
- <article class="person-card reveal">
- <div class="person-photo">
- <img src="../images/night-run-party-megaphone.jpg" alt="Atitude">
- </div>
- <p class="person-name">Nome Apellido</p>
- </article>
- </div>
- <p class="people-note" data-i18n="atitudes.note">Fotos e nomes serão atualizados em breve.</p>
+ <div class="people-grid" id="peopleGrid"></div>
+ <p class="people-note" id="peopleNote" data-i18n="atitudes.note">Fotos e nomes serão atualizados em breve.</p>
  </section>
 
  <section class="cta-section has-bg" style="background-image: url('../images/cta-community.jpg');">
@@ -170,10 +144,50 @@
  <script src="../js/main.js"></script>
  <script>
  (async function () {
- if (!window.ARCCatalog) return;
- const cat = await ARCCatalog.loadCatalog();
+ function resolveImg(url) {
+ if (!url) return '';
+ if (/^https?:\/\//i.test(url) || url.startsWith('data:') || url.startsWith('/')) return url;
+ if (url.startsWith('../')) return url;
+ if (url.startsWith('images/')) return '../' + url;
+ return '../images/' + url.replace(/^.*\//, '');
+ }
+ function esc(s) {
+ return String(s ?? '')
+ .replace(/&/g, '&amp;')
+ .replace(/</g, '&lt;')
+ .replace(/>/g, '&gt;')
+ .replace(/"/g, '&quot;');
+ }
+ function renderPeople(list) {
+ const grid = document.getElementById('peopleGrid');
+ const note = document.getElementById('peopleNote');
+ if (!grid) return;
+ const items = (list || []).filter(function (p) { return p && p.active !== false; });
+ if (!items.length) {
+ grid.innerHTML = '';
+ if (note) note.hidden = false;
+ return;
+ }
+ if (note) note.hidden = true;
+ grid.innerHTML = items.map(function (p, i) {
+ var delay = i % 3 === 1 ? ' reveal-delay-1' : i % 3 === 2 ? ' reveal-delay-2' : '';
+ var src = resolveImg(p.image) || '../images/logo.jpg';
+ return (
+ '<article class="person-card reveal' + delay + '">' +
+ '<div class="person-photo"><img src="' + esc(src) + '" alt="' + esc(p.name || '') + '" loading="lazy"></div>' +
+ '<p class="person-name">' + esc(p.name || '') + '</p>' +
+ '</article>'
+ );
+ }).join('');
+ }
+ var list = window.DEFAULT_ATTITUDERS || [];
+ if (window.ARCCatalog) {
+ var cat = await ARCCatalog.loadCatalog();
  ARCCatalog.applyTexts(cat.texts);
  ARCCatalog.applySiteImages(cat.images);
+ if (cat.attituders && cat.attituders.length) list = cat.attituders;
+ }
+ renderPeople(list);
  })();
  </script>
 </body>

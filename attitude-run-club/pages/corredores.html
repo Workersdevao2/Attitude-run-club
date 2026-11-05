@@ -67,56 +67,18 @@
  <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="mobile-cta" data-i18n="nav.cta" target="_blank" rel="noopener">Juntar ao Clube</a>
  </div>
 
- <section class="page-hero has-bg" style="background-image: url('../images/run-01.jpg');">
+ <section class="page-hero has-bg" data-site-img-bg="corredores-hero" style="background-image: url('../images/run-01.jpg');">
  <p class="section-label reveal" data-i18n="corredores.label">Corredores</p>
  <h1 class="section-title reveal reveal-delay-1" data-i18n="corredores.title">Os nossos<br>corredores.</h1>
  <p class="page-hero-sub reveal reveal-delay-2" data-i18n="corredores.sub">Quem corre maratonas, halfs e tudo o que o asfalto permite. A cara da tribo.</p>
  </section>
 
  <section style="padding-top:0;">
- <div class="people-grid">
- <!-- Placeholders — fotos reais quando o cliente enviar -->
- <article class="person-card reveal">
- <div class="person-photo">
- <img src="../images/run-02.jpg" alt="Corredor">
- </div>
- <p class="person-name">Nome Apellido</p>
- </article>
- <article class="person-card reveal reveal-delay-1">
- <div class="person-photo">
- <img src="../images/run-03.jpg" alt="Corredor">
- </div>
- <p class="person-name">Nome Apellido</p>
- </article>
- <article class="person-card reveal reveal-delay-2">
- <div class="person-photo">
- <img src="../images/start-01.jpg" alt="Corredor">
- </div>
- <p class="person-name">Nome Apellido</p>
- </article>
- <article class="person-card reveal">
- <div class="person-photo">
- <img src="../images/start-02.jpg" alt="Corredor">
- </div>
- <p class="person-name">Nome Apellido</p>
- </article>
- <article class="person-card reveal reveal-delay-1">
- <div class="person-photo">
- <img src="../images/group.jpg" alt="Corredor">
- </div>
- <p class="person-name">Nome Apellido</p>
- </article>
- <article class="person-card reveal reveal-delay-2">
- <div class="person-photo">
- <img src="../images/joy-01.jpg" alt="Corredor">
- </div>
- <p class="person-name">Nome Apellido</p>
- </article>
- </div>
- <p class="people-note" data-i18n="corredores.note">Fotos e nomes serão atualizados em breve.</p>
+ <div class="people-grid" id="peopleGrid"></div>
+ <p class="people-note" id="peopleNote" data-i18n="corredores.note">Fotos e nomes serão atualizados em breve.</p>
  </section>
 
- <section class="cta-section has-bg" style="background-image: url('../images/cta-run.jpg');">
+ <section class="cta-section has-bg" data-site-img-bg="cta-corredores" style="background-image: url('../images/cta-run.jpg');">
  <p class="cta-label" data-i18n="corredores.cta.label">Queres aparecer aqui?</p>
  <h2 class="cta-title" data-i18n="corredores.cta.title">Corre com<br>atitude.</h2>
  <div class="cta-actions">
@@ -182,10 +144,50 @@
  <script src="../js/main.js"></script>
  <script>
  (async function () {
- if (!window.ARCCatalog) return;
- const cat = await ARCCatalog.loadCatalog();
+ function resolveImg(url) {
+ if (!url) return '';
+ if (/^https?:\/\//i.test(url) || url.startsWith('data:') || url.startsWith('/')) return url;
+ if (url.startsWith('../')) return url;
+ if (url.startsWith('images/')) return '../' + url;
+ return '../images/' + url.replace(/^.*\//, '');
+ }
+ function esc(s) {
+ return String(s ?? '')
+ .replace(/&/g, '&amp;')
+ .replace(/</g, '&lt;')
+ .replace(/>/g, '&gt;')
+ .replace(/"/g, '&quot;');
+ }
+ function renderPeople(list) {
+ const grid = document.getElementById('peopleGrid');
+ const note = document.getElementById('peopleNote');
+ if (!grid) return;
+ const items = (list || []).filter(function (p) { return p && p.active !== false; });
+ if (!items.length) {
+ grid.innerHTML = '';
+ if (note) note.hidden = false;
+ return;
+ }
+ if (note) note.hidden = true;
+ grid.innerHTML = items.map(function (p, i) {
+ var delay = i % 3 === 1 ? ' reveal-delay-1' : i % 3 === 2 ? ' reveal-delay-2' : '';
+ var src = resolveImg(p.image) || '../images/logo.jpg';
+ return (
+ '<article class="person-card reveal' + delay + '">' +
+ '<div class="person-photo"><img src="' + esc(src) + '" alt="' + esc(p.name || '') + '" loading="lazy"></div>' +
+ '<p class="person-name">' + esc(p.name || '') + '</p>' +
+ '</article>'
+ );
+ }).join('');
+ }
+ var list = window.DEFAULT_CORREDORES || [];
+ if (window.ARCCatalog) {
+ var cat = await ARCCatalog.loadCatalog();
  ARCCatalog.applyTexts(cat.texts);
  ARCCatalog.applySiteImages(cat.images);
+ if (cat.corredores && cat.corredores.length) list = cat.corredores;
+ }
+ renderPeople(list);
  })();
  </script>
 </body>

@@ -1806,6 +1806,10 @@ const DEFAULT_SITE_IMAGES = {
  "loja-hero": "images/hero-team.jpg",
  "suplementacao-hero": "images/plank.jpg",
  "cta-suplementacao": "images/cta-energy.jpg",
+ "corredores-hero": "images/run-01.jpg",
+ "cta-corredores": "images/cta-run.jpg",
+ "attituders-hero": "images/community-01.jpg",
+ "cta-attituders": "images/cta-community.jpg",
 };
 
 /** Slot definitions for admin UI */
@@ -1840,6 +1844,10 @@ const SITE_IMAGE_SLOTS = [
  { key: "loja-hero", label: "Loja · Hero", hint: "Fundo do hero Loja" },
  { key: "suplementacao-hero", label: "Suplementação · Hero", hint: "Fundo do hero Suplementação" },
  { key: "cta-suplementacao", label: "Suplementação · CTA", hint: "Fundo CTA Suplementação" },
+ { key: "corredores-hero", label: "Corredores · Hero", hint: "Fundo do hero Corredores" },
+ { key: "cta-corredores", label: "Corredores · CTA", hint: "Fundo CTA Corredores" },
+ { key: "attituders-hero", label: "Attituders · Hero", hint: "Fundo do hero Attituders" },
+ { key: "cta-attituders", label: "Attituders · CTA", hint: "Fundo CTA Attituders" },
 ];
 
 
@@ -1923,6 +1931,26 @@ const SUPP_CATEGORY_LABELS = {
  outros: { pt: "Outros", en: "Other" },
 };
 
+/**
+ * People on Corredores / Attituders pages.
+ * Admin edits name + photo; publish writes into catalog.json.
+ */
+const DEFAULT_CORREDORES = [
+ { id: "cor-1", name: "Nome Apelido", image: "images/run-02.jpg", active: true, order: 1 },
+ { id: "cor-2", name: "Nome Apelido", image: "images/run-03.jpg", active: true, order: 2 },
+ { id: "cor-3", name: "Nome Apelido", image: "images/start-01.jpg", active: true, order: 3 },
+ { id: "cor-4", name: "Nome Apelido", image: "images/start-02.jpg", active: true, order: 4 },
+ { id: "cor-5", name: "Nome Apelido", image: "images/group.jpg", active: true, order: 5 },
+ { id: "cor-6", name: "Nome Apelido", image: "images/joy-01.jpg", active: true, order: 6 },
+];
+
+const DEFAULT_ATTITUDERS = [
+ { id: "att-1", name: "Nome Apelido", image: "images/smile-01.jpg", active: true, order: 1 },
+ { id: "att-2", name: "Nome Apelido", image: "images/hero-team.jpg", active: true, order: 2 },
+ { id: "att-3", name: "Nome Apelido", image: "images/arms-up.jpg", active: true, order: 3 },
+ { id: "att-4", name: "Nome Apelido", image: "images/night-run-party-megaphone.jpg", active: true, order: 4 },
+];
+
 // Export for modules / global
 if (typeof window !== 'undefined') {
  window.ARC_WA_NUMBER = ARC_WA_NUMBER;
@@ -1938,4 +1966,6 @@ if (typeof window !== 'undefined') {
  window.TEXT_GROUPS = TEXT_GROUPS;
  window.DEFAULT_SUPPLEMENTS = DEFAULT_SUPPLEMENTS;
  window.SUPP_CATEGORY_LABELS = SUPP_CATEGORY_LABELS;
+ window.DEFAULT_CORREDORES = DEFAULT_CORREDORES;
+ window.DEFAULT_ATTITUDERS = DEFAULT_ATTITUDERS;
 }
