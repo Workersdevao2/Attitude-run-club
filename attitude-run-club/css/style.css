@@ -3610,3 +3610,112 @@ body.qv-open { overflow: hidden; }
 @media (max-width: 520px) {
   .people-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ── Contact social list + icons ── */
+.contact-local {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.contact-local p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--white);
+}
+.contact-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--accent, #e8ff47);
+  margin-top: 2px;
+}
+.contact-link-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  color: var(--white);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.contact-link-icon:hover { color: var(--accent); }
+.contact-link-icon .contact-icon { margin-top: 0; color: inherit; }
+
+.social-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+.social-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--white);
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+.social-row:hover {
+  border-color: rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.05);
+  color: var(--accent);
+}
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.06);
+  color: var(--white);
+}
+.social-row:hover .social-icon { background: rgba(255,255,255,0.1); }
+.social-text {
+  font-size: 14px;
+  line-height: 1.35;
+}
+.social-text strong {
+  display: block;
+  font-family: var(--font-cond);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1px;
+}
+.social-row:hover .social-text strong { color: rgba(255,255,255,0.7); }
+
+/* Footer social icons */
+.footer-social {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.footer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.footer-social a:hover {
+  color: var(--white);
+  border-color: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.06);
+}

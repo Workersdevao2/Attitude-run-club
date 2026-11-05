@@ -90,7 +90,7 @@ const translations = {
  'nav.planos': 'Planos',
  'nav.programa': 'Treino',
  'nav.corredores': 'Corredores',
- 'nav.atitudes': 'Atitudes',
+ 'nav.atitudes': 'Attituders',
  'nav.loja': 'Loja',
  'nav.eventos': 'Eventos',
  'nav.roadmap': 'Roadmap',
@@ -176,8 +176,8 @@ const translations = {
  'corredores.cta.btn': 'Juntar ao Clube',
 
  // Atitudes
- 'atitudes.label': 'Atitudes',
- 'atitudes.title': 'Quem<br>movimenta.',
+ 'atitudes.label': 'Attituders',
+ 'atitudes.title': 'Os<br>Attituders.',
  'atitudes.sub': 'As pessoas que promovem, organizam e empurram a tribo para a frente.',
  'atitudes.note': 'Fotos e nomes serão atualizados em breve.',
  'atitudes.cta.label': 'Faz parte do movimento',
@@ -487,7 +487,7 @@ const translations = {
  'nav.planos': 'Plans',
  'nav.programa': 'Training',
  'nav.corredores': 'Runners',
- 'nav.atitudes': 'Attitudes',
+ 'nav.atitudes': 'Attituders',
  'nav.loja': 'Shop',
  'nav.eventos': 'Events',
  'nav.roadmap': 'Roadmap',
@@ -573,8 +573,8 @@ const translations = {
  'corredores.cta.btn': 'Join the Club',
 
  // Attitudes
- 'atitudes.label': 'Attitudes',
- 'atitudes.title': 'Who<br>moves it.',
+ 'atitudes.label': 'Attituders',
+ 'atitudes.title': 'The<br>Attituders.',
  'atitudes.sub': 'The people who promote, organise and push the tribe forward.',
  'atitudes.note': 'Photos and names will be updated soon.',
  'atitudes.cta.label': 'Be part of the movement',
