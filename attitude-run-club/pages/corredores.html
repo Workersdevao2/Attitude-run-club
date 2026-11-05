@@ -174,11 +174,12 @@
  var src = resolveImg(p.image) || '../images/logo.jpg';
  return (
  '<article class="person-card reveal' + delay + '">' +
- '<div class="person-photo"><img src="' + esc(src) + '" alt="' + esc(p.name || '') + '" loading="lazy"></div>' +
+ '<div class="person-photo"><img src="' + esc(src) + '" alt="' + esc(p.name || '') + '" loading="lazy" onerror="this.onerror=null;this.src=\'../images/logo.jpg\'"></div>' +
  '<p class="person-name">' + esc(p.name || '') + '</p>' +
  '</article>'
  );
  }).join('');
+ if (typeof window.observeReveals === 'function') window.observeReveals(grid);
  }
  var list = window.DEFAULT_CORREDORES || [];
  if (window.ARCCatalog) {

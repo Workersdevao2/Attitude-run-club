@@ -95,21 +95,21 @@
  <h3>Como trabalhar</h3>
  <ol>
  <li><strong>Edita</strong> produtos, corredores, attituders, textos ou imagens.</li>
- <li>Clica <strong>Guardar</strong> no formulário — a alteração é publicada na loja de seguida.</li>
- <li>Ou usa o botão fixo <strong>Guardar e publicar</strong> em baixo.</li>
+ <li>No formulário, clica <strong>Guardar</strong> — publica na loja de seguida.</li>
+ <li>Textos / zonas: usa o botão fixo <strong>Publicar alterações</strong> em baixo.</li>
  </ol>
  <h3>Corredores &amp; Attituders</h3>
  <ol>
- <li>Abre o separador <strong>Corredores &amp; Attituders</strong>.</li>
- <li>Clica <strong>+ Corredor</strong> ou <strong>+ Attituder</strong>.</li>
- <li>Mete o <strong>nome</strong> e a <strong>foto</strong> → Guardar.</li>
- <li>A página pública atualiza no próximo carregamento.</li>
+ <li>Separador <strong>Corredores &amp; Attituders</strong>.</li>
+ <li><strong>+ Corredor</strong> ou <strong>+ Attituder</strong>.</li>
+ <li>Nome + foto (botão <strong>Carregar</strong>) → <strong>Guardar</strong>.</li>
+ <li>Toast “Publicado na loja” = já está no site (refresh na página pública).</li>
  </ol>
  <h3>Dicas mobile</h3>
  <ol>
- <li>O botão <strong>Guardar e publicar</strong> fica fixo em baixo.</li>
- <li>Usa “Carregar” ou “Escolher da média” · não precisas de colar URLs.</li>
- <li>Se a publicação falhar, tenta outra vez ou contacta o programador.</li>
+ <li>O botão <strong>Publicar alterações</strong> fica fixo em baixo (some quando o modal está aberto).</li>
+ <li>Usa “Carregar” ou “Escolher da média” · não coles URLs.</li>
+ <li>Se a publicação falhar, clica outra vez em <strong>Publicar alterações</strong>.</li>
  </ol>
  <p style="margin-top:16px;">
  <button type="button" class="btn btn-ghost btn-sm" id="btnChangePw">Alterar password</button>
@@ -327,8 +327,8 @@
  </section>
  </main>
 
- <div class="sticky-actions">
- <button type="button" class="btn btn-primary" id="btnPublish">Guardar e publicar</button>
+ <div class="sticky-actions" id="stickyActions">
+ <button type="button" class="btn btn-primary" id="btnPublish">Publicar alterações</button>
  </div>
  </div>
 
@@ -419,7 +419,7 @@
  <div class="modal-foot">
  <button type="button" class="btn btn-ghost" data-close-modal="productModal">Cancelar</button>
  <button type="button" class="btn btn-ghost" id="btnDupProduct" hidden>Duplicar</button>
- <button type="button" class="btn btn-primary" id="btnSaveProduct">Guardar e publicar</button>
+ <button type="button" class="btn btn-primary" id="btnSaveProduct">Guardar</button>
  </div>
  </div>
  </div>
@@ -491,7 +491,7 @@
  <div class="modal-foot">
  <button type="button" class="btn btn-ghost" data-close-modal="suppModal">Cancelar</button>
  <button type="button" class="btn btn-ghost" id="btnDeleteSupp" hidden style="color:#f66;">Apagar</button>
- <button type="button" class="btn btn-primary" id="btnSaveSupp">Guardar e publicar</button>
+ <button type="button" class="btn btn-primary" id="btnSaveSupp">Guardar</button>
  </div>
  </div>
  </div>
@@ -534,7 +534,7 @@
  <div class="modal-foot">
  <button type="button" class="btn btn-ghost" data-close-modal="personModal">Cancelar</button>
  <button type="button" class="btn btn-ghost" id="btnDeletePerson" hidden style="color:#f66;">Apagar</button>
- <button type="button" class="btn btn-primary" id="btnSavePerson">Guardar e publicar</button>
+ <button type="button" class="btn btn-primary" id="btnSavePerson">Guardar</button>
  </div>
  </div>
  </div>

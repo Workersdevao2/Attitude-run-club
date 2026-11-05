@@ -365,7 +365,7 @@
  const undoBtn = document.getElementById('btnUndoDraft');
  if (undoBtn) undoBtn.hidden = true;
  renderAll();
- toast('Rascunho anterior restaurado', 'ok');
+ toast('Versão anterior restaurada', 'ok');
  updatePublishStrip();
  }
 
@@ -442,7 +442,7 @@
  dot.classList.toggle('is-clean', !dirty);
  }
  text.textContent = dirty
- ? 'Há alterações locais · clica “Guardar e publicar” · Última: ' + lastLabel
+ ? 'Alterações por publicar · clica “Publicar alterações” · Última: ' + lastLabel
  : 'Loja sincronizada · Última publicação: ' + lastLabel;
  }
 
@@ -872,7 +872,9 @@
  renderProducts();
  updateStats();
  updatePublishStrip();
- saveAndPublish('Produto guardado e publicado');
+ saveAndPublish('Produto publicado').then(function (ok) {
+ if (!ok) toast('Guardado localmente · publicação falhou — clica “Publicar alterações”', 'error');
+ });
  }
 
  function deleteProduct(id) {
@@ -882,7 +884,9 @@
  renderProducts();
  updateStats();
  updatePublishStrip();
- saveAndPublish('Produto apagado e publicado');
+ saveAndPublish('Produto apagado').then(function (ok) {
+ if (!ok) toast('Apagado localmente · publicação falhou — clica “Publicar alterações”', 'error');
+ });
  }
 
  function duplicateProduct(id) {
@@ -1180,7 +1184,9 @@
  closeModal('suppModal');
  editingSuppId = null;
  renderSupplements();
- saveAndPublish('Suplemento guardado e publicado');
+ saveAndPublish('Suplemento publicado').then(function (ok) {
+ if (!ok) toast('Guardado localmente · publicação falhou — clica “Publicar alterações”', 'error');
+ });
  }
 
  function deleteSupplement(id) {
@@ -1189,7 +1195,9 @@
  normalizeSuppOrders();
  closeModal('suppModal');
  renderSupplements();
- saveAndPublish('Suplemento apagado e publicado');
+ saveAndPublish('Suplemento apagado').then(function (ok) {
+ if (!ok) toast('Apagado localmente · publicação falhou — clica “Publicar alterações”', 'error');
+ });
  }
 
  function moveSupplement(id, dir) {
@@ -1371,7 +1379,10 @@
  closeModal('personModal');
  editingPersonId = null;
  renderPeople();
- saveAndPublish('Guardado e publicado');
+ // Publish live immediately (no draft-only path)
+ saveAndPublish('Publicado na loja').then(function (ok) {
+ if (!ok) toast('Guardado localmente · publicação falhou — clica “Publicar alterações”', 'error');
+ });
  }
  function deletePerson(group, id) {
  if (!confirm('Apagar esta pessoa da loja?')) return;
@@ -1382,7 +1393,9 @@
  normalizePeopleOrders(group);
  closeModal('personModal');
  renderPeople();
- saveAndPublish('Apagado e publicado');
+ saveAndPublish('Apagado e publicado').then(function (ok) {
+ if (!ok) toast('Apagado localmente · publicação falhou — clica “Publicar alterações”', 'error');
+ });
  }
  function movePerson(group, id, dir) {
  const list = peopleList(group)
@@ -2165,7 +2178,7 @@
  publishInFlight = false;
  if (btn) {
  btn.disabled = false;
- btn.textContent = 'Guardar e publicar';
+ btn.textContent = 'Publicar alterações';
  }
  }
  }
@@ -2186,20 +2199,30 @@
  });
 
  // ── Modal helpers ───────────────────────────────────────────────────────
+ function syncStickyVisibility() {
+ const open = document.querySelector('.modal-backdrop.open');
+ const sticky = document.getElementById('stickyActions');
+ if (sticky) sticky.style.display = open ? 'none' : '';
+ }
  function openModal(id) {
  const m = document.getElementById(id);
  if (m) m.classList.add('open');
+ syncStickyVisibility();
  }
  function closeModal(id) {
  const m = document.getElementById(id);
  if (m) m.classList.remove('open');
+ syncStickyVisibility();
  }
  $$('[data-close-modal]').forEach((b) => {
  b.addEventListener('click', () => closeModal(b.dataset.closeModal));
  });
  $$('.modal-backdrop').forEach((bd) => {
  bd.addEventListener('click', (e) => {
- if (e.target === bd) bd.classList.remove('open');
+ if (e.target === bd) {
+ bd.classList.remove('open');
+ syncStickyVisibility();
+ }
  });
  });
 
