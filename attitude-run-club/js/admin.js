@@ -461,13 +461,34 @@
  }
 
 
- // ── Nav ─────────────────────────────────────────────────────────────────
+ // ── Nav + sidebar ────────────────────────────────────────────────────────
+ function closeSidebar() {
+ const sb = document.getElementById('adminSidebar');
+ if (sb) sb.classList.remove('is-open');
+ document.body.classList.remove('sidebar-open');
+ }
+ function openSidebar() {
+ const sb = document.getElementById('adminSidebar');
+ if (sb) sb.classList.add('is-open');
+ document.body.classList.add('sidebar-open');
+ }
+ document.getElementById('sidebarToggle')?.addEventListener('click', () => {
+ const sb = document.getElementById('adminSidebar');
+ if (sb && sb.classList.contains('is-open')) closeSidebar();
+ else openSidebar();
+ });
+ document.body.addEventListener('click', (e) => {
+ if (!document.body.classList.contains('sidebar-open')) return;
+ if (e.target.closest('.admin-sidebar') || e.target.closest('#sidebarToggle')) return;
+ closeSidebar();
+ });
  $$('.admin-nav button').forEach((btn) => {
  btn.addEventListener('click', () => {
  $$('.admin-nav button').forEach((b) => b.classList.remove('active'));
  btn.classList.add('active');
  const panel = btn.dataset.panel;
  $$('.panel').forEach((p) => p.classList.toggle('active', p.id === 'panel-' + panel));
+ closeSidebar();
  });
  });
 
@@ -1481,6 +1502,7 @@
  }
  }
  document.getElementById('btnReloadPeople')?.addEventListener('click', reloadPeopleFromServer);
+ document.getElementById('btnReloadAttituders')?.addEventListener('click', reloadPeopleFromServer);
  document.getElementById('btnReloadSupplements')?.addEventListener('click', reloadSupplementsFromServer);
  document.getElementById('btnUploadPersonImage')?.addEventListener('click', () => {
  pickerTarget = { type: 'person' };

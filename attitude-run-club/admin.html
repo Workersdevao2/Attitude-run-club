@@ -11,7 +11,7 @@
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
  <link rel="stylesheet" href="css/admin.css">
- <link rel="icon" href="images/logo.jpg" type="image/jpeg">
+ <link rel="icon" href="images/attitude-logo.jpg" type="image/jpeg">
 </head>
 <body class="no-sticky-pad">
  <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -19,6 +19,9 @@
  <!-- LOGIN -->
  <div class="login-wrap" id="loginScreen">
  <form class="login-card" id="loginForm" autocomplete="on">
+ <div class="login-logo">
+ <img src="images/attitude-logo.jpg" alt="Attitude" width="160" height="160">
+ </div>
  <h1>Attitude Admin</h1>
  <p>Painel da equipa · produtos, textos, imagens e publicação.</p>
  <label for="adminPassword">Password</label>
@@ -46,27 +49,41 @@
 
  <!-- APP -->
  <div id="adminApp" hidden>
- <header class="admin-header">
- <div>
- <h1>Attitude Admin</h1>
+ <div class="admin-shell">
+ <aside class="admin-sidebar" id="adminSidebar">
+ <div class="sidebar-brand">
+ <img src="images/attitude-logo.jpg" alt="Attitude" class="sidebar-logo">
+ <span class="sidebar-brand-text">Attitude Admin</span>
  </div>
- <div style="display:flex;align-items:center;gap:8px;">
- <span class="badge" id="statPublishBadge">Staff</span>
- <button type="button" class="logout-btn" id="logoutBtn">Sair</button>
- </div>
- </header>
-
  <nav class="admin-nav" aria-label="Secções">
  <button type="button" data-panel="dashboard" class="active">Painel</button>
  <button type="button" data-panel="inbox">Pedidos <span class="nav-badge" id="navInboxBadge" hidden>0</span></button>
  <button type="button" data-panel="products">Produtos</button>
  <button type="button" data-panel="supplements">Suplementação</button>
- <button type="button" data-panel="people">Corredores &amp; Attituders</button>
+ <button type="button" data-panel="corredores">Corredores</button>
+ <button type="button" data-panel="attituders">Attituders</button>
  <button type="button" data-panel="zones">Zonas</button>
  <button type="button" data-panel="texts">Textos</button>
  <button type="button" data-panel="images">Imagens</button>
  <button type="button" data-panel="media">Média</button>
  </nav>
+ <div class="sidebar-footer">
+ <span class="badge" id="statPublishBadge">Staff</span>
+ <button type="button" class="logout-btn" id="logoutBtn">Sair</button>
+ </div>
+ </aside>
+
+ <div class="admin-main-wrap">
+ <header class="admin-topbar">
+ <button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="Menu">
+ <span></span><span></span><span></span>
+ </button>
+ <div class="topbar-brand">
+ <img src="images/attitude-logo.jpg" alt="" class="topbar-logo">
+ <strong>Attitude Admin</strong>
+ </div>
+ <span class="badge topbar-badge">Staff</span>
+ </header>
 
  <div class="publish-strip" id="publishStrip" aria-live="polite">
  <span class="publish-dot" id="publishDot"></span>
@@ -98,9 +115,9 @@
  <li>No formulário, clica <strong>Guardar</strong> — publica na loja de seguida.</li>
  <li>Textos / zonas: usa o botão fixo <strong>Publicar alterações</strong> em baixo.</li>
  </ol>
- <h3>Corredores &amp; Attituders</h3>
+ <h3>Corredores / Attituders</h3>
  <ol>
- <li>Separador <strong>Corredores &amp; Attituders</strong>.</li>
+ <li>Menu lateral: <strong>Corredores</strong> ou <strong>Attituders</strong>.</li>
  <li><strong>+ Corredor</strong> ou <strong>+ Attituder</strong>.</li>
  <li>Nome + foto (botão <strong>Carregar</strong>) → <strong>Guardar</strong>.</li>
  <li>Toast “Publicado na loja” = já está no site (refresh na página pública).</li>
@@ -209,39 +226,36 @@
  <div class="product-list" id="suppList"></div>
  </section>
 
- <!-- PEOPLE: Corredores + Attituders -->
- <section class="panel" id="panel-people">
+ <!-- CORREDORES -->
+ <section class="panel" id="panel-corredores">
  <div class="panel-head">
  <div>
- <h2>Corredores &amp; Attituders</h2>
- <p>Fotos e nomes das páginas Corredores e Attituders. Carrega a foto, mete o nome, publica.</p>
+ <h2>Corredores</h2>
+ <p>Fotos e nomes da página Corredores. Carrega a foto, mete o nome, guarda.</p>
  </div>
  <div class="panel-head-actions">
  <button type="button" class="btn btn-ghost btn-sm" id="btnReloadPeople" title="Limpa o cache local e volta a carregar do servidor">Recarregar do servidor</button>
- </div>
- </div>
-
- <div class="people-admin-block">
- <div class="people-admin-head">
- <h3>Corredores</h3>
- <div class="panel-head-actions">
  <a class="btn btn-ghost btn-sm" href="pages/corredores.html" target="_blank" rel="noopener">Ver página ↗</a>
  <button type="button" class="btn btn-primary btn-sm" id="btnAddCorredor">+ Corredor</button>
  </div>
  </div>
  <div class="product-list" id="corredoresList"></div>
- </div>
+ </section>
 
- <div class="people-admin-block" style="margin-top:32px;">
- <div class="people-admin-head">
- <h3>Attituders</h3>
+ <!-- ATTITUDERS -->
+ <section class="panel" id="panel-attituders">
+ <div class="panel-head">
+ <div>
+ <h2>Attituders</h2>
+ <p>Fotos e nomes da página Attituders. Carrega a foto, mete o nome, guarda.</p>
+ </div>
  <div class="panel-head-actions">
+ <button type="button" class="btn btn-ghost btn-sm" id="btnReloadAttituders" title="Limpa o cache local e volta a carregar do servidor">Recarregar do servidor</button>
  <a class="btn btn-ghost btn-sm" href="pages/attituders.html" target="_blank" rel="noopener">Ver página ↗</a>
  <button type="button" class="btn btn-primary btn-sm" id="btnAddAttituder">+ Attituder</button>
  </div>
  </div>
  <div class="product-list" id="attitudersList"></div>
- </div>
  </section>
 
  <!-- ZONES -->
@@ -334,7 +348,9 @@
  <div class="sticky-actions" id="stickyActions">
  <button type="button" class="btn btn-primary" id="btnPublish">Publicar alterações</button>
  </div>
- </div>
+ </div><!-- /.admin-main-wrap -->
+ </div><!-- /.admin-shell -->
+ </div><!-- /#adminApp -->
 
  <!-- Product modal -->
  <div class="modal-backdrop" id="productModal">
