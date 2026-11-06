@@ -279,6 +279,36 @@
  attituders = structuredClone(window.DEFAULT_ATTITUDERS);
  }
 
+ // Normalize legacy / mistyped people IDs → cor-N / att-N
+ (function normalizePeopleIds() {
+ const map = {
+ 'corredor-1': 'cor-7',
+ 'corredor-2': 'cor-8',
+ 'corredor_1': 'cor-7',
+ 'corredor_2': 'cor-8',
+ 'attiturer-1': 'att-5',
+ 'attituder-1': 'att-5',
+ 'attiturer_1': 'att-5',
+ };
+ let changed = false;
+ function fix(list) {
+ (list || []).forEach((p) => {
+ if (!p || !p.id) return;
+ const next = map[String(p.id)];
+ if (next && next !== p.id) {
+ p.id = next;
+ changed = true;
+ }
+ });
+ }
+ fix(corredores);
+ fix(attituders);
+ if (changed) {
+ saveJSON(LS.corredores, corredores);
+ saveJSON(LS.attituders, attituders);
+ }
+ })();
+
  zones =
  loadJSON(LS.zones, null) ||
  (remote && Array.isArray(remote.zones) ? structuredClone(remote.zones) : null) ||

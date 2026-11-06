@@ -1942,6 +1942,8 @@ const DEFAULT_CORREDORES = [
  { id: "cor-4", name: "Nome Apelido", image: "images/start-02.jpg", active: true, order: 4 },
  { id: "cor-5", name: "Nome Apelido", image: "images/group.jpg", active: true, order: 5 },
  { id: "cor-6", name: "Nome Apelido", image: "images/joy-01.jpg", active: true, order: 6 },
+ { id: "cor-7", name: "Nome Apelido", image: "images/run-01.jpg", active: true, order: 7 },
+ { id: "cor-8", name: "Nome Apelido", image: "images/start-01.jpg", active: true, order: 8 },
 ];
 
 const DEFAULT_ATTITUDERS = [
@@ -1949,6 +1951,7 @@ const DEFAULT_ATTITUDERS = [
  { id: "att-2", name: "Nome Apelido", image: "images/hero-team.jpg", active: true, order: 2 },
  { id: "att-3", name: "Nome Apelido", image: "images/arms-up.jpg", active: true, order: 3 },
  { id: "att-4", name: "Nome Apelido", image: "images/night-run-party-megaphone.jpg", active: true, order: 4 },
+ { id: "att-5", name: "Nome Apelido", image: "images/community-01.jpg", active: true, order: 5 },
 ];
 
 // Export for modules / global
