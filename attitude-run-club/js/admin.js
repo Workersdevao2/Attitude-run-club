@@ -419,6 +419,7 @@
  id: p.id,
  name_pt: p.name_pt,
  name_en: p.name_en,
+ name: p.name,
  price: p.price,
  image: p.image,
  sizes: p.sizes,
@@ -427,6 +428,17 @@
  order: p.order,
  category: p.category || '',
  soldOut: !!p.soldOut,
+ }))
+ );
+ }
+ function peopleFingerprint(list) {
+ return JSON.stringify(
+ (list || []).map((p) => ({
+ id: p.id,
+ name: p.name || '',
+ image: p.image || '',
+ active: p.active !== false,
+ order: p.order || 0,
  }))
  );
  }
@@ -466,16 +478,19 @@
  const liveImages = published && published.images ? published.images : {};
  const liveCor = published && Array.isArray(published.corredores) ? published.corredores : [];
  const liveAtt = published && Array.isArray(published.attituders) ? published.attituders : [];
+ const liveSupp = published && Array.isArray(published.supplements) ? published.supplements : [];
  const dirtyProducts = catalogFingerprint(products) !== catalogFingerprint(liveProducts);
  const dirtyTexts = textsFingerprint(texts) !== textsFingerprint(liveTexts);
  const dirtyImages = imagesFingerprint(images) !== imagesFingerprint(liveImages);
  const dirtyPeople =
- catalogFingerprint(corredores) !== catalogFingerprint(liveCor) ||
- catalogFingerprint(attituders) !== catalogFingerprint(liveAtt);
- const dirty = dirtyProducts || dirtyTexts || dirtyImages || dirtyPeople;
+ peopleFingerprint(corredores) !== peopleFingerprint(liveCor) ||
+ peopleFingerprint(attituders) !== peopleFingerprint(liveAtt);
+ const dirtySupp = peopleFingerprint(supplements) !== peopleFingerprint(liveSupp);
+ const dirty = dirtyProducts || dirtyTexts || dirtyImages || dirtyPeople || dirtySupp;
  const parts = [];
  if (dirtyProducts) parts.push('produtos');
  if (dirtyPeople) parts.push('pessoas');
+ if (dirtySupp) parts.push('suplementos');
  if (dirtyTexts) parts.push('textos');
  if (dirtyImages) parts.push('imagens');
  const lastLabel = last
@@ -488,6 +503,14 @@
  text.textContent = dirty
  ? 'Alterações por publicar · clica “Publicar alterações” · Última: ' + lastLabel
  : 'Loja sincronizada · Última publicação: ' + lastLabel;
+
+ // Sticky publish only when something is still local-only (e.g. textos/zonas)
+ const sticky = document.getElementById('stickyActions');
+ const modalOpen = !!document.querySelector('.modal-backdrop.open');
+ if (sticky) {
+ sticky.style.display = dirty && !modalOpen ? '' : 'none';
+ }
+ document.body.classList.toggle('has-sticky-publish', dirty && !modalOpen);
  }
 
 
@@ -2312,9 +2335,7 @@
 
  // ── Modal helpers ───────────────────────────────────────────────────────
  function syncStickyVisibility() {
- const open = document.querySelector('.modal-backdrop.open');
- const sticky = document.getElementById('stickyActions');
- if (sticky) sticky.style.display = open ? 'none' : '';
+ if (typeof updatePublishStrip === 'function') updatePublishStrip();
  }
  function openModal(id) {
  const m = document.getElementById(id);
