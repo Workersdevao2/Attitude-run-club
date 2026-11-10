@@ -3734,3 +3734,149 @@ body.qv-open { overflow: hidden; }
   opacity: 1;
   transform: none;
 }
+
+/* ── Nutrição page ── */
+.nutri-day-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 32px;
+}
+@media (max-width: 640px) {
+  .nutri-day-grid { grid-template-columns: 1fr; }
+  .programa-wrap.nutri-grid { grid-template-columns: 1fr !important; padding: 0 24px 32px; }
+}
+
+/* ── Eventos Externos ── */
+.ext-section {
+  padding: 0 48px 80px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.ext-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 40px;
+  align-items: start;
+}
+.ext-block-title {
+  font-family: var(--font-cond);
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--white);
+}
+.ext-block-sub {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0 0 24px;
+  line-height: 1.5;
+}
+.ext-form-wrap {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 28px 24px;
+}
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.ext-status {
+  font-size: 13px;
+  margin-top: 12px;
+  min-height: 1.2em;
+}
+.ext-status.is-ok { color: var(--accent, #e8ff47); }
+.ext-status.is-err { color: #ff6b6b; }
+.ext-form-note {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 10px;
+}
+.ext-board-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+.ext-board-head .ext-block-title { margin: 0; }
+.ext-refresh {
+  padding: 8px 14px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.ext-board {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 640px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.ext-empty {
+  color: var(--muted);
+  font-size: 14px;
+  padding: 24px 0;
+  margin: 0;
+}
+.ext-result-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.ext-result-card:hover {
+  border-color: rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.05);
+}
+.ext-result-name {
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0 0 4px;
+  color: var(--white);
+}
+.ext-result-event {
+  font-size: 13px;
+  color: rgba(255,255,255,0.8);
+  margin: 0 0 6px;
+}
+.ext-result-meta {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+}
+.ext-result-notes {
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  margin: 8px 0 0;
+  font-style: italic;
+}
+.ext-result-time-wrap {
+  text-align: right;
+  flex-shrink: 0;
+}
+.ext-result-time {
+  display: block;
+  font-family: var(--font-cond);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent, #e8ff47);
+  letter-spacing: 0.02em;
+}
+.ext-result-when {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+@media (max-width: 800px) {
+  .ext-section { padding: 0 24px 64px; }
+  .ext-layout { grid-template-columns: 1fr; gap: 32px; }
+  .form-row-2 { grid-template-columns: 1fr; }
+}

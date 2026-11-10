@@ -954,6 +954,8 @@ const DEFAULT_TEXTS = {
  "nav.programa": "Treino",
  "nav.roadmap": "Roadmap",
  "nav.suplementacao": "Suplementação",
+ "nav.nutricao": "Nutrição",
+ "nav.eventosExternos": "Externos",
  "pillar.1.desc": "Treinos semanais para todos os níveis. Pace groups, longões, night runs e treinos técnicos que te tornam melhor a cada semana.",
  "pillar.1.title": "Corrida",
  "pillar.2.desc": "Brunch pós-corrida, sunset runs, run + música, run + fotografia. O treino é só o começo da experiência.",
@@ -1252,6 +1254,8 @@ const DEFAULT_TEXTS = {
  "nav.programa": "Training",
  "nav.roadmap": "Roadmap",
  "nav.suplementacao": "Supplements",
+ "nav.nutricao": "Nutrition",
+ "nav.eventosExternos": "External",
  "pillar.1.desc": "Weekly training for every level. Pace groups, long runs, night runs and technical sessions that make you better every week.",
  "pillar.1.title": "Running",
  "pillar.2.desc": "Post-run brunch, sunset runs, run + music, run + photography. Training is only the start of the experience.",
@@ -1752,7 +1756,9 @@ const TEXT_GROUPS = [
  { k: "nav.roadmap", label: "Nav · Roadmap" },
  { k: "nav.contacto", label: "Nav · Contacto" },
  { k: "nav.cta", label: "Nav · botão CTA" },
- { k: "nav.suplementacao", label: "Nav · Suplementação" }
+ { k: "nav.suplementacao", label: "Nav · Suplementação" },
+ { k: "nav.nutricao", label: "Nav · Nutrição" },
+ { k: "nav.eventosExternos", label: "Nav · Externos" }
  ]
  },
  {

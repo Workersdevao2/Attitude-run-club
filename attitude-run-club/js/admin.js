@@ -2524,6 +2524,7 @@
  $$('.admin-nav button').forEach((btn) => {
  btn.addEventListener('click', () => {
  if (btn.dataset.panel === 'inbox') loadInbox();
+ if (btn.dataset.panel === 'results') loadResultsAdmin();
  });
  });
 
@@ -2572,6 +2573,101 @@
  updateStats({ inboxLoading: true });
  loadInbox();
  }
+
+
+ // ── Results (Eventos Externos) ───────────────────────────────────────────
+ let resultsAdminItems = [];
+ const RESULTS_URL = API_BASE + '/results';
+
+ async function loadResultsAdmin() {
+ const list = $('#resultsAdminList');
+ if (list) list.innerHTML = '<p class="inbox-empty">A carregar…</p>';
+ try {
+ const res = await fetch(RESULTS_URL, {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({ action: 'adminList', password: adminPassword() }),
+ });
+ const data = await res.json().catch(() => ({}));
+ if (!res.ok || !data.ok) throw new Error(data.error || 'Falha');
+ resultsAdminItems = Array.isArray(data.items) ? data.items : [];
+ renderResultsAdmin();
+ } catch (e) {
+ if (list) list.innerHTML = '<p class="inbox-empty">Não foi possível carregar. Confirma que o Worker tem POST /results e KV.</p>';
+ }
+ }
+
+ function renderResultsAdmin() {
+ const list = $('#resultsAdminList');
+ if (!list) return;
+ if (!resultsAdminItems.length) {
+ list.innerHTML = '<p class="inbox-empty">Sem resultados registados.</p>';
+ return;
+ }
+ list.innerHTML = resultsAdminItems.map((it) => {
+ const meta = [it.distance, it.position, it.eventDate].filter(Boolean).join(' · ');
+ const when = it.createdAt ? new Date(it.createdAt).toLocaleString('pt-AO') : '';
+ const status = it.status || 'approved';
+ const esc = (v) => String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+ return `<article class="inbox-card">
+ <div class="inbox-card-top">
+ <strong>${esc(it.name)}</strong>
+ <span class="inbox-status">${esc(status)}</span>
+ </div>
+ <p class="inbox-meta">${esc(it.event)}${meta ? ' · ' + esc(meta) : ''}</p>
+ <p class="inbox-msg"><strong>${esc(it.time)}</strong>${it.notes ? ' — ' + esc(it.notes) : ''}</p>
+ <p class="inbox-meta">${esc(when)}</p>
+ <div class="inbox-actions">
+ ${status !== 'hidden' ? `<button type="button" class="btn btn-ghost btn-sm" data-res-hide data-id="${esc(it.id)}">Ocultar</button>` : ''}
+ <button type="button" class="btn btn-ghost btn-sm" data-res-delete data-id="${esc(it.id)}">Apagar</button>
+ </div>
+ </article>`;
+ }).join('');
+ }
+
+ async function resultsDelete(id) {
+ if (!confirm('Apagar este resultado?')) return;
+ try {
+ const res = await fetch(RESULTS_URL, {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({ action: 'delete', password: adminPassword(), id }),
+ });
+ const data = await res.json().catch(() => ({}));
+ if (!res.ok || !data.ok) throw new Error(data.error || 'Falha');
+ resultsAdminItems = resultsAdminItems.filter((x) => x.id !== id);
+ renderResultsAdmin();
+ } catch (e) {
+ alert(e.message || 'Erro ao apagar');
+ }
+ }
+
+ async function resultsHide(id) {
+ try {
+ const res = await fetch(RESULTS_URL, {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({ action: 'hide', password: adminPassword(), id }),
+ });
+ const data = await res.json().catch(() => ({}));
+ if (!res.ok || !data.ok) throw new Error(data.error || 'Falha');
+ const it = resultsAdminItems.find((x) => x.id === id);
+ if (it) it.status = 'hidden';
+ renderResultsAdmin();
+ } catch (e) {
+ alert(e.message || 'Erro ao ocultar');
+ }
+ }
+
+ $('#btnRefreshResults')?.addEventListener('click', () => loadResultsAdmin());
+ $('#resultsAdminList')?.addEventListener('click', (e) => {
+ const t = e.target.closest('[data-res-delete], [data-res-hide]');
+ if (!t) return;
+ const id = t.dataset.id;
+ if (!id) return;
+ if (t.hasAttribute('data-res-delete')) resultsDelete(id);
+ else if (t.hasAttribute('data-res-hide')) resultsHide(id);
+ });
 
  // ── Keyboard ────────────────────────────────────────────────────────────
  document.addEventListener('keydown', (e) => {

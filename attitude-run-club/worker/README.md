@@ -4,6 +4,7 @@ Cloudflare Worker for:
 
 - **Publish catalog** → Cloudinary `catalog.json` (admin)
 - **Inbox** → contact messages + shop orders (public submit, admin list)
+- **Results** → external race results (public submit/list, admin moderate)
 
 Live: `https://attitude-run-club-publish.workersdevao.workers.dev`
 
@@ -163,3 +164,21 @@ API base used in:
 - Media uploads use an **unsigned** Cloudinary preset from the browser.
 - Change default admin password after handoff.
 - Do **not** commit `wrangler-account.json` or secret values.
+
+
+### `POST /results` — external race results
+
+Public:
+```json
+{ "action": "list" }
+{ "action": "submit", "name": "Wilson", "event": "San Angol", "time": "00:48:32", "distance": "10K" }
+```
+
+Admin (password required):
+```json
+{ "action": "adminList", "password": "…" }
+{ "action": "delete", "password": "…", "id": "res_…" }
+{ "action": "hide", "password": "…", "id": "res_…" }
+```
+
+Storage: same KV binding `INBOX`, key `race_results`.

@@ -340,6 +340,152 @@ async function handleInbox(request, env) {
   return json({ ok: false, error: 'Ação desconhecida' }, 400);
 }
 
+// ── Race results (Eventos Externos) ─────────────────────────────────────────
+// KV key: race_results  →  { updatedAt, items: [...] }
+// Public: submit (auto-approved), list approved
+// Admin: list all, delete
+
+function emptyResults() {
+  return { updatedAt: null, items: [] };
+}
+
+async function fetchResults(env) {
+  if (env.INBOX) {
+    try {
+      const data = await env.INBOX.get('race_results', { type: 'json' });
+      if (data && Array.isArray(data.items)) return data;
+      return emptyResults();
+    } catch {
+      return emptyResults();
+    }
+  }
+  return emptyResults();
+}
+
+async function saveResults(env, payload) {
+  if (!env.INBOX) {
+    throw new Error('KV INBOX binding required for race results');
+  }
+  await env.INBOX.put('race_results', JSON.stringify(payload));
+  return { ok: true, storage: 'kv' };
+}
+
+async function handleResults(request, env) {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ ok: false, error: 'Invalid JSON body' }, 400);
+  }
+
+  const action = body?.action || 'list';
+
+  // Public list — approved only
+  if (action === 'list') {
+    const store = await fetchResults(env);
+    const items = (store.items || []).filter((it) => it.status !== 'hidden');
+    return json({
+      ok: true,
+      updatedAt: store.updatedAt,
+      items,
+      count: items.length,
+      storage: env.INBOX ? 'kv' : null,
+    });
+  }
+
+  // Public submit — appears immediately
+  if (action === 'submit') {
+    const name = sanitizeStr(body?.name, 120);
+    const event = sanitizeStr(body?.event, 200);
+    const time = sanitizeStr(body?.time, 40);
+    const distance = sanitizeStr(body?.distance, 40);
+    const position = sanitizeStr(body?.position, 40);
+    const notes = sanitizeStr(body?.notes, 500);
+    const eventDate = sanitizeStr(body?.eventDate, 40);
+
+    if (!name) return json({ ok: false, error: 'Nome é obrigatório' }, 400);
+    if (!event) return json({ ok: false, error: 'Evento / corrida é obrigatório' }, 400);
+    if (!time) return json({ ok: false, error: 'Resultado (tempo) é obrigatório' }, 400);
+
+    const entry = {
+      id: uid('res'),
+      status: 'approved',
+      createdAt: new Date().toISOString(),
+      name,
+      event,
+      eventDate,
+      distance,
+      time,
+      position,
+      notes,
+    };
+
+    try {
+      const store = await fetchResults(env);
+      const items = Array.isArray(store.items) ? store.items : [];
+      items.unshift(entry);
+      const trimmed = items.slice(0, 500);
+      const payload = { updatedAt: new Date().toISOString(), items: trimmed };
+      const saved = await saveResults(env, payload);
+      return json({
+        ok: true,
+        id: entry.id,
+        createdAt: entry.createdAt,
+        count: trimmed.length,
+        storage: saved.storage || null,
+      });
+    } catch (err) {
+      return json({ ok: false, error: err.message || String(err) }, 502);
+    }
+  }
+
+  // Admin actions
+  const password = body?.password;
+  if (!password || password !== env.ADMIN_PASSWORD) {
+    return json({ ok: false, error: 'Unauthorized' }, 401);
+  }
+
+  if (action === 'adminList') {
+    const store = await fetchResults(env);
+    return json({
+      ok: true,
+      updatedAt: store.updatedAt,
+      items: store.items || [],
+      count: (store.items || []).length,
+      storage: env.INBOX ? 'kv' : null,
+    });
+  }
+
+  if (action === 'delete') {
+    const id = sanitizeStr(body?.id, 60);
+    if (!id) return json({ ok: false, error: 'id obrigatório' }, 400);
+    const store = await fetchResults(env);
+    const items = (Array.isArray(store.items) ? store.items : []).filter((it) => it.id !== id);
+    await saveResults(env, { updatedAt: new Date().toISOString(), items });
+    return json({ ok: true, id });
+  }
+
+  if (action === 'hide') {
+    const id = sanitizeStr(body?.id, 60);
+    if (!id) return json({ ok: false, error: 'id obrigatório' }, 400);
+    const store = await fetchResults(env);
+    const items = Array.isArray(store.items) ? store.items : [];
+    let found = false;
+    for (const it of items) {
+      if (it.id === id) {
+        it.status = 'hidden';
+        found = true;
+        break;
+      }
+    }
+    if (!found) return json({ ok: false, error: 'Não encontrado' }, 404);
+    await saveResults(env, { updatedAt: new Date().toISOString(), items });
+    return json({ ok: true, id, status: 'hidden' });
+  }
+
+  return json({ ok: false, error: 'Ação desconhecida' }, 400);
+}
+
 export default {
   async fetch(request, env) {
     if (request.method === 'OPTIONS') {
@@ -358,10 +504,13 @@ export default {
     if (request.method === 'POST' && path === '/inbox') {
       return handleInbox(request, env);
     }
+    if (request.method === 'POST' && path === '/results') {
+      return handleResults(request, env);
+    }
 
     return json({
       ok: false,
-      error: 'Not found. Use POST /publish, POST /submit, or POST /inbox',
+      error: 'Not found. Use POST /publish, POST /submit, POST /inbox, or POST /results',
     }, 404);
   },
 };
