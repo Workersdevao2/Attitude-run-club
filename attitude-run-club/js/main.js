@@ -98,7 +98,7 @@ const translations = {
  'nav.cta': 'Juntar ao Clube',
  'nav.suplementacao': 'Suplementação',
  'nav.nutricao': 'Nutrição',
- 'nav.eventosExternos': 'Externos',
+ 'nav.resultados': 'Resultados',
 
  // Home hero
  'hero.eyebrow': 'Luanda · Lisboa · Maputo · Cape Town',
@@ -257,8 +257,8 @@ const translations = {
  'nutri.cta.btn': 'Ver Suplementação',
  'nutri.cta.contact': 'Falar connosco',
 
- // Eventos Externos
- 'ext.label': 'Eventos Externos',
+ // Resultados
+ 'ext.label': 'Resultados',
  'ext.title': 'A tribo<br>também corre fora.',
  'ext.sub': 'Participaste numa corrida fora do clube? Regista o teu nome e o teu resultado. Constrói o histórico da Attitude.',
  'ext.form.title': 'Registar resultado',
@@ -577,7 +577,7 @@ const translations = {
  'nav.cta': 'Join the Club',
  'nav.suplementacao': 'Supplements',
  'nav.nutricao': 'Nutrition',
- 'nav.eventosExternos': 'External',
+ 'nav.resultados': 'Results',
 
  // Home hero
  'hero.eyebrow': 'Luanda · Lisbon · Maputo · Cape Town',
@@ -736,8 +736,8 @@ const translations = {
  'nutri.cta.btn': 'View Supplements',
  'nutri.cta.contact': 'Talk to us',
 
- // External events
- 'ext.label': 'External Events',
+ // Results
+ 'ext.label': 'Results',
  'ext.title': 'The tribe<br>also races outside.',
  'ext.sub': 'Ran a race outside the club? Log your name and result. Build the Attitude history.',
  'ext.form.title': 'Log a result',

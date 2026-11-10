@@ -340,7 +340,7 @@ async function handleInbox(request, env) {
   return json({ ok: false, error: 'Ação desconhecida' }, 400);
 }
 
-// ── Race results (Eventos Externos) ─────────────────────────────────────────
+// ── Race results (Resultados) ─────────────────────────────────────────
 // KV key: race_results  →  { updatedAt, items: [...] }
 // Public: submit (auto-approved), list approved
 // Admin: list all, delete

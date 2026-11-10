@@ -2575,7 +2575,7 @@
  }
 
 
- // ── Results (Eventos Externos) ───────────────────────────────────────────
+ // ── Results (Resultados) ───────────────────────────────────────────
  let resultsAdminItems = [];
  const RESULTS_URL = API_BASE + '/results';
 
