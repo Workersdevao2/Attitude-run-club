@@ -174,6 +174,10 @@ async function handlePublish(request, env) {
     zones: Array.isArray(catalog.zones) ? catalog.zones : [],
     texts: catalog.texts && typeof catalog.texts === 'object' ? catalog.texts : { pt: {}, en: {} },
     images: catalog.images && typeof catalog.images === 'object' ? catalog.images : {},
+    // Night Run Party gallery (max 50 URLs) — was missing, so public site never saw admin uploads
+    eventGallery: Array.isArray(catalog.eventGallery)
+      ? catalog.eventGallery.filter(Boolean).slice(0, 50)
+      : [],
   };
 
   const publicId = `${folderOf(env)}/catalog`;
@@ -189,6 +193,7 @@ async function handlePublish(request, env) {
       corredores: payload.corredores.length,
       attituders: payload.attituders.length,
       zones: payload.zones.length,
+      eventGallery: payload.eventGallery.length,
     });
   } catch (err) {
     return json({ ok: false, error: err.message || String(err) }, 502);
