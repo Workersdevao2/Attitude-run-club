@@ -488,25 +488,29 @@
  if (!container) return;
  const list = (urls || []).filter(Boolean).slice(0, 50);
  if (!list.length) {
+ // Fallback defaults if catalog has no gallery yet
+ const fallback = global.DEFAULT_EVENT_GALLERY || [];
+ if (fallback.length) {
+ return renderEventGallery(fallback, container);
+ }
  container.innerHTML = '';
  container.hidden = true;
  return;
  }
  container.hidden = false;
  const patterns = ['tall', '', '', 'wide', '', ''];
+ // Use reveal + visible: items are injected after IntersectionObserver setup,
+ // so without .visible they stay opacity:0 forever.
  container.innerHTML = list
  .map(function (url, i) {
  const src = resolveSiteUrl(url);
  const cls = patterns[i % patterns.length];
- const delay = i % 4 === 0 ? '' : ' reveal-delay-' + (i % 3 + 1);
  return (
  '<div class="gallery-item' +
  (cls ? ' ' + cls : '') +
- ' reveal' +
- delay +
- '"><img src="' +
+ ' reveal visible"><img src="' +
  esc(src) +
- '" alt="Night Run Party" loading="lazy"></div>'
+ '" alt="Night Run Party" loading="lazy" decoding="async"></div>'
  );
  })
  .join('');

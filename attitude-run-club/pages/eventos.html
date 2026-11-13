@@ -259,6 +259,9 @@
  ARCCatalog.applyTexts(cat.texts);
  ARCCatalog.applySiteImages(cat.images);
  ARCCatalog.renderEventGallery(cat.eventGallery, document.getElementById('eventGalleryGrid'));
+ if (typeof setLanguage === 'function') {
+ setLanguage(typeof currentLang !== 'undefined' ? currentLang : (localStorage.getItem('arc-lang') || 'pt'));
+ }
  })();
  </script>
 </body>
