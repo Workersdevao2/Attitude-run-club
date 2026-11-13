@@ -559,8 +559,20 @@ const translations = {
  'supp.cta.title': 'Produtos reais<br>a caminho.',
  'supp.cta.sub': 'Queres ser avisado quando o catálogo abrir? Fala connosco.',
  'supp.cta.btn': 'Contactar',
-
- },
+  "eventos.past.4.date": "Maio 2025 · Luanda",
+  "eventos.past.4.meta": "LED · Comunidade · Energia",
+  "eventos.past.4.name": "First Night Run",
+  "eventos.past.4.recap": "O início de tudo. A primeira noite em que a tribo correu junta sob as luzes da cidade.",
+  "eventos.past.5.date": "Abril 2025 · Luanda",
+  "eventos.past.5.meta": "Pace social · Vista · Música",
+  "eventos.past.5.name": "Sunset Run",
+  "eventos.past.5.recap": "Treinos ao pôr do sol que se tornaram o ritual semanal da comunidade.",
+  "footer.addr1": "Benfica, Rua Direita do BFA",
+  "footer.addr2": "Defronte ao Condomínio Ville Vermont",
+  "footer.addr3": "Luanda, Angola",
+  "footer.email": "attituderunclub@gmail.com",
+  "footer.instagram": "Instagram",
+  "footer.whatsapp": "WhatsApp: 932 826 818"},
 
  en: {
  // Nav
@@ -1038,8 +1050,20 @@ const translations = {
  'supp.cta.title': 'Real products<br>on the way.',
  'supp.cta.sub': 'Want to be notified when the catalogue opens? Get in touch.',
  'supp.cta.btn': 'Contact',
-
- }
+  "eventos.past.4.date": "May 2025 · Luanda",
+  "eventos.past.4.meta": "LED · Community · Energy",
+  "eventos.past.4.name": "First Night Run",
+  "eventos.past.4.recap": "Where it all started. The first night the tribe ran together under the city lights.",
+  "eventos.past.5.date": "April 2025 · Luanda",
+  "eventos.past.5.meta": "Social pace · Views · Music",
+  "eventos.past.5.name": "Sunset Run",
+  "eventos.past.5.recap": "Sunset runs that became the community's weekly ritual.",
+  "footer.addr1": "Benfica, Rua Direita do BFA",
+  "footer.addr2": "Opposite Ville Vermont Condominium",
+  "footer.addr3": "Luanda, Angola",
+  "footer.email": "attituderunclub@gmail.com",
+  "footer.instagram": "Instagram",
+  "footer.whatsapp": "WhatsApp: 932 826 818"}
 };
 
 let currentLang = localStorage.getItem('arc-lang') || 'pt';

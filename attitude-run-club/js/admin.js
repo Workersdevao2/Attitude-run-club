@@ -1641,10 +1641,12 @@
  let textExpandAll = false;
 
  const TEXT_PREVIEW_URLS = {
+ 'Geral / Nav': 'index.html',
  'Hero (home)': 'index.html',
  Marquee: 'index.html',
  Pilares: 'index.html#pilares',
  Stats: 'index.html',
+ 'Promo evento (home)': 'index.html',
  Galeria: 'index.html',
  'Como entrar (home)': 'index.html',
  'Como entrar (planos)': 'pages/planos.html',
@@ -1659,7 +1661,11 @@
  'Loja (checkout form)': 'pages/checkout.html',
  Checkout: 'pages/checkout.html',
  Suplementação: 'pages/suplementacao.html',
- Navegação: 'index.html',
+ 'Nutrição': 'pages/nutricao.html',
+ 'Programa de treino': 'pages/programa-treino.html',
+ Resultados: 'pages/resultados.html',
+ Corredores: 'pages/corredores.html',
+ Attituders: 'pages/attituders.html',
  Footer: 'index.html',
  };
 
@@ -2010,7 +2016,8 @@
  const slots = window.SITE_IMAGE_SLOTS || [];
  const el = $('#slotsGrid');
  if (!el) return;
- el.innerHTML = slots.map((s) => {
+
+ const cardHTML = (s) => {
  const url = images[s.key] || (window.DEFAULT_SITE_IMAGES || {})[s.key] || '';
  return `
  <div class="slot-card" data-slot="${esc(s.key)}">
@@ -2022,9 +2029,29 @@
  <button type="button" class="btn btn-ghost btn-sm" data-slot-pick="${esc(s.key)}">Escolher da média</button>
  <button type="button" class="btn btn-ghost btn-sm" data-slot-reset="${esc(s.key)}">Original</button>
  </div>
+ </div>`;
+ };
+
+ // Group by page (preserves order of first appearance)
+ const groups = [];
+ const map = new Map();
+ slots.forEach((s) => {
+ const g = s.group || 'Outros';
+ if (!map.has(g)) {
+ map.set(g, []);
+ groups.push(g);
+ }
+ map.get(g).push(s);
+ });
+
+ el.innerHTML = groups.map((g) => `
+ <div class="slot-group">
+ <h3 class="slot-group-title">${esc(g)}</h3>
+ <div class="slots-grid-inner">
+ ${map.get(g).map(cardHTML).join('')}
  </div>
- `;
- }).join('');
+ </div>
+ `).join('');
 
  el.querySelectorAll('[data-slot-upload]').forEach((b) => {
  b.addEventListener('click', () => {
