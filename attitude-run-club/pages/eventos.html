@@ -173,7 +173,8 @@
  </div>
 
  <!-- NIGHT RUN PARTY · 30 OCT — PHOTO GALLERY -->
- <div class="event-gallery-wrap reveal" style="margin-top: 64px;">
+ <!-- no .reveal on wrap: IntersectionObserver often never marks this block visible (opacity stayed 0) -->
+ <div class="event-gallery-wrap" style="margin-top: 64px;">
  <div class="event-gallery-header">
  <p class="section-label" data-i18n="eventos.gallery.eyebrow">30 Outubro 2026</p>
  <h2 class="events-col-title" data-i18n="eventos.gallery.title">Night Run Party · Galeria</h2>

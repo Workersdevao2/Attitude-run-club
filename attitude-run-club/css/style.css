@@ -1885,6 +1885,13 @@ footer {
   max-width: 100%;
   overflow: hidden;
 }
+/* Event gallery wrap: never stay opacity 0 (observer can miss tall blocks) */
+.event-gallery-wrap.reveal,
+.event-gallery-wrap.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
 /* Product cards load async — never leave them invisible if .reveal was applied */
 .product-card.reveal,
 .product-card.reveal.visible {
