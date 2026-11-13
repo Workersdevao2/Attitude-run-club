@@ -478,6 +478,20 @@
  );
  }
 
+ function galleryFingerprint(list) {
+ return JSON.stringify(
+ (list || [])
+ .map((u) => (typeof u === 'string' ? u : (u && u.url) || ''))
+ .filter(Boolean)
+ );
+ }
+
+ function zonesFingerprint(list) {
+ return JSON.stringify(
+ (list || []).map((z) => [z.id || '', z.name || '', z.price || 0])
+ );
+ }
+
  function updatePublishStrip() {
  const text = document.getElementById('publishStripText');
  const dot = document.getElementById('publishDot');
@@ -490,23 +504,36 @@
  const liveProducts = published && Array.isArray(published.products) ? published.products : [];
  const liveTexts = published && published.texts ? published.texts : { pt: {}, en: {} };
  const liveImages = published && published.images ? published.images : {};
+ const liveGallery = published && Array.isArray(published.eventGallery) ? published.eventGallery : [];
+ const liveZones = published && Array.isArray(published.zones) ? published.zones : [];
  const liveCor = published && Array.isArray(published.corredores) ? published.corredores : [];
  const liveAtt = published && Array.isArray(published.attituders) ? published.attituders : [];
  const liveSupp = published && Array.isArray(published.supplements) ? published.supplements : [];
  const dirtyProducts = catalogFingerprint(products) !== catalogFingerprint(liveProducts);
  const dirtyTexts = textsFingerprint(texts) !== textsFingerprint(liveTexts);
  const dirtyImages = imagesFingerprint(images) !== imagesFingerprint(liveImages);
+ const dirtyGallery = galleryFingerprint(eventGallery) !== galleryFingerprint(liveGallery);
+ const dirtyZones = zonesFingerprint(zones) !== zonesFingerprint(liveZones);
  const dirtyPeople =
  peopleFingerprint(corredores) !== peopleFingerprint(liveCor) ||
  peopleFingerprint(attituders) !== peopleFingerprint(liveAtt);
  const dirtySupp = peopleFingerprint(supplements) !== peopleFingerprint(liveSupp);
- const dirty = dirtyProducts || dirtyTexts || dirtyImages || dirtyPeople || dirtySupp;
+ const dirty =
+ dirtyProducts ||
+ dirtyTexts ||
+ dirtyImages ||
+ dirtyGallery ||
+ dirtyZones ||
+ dirtyPeople ||
+ dirtySupp;
  const parts = [];
  if (dirtyProducts) parts.push('produtos');
  if (dirtyPeople) parts.push('pessoas');
  if (dirtySupp) parts.push('suplementos');
  if (dirtyTexts) parts.push('textos');
  if (dirtyImages) parts.push('imagens');
+ if (dirtyGallery) parts.push('galeria');
+ if (dirtyZones) parts.push('zonas');
  const lastLabel = last
  ? new Date(last).toLocaleString('pt-AO', { dateStyle: 'short', timeStyle: 'short' })
  : 'nunca';
@@ -515,16 +542,21 @@
  dot.classList.toggle('is-clean', !dirty);
  }
  text.textContent = dirty
- ? 'Alterações por publicar · clica “Publicar alterações” · Última: ' + lastLabel
+ ? 'Alterações por publicar (' +
+ parts.join(', ') +
+ ') · clica “Publicar alterações” · Última: ' +
+ lastLabel
  : 'Loja sincronizada · Última publicação: ' + lastLabel;
 
- // Sticky publish only when something is still local-only (e.g. textos/zonas)
+ // Always show sticky publish (hidden only while a modal is open)
  const sticky = document.getElementById('stickyActions');
  const modalOpen = !!document.querySelector('.modal-backdrop.open');
  if (sticky) {
- sticky.style.display = dirty && !modalOpen ? '' : 'none';
+ sticky.style.display = modalOpen ? 'none' : 'flex';
+ sticky.classList.toggle('is-dirty', dirty);
+ sticky.classList.toggle('is-clean', !dirty);
  }
- document.body.classList.toggle('has-sticky-publish', dirty && !modalOpen);
+ document.body.classList.toggle('has-sticky-publish', !modalOpen);
  }
 
 
@@ -2142,6 +2174,7 @@
  eventGallery[i] = tmp;
  renderEventGalleryAdmin();
  saveJSON(LS.eventGallery, eventGallery);
+ updatePublishStrip();
  });
  });
  el.querySelectorAll('[data-eg-down]').forEach((b) => {
@@ -2153,6 +2186,7 @@
  eventGallery[i] = tmp;
  renderEventGalleryAdmin();
  saveJSON(LS.eventGallery, eventGallery);
+ updatePublishStrip();
  });
  });
  }
@@ -2420,6 +2454,7 @@
  saveJSON(LS.zones, zones);
  saveJSON(LS.texts, texts);
  saveJSON(LS.images, images);
+ saveJSON(LS.eventGallery, eventGallery);
  saveJSON(LS.media, media);
 
  if (publishInFlight) {
@@ -2466,6 +2501,7 @@
  return true;
  } catch (err) {
  toast('Publicar falhou: ' + (err.message || err), 'error');
+ updatePublishStrip();
  return false;
  } finally {
  publishInFlight = false;

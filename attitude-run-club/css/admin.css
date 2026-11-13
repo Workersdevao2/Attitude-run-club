@@ -1520,3 +1520,11 @@ body.admin-compact .product-table td {
   min-width: 28px;
   padding: 2px 6px;
 }
+
+
+.sticky-actions.is-clean .btn-primary {
+  opacity: 0.85;
+}
+.sticky-actions.is-dirty .btn-primary {
+  box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.35);
+}
