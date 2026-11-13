@@ -72,8 +72,8 @@
 
  <section class="page-hero has-bg" data-site-img-bg="eventos-hero" style="background-image: url('../images/night-run-party-runners.jpg');">
  <p class="section-label reveal" data-i18n="eventos.label">Eventos</p>
- <h1 class="section-title reveal reveal-delay-1" data-i18n="eventos.title">Histórico<br>&amp; próximos.</h1>
- <p class="page-hero-sub reveal reveal-delay-2" data-i18n="eventos.sub">O que já vivemos e o que vem a seguir. Cada corrida deixa marca · e a próxima já está marcada.</p>
+ <h1 class="section-title reveal reveal-delay-1" data-i18n="eventos.title">Histórico<br>&amp; momentos.</h1>
+ <p class="page-hero-sub reveal reveal-delay-2" data-i18n="eventos.sub">O que já vivemos juntos. Cada corrida deixa marca — revê a Night Run Party e o resto da tribo em movimento.</p>
  </section>
 
  <section style="padding-top:0;">
@@ -93,6 +93,18 @@
 
  <div class="past-carousel" id="pastCarousel">
  <div class="past-track" id="pastTrack">
+
+ <article class="past-slide">
+ <div class="past-slide-img">
+ <img src="../images/night-run-party-megaphone.jpg" data-site-img="event-past-nrp" alt="Night Run Party · 30 Outubro">
+ </div>
+ <div class="past-slide-body">
+ <p class="calendar-date" data-i18n="eventos.past.nrp.date">30 Outubro 2025 · Luanda</p>
+ <h3 class="calendar-name" data-i18n="eventos.past.nrp.name">Night Run Party</h3>
+ <p class="calendar-meta" data-i18n="eventos.past.nrp.meta">Attituders Let's Go · 19h–00h · Wakanda Training</p>
+ <p class="calendar-recap" data-i18n="eventos.past.nrp.recap">A noite em que a tribo encheu a Rua do BFA. Corrida, energia e atitude do início ao fim. Obrigado a todos os que marcaram presença.</p>
+ </div>
+ </article>
 
  <article class="past-slide">
  <div class="past-slide-img">
@@ -160,32 +172,21 @@
  <div class="carousel-dots" id="pastDots"></div>
  </div>
 
- <!-- UPCOMING EVENTS -->
- <div class="events-split" style="margin-top: 64px;">
- <div class="col-upcoming reveal" style="grid-column: 1 / -1; max-width: 520px; margin: 0 auto;">
- <h2 class="events-col-title" data-i18n="eventos.upcoming.title">Próximos eventos</h2>
- <div class="calendar-list">
- <article class="calendar-card featured">
- <img src="../images/night-run-party-megaphone.jpg" data-site-img="event-up-1" alt="Night Run Party · Attituders Let's Go" class="calendar-poster">
- <p class="days-badge"><span class="js-days-to-event">·</span> <span data-i18n="stat.dias">Dias para o evento</span></p>
- <p class="calendar-date" data-i18n="eventos.up.1.date">Sexta · 30 Outubro · 19h</p>
- <h3 class="calendar-name" data-i18n="eventos.up.1.name">Night Run Party</h3>
- <p class="calendar-meta" data-i18n="eventos.up.1.meta">Attituders Let's Go · 19h–00h · Ingressos · ticket.ao</p>
- <p class="calendar-recap" data-i18n="eventos.up.1.recap">O próximo grande encontro da tribo. Energia, corrida e atitude. Não fiques de fora.</p>
- <div class="calendar-actions">
- <a href="https://ticket.ao/event/attituders-lets-go/" class="primary" target="_blank" rel="noopener" data-i18n="eventos.up.1.btn">Comprar ingresso</a>
- <a href="https://wa.me/244932826818" target="_blank" rel="noopener">WhatsApp</a>
+ <!-- NIGHT RUN PARTY · 30 OCT — PHOTO GALLERY -->
+ <div class="event-gallery-wrap reveal" style="margin-top: 64px;">
+ <div class="event-gallery-header">
+ <p class="section-label" data-i18n="eventos.gallery.eyebrow">30 Outubro 2025</p>
+ <h2 class="events-col-title" data-i18n="eventos.gallery.title">Night Run Party · Galeria</h2>
+ <p class="event-gallery-sub" data-i18n="eventos.gallery.sub">Momentos da noite em que a tribo correu junta. Energia, luzes e atitude na Rua do BFA.</p>
  </div>
- </article>
- </div>
- </div>
+ <div class="gallery-grid event-gallery-grid" id="eventGalleryGrid"></div>
  </div>
 
  </section>
 
  <section class="cta-section has-bg" data-site-img-bg="cta-eventos" style="min-height:50vh; background-image: url('../images/cta-community.jpg');">
- <p class="cta-eyebrow" data-i18n="eventos.cta.eyebrow">Não percas o próximo</p>
- <h2 class="cta-title" data-i18n="eventos.cta.title">Junta-te<br>à tribo.</h2>
+ <p class="cta-eyebrow" data-i18n="eventos.cta.eyebrow">Próxima paragem</p>
+ <h2 class="cta-title" data-i18n="eventos.cta.title">A tribo continua<br>a correr.</h2>
  <div class="cta-actions">
  <a href="https://www.regibox.pt/regiprof_wod/registo/novo_registo.php?id_box=102&lang=pt&code=558112ee6f7f332e61f96b7c73bb5132" class="btn-large" target="_blank" rel="noopener" data-i18n="eventos.cta.btn">Quero Participar</a>
  </div>
@@ -257,6 +258,7 @@
  const cat = await ARCCatalog.loadCatalog();
  ARCCatalog.applyTexts(cat.texts);
  ARCCatalog.applySiteImages(cat.images);
+ ARCCatalog.renderEventGallery(cat.eventGallery, document.getElementById('eventGalleryGrid'));
  })();
  </script>
 </body>

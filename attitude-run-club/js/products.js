@@ -837,8 +837,8 @@ const DEFAULT_TEXTS = {
     "event.tag.semanal": "Semanal",
     "event.tag.trimestral": "Trimestral",
     "eventos.cta.btn": "Quero Participar",
-    "eventos.cta.eyebrow": "Não percas o próximo",
-    "eventos.cta.title": "Junta-te<br>à tribo.",
+    "eventos.cta.eyebrow": "Next stop",
+    "eventos.cta.title": "The tribe keeps<br>running.",
     "eventos.formats.label": "Experiências",
     "eventos.formats.title": "Formatos<br>de eventos.",
     "eventos.label": "Eventos",
@@ -855,8 +855,8 @@ const DEFAULT_TEXTS = {
     "eventos.past.3.name": "Run + Brunch",
     "eventos.past.3.recap": "Treino + mesa partilhada. Smoothies, café e networking depois dos 5 km. Formato que a tribo pediu para voltar.",
     "eventos.past.title": "Eventos passados",
-    "eventos.sub": "O que já vivemos e o que vem a seguir. Cada corrida deixa marca · e a próxima já está marcada.",
-    "eventos.title": "Histórico<br>& próximos.",
+    "eventos.sub": "What we've lived together. Every run leaves a mark — revisit Night Run Party and the rest of the tribe in motion.",
+    "eventos.title": "History<br>& moments.",
     "eventos.up.1.btn": "Comprar ingresso",
     "eventos.up.1.date": "Sexta · 30 Outubro · 19h",
     "eventos.up.1.meta": "Attituders Let's Go · 19h–00h · Ingressos · ticket.ao",
@@ -1142,12 +1142,12 @@ const DEFAULT_TEXTS = {
     "programa.note": "Detalhe completo do programa será publicado em breve. Fala connosco para começar já.",
     "programa.sub": "Estrutura clara para evoluíres — do primeiro quilómetro até às maratonas.",
     "programa.title": "Treina com<br>propósito.",
-    "promo.btn1": "Comprar ingresso",
-    "promo.btn2": "Ver detalhes",
-    "promo.desc": "Energia, corrida e atitude. O grande encontro da tribo — ingressos já disponíveis.",
-    "promo.eyebrow": "Próximo evento",
+    "promo.btn1": "View gallery",
+    "promo.btn2": "All events",
+    "promo.desc": "The tribe filled the night. Running, lights and attitude — thank you to everyone who showed up.",
+    "promo.eyebrow": "Past event",
     "promo.loc": "Rua do BFA · Wakanda Training · Luanda",
-    "promo.meta": "Sexta · 30 Outubro · 19h–00h",
+    "promo.meta": "Friday · 30 October 2025 · 7pm–12am",
     "promo.title": "Night Run<br>Party",
     "roadmap.cta.btn": "Juntar-me",
     "roadmap.cta.eyebrow": "Faz parte desde o início",
@@ -1223,7 +1223,14 @@ const DEFAULT_TEXTS = {
     "footer.addr3": "Luanda, Angola",
     "footer.email": "attituderunclub@gmail.com",
     "footer.instagram": "Instagram",
-    "footer.whatsapp": "WhatsApp: 932 826 818"},
+    "footer.whatsapp": "WhatsApp: 932 826 818",
+  "eventos.gallery.eyebrow": "30 Outubro 2025",
+  "eventos.gallery.sub": "Momentos da noite em que a tribo correu junta. Energia, luzes e atitude na Rua do BFA.",
+  "eventos.gallery.title": "Night Run Party · Galeria",
+  "eventos.past.nrp.date": "30 Outubro 2025 · Luanda",
+  "eventos.past.nrp.meta": "Attituders Let's Go · 19h–00h · Wakanda Training",
+  "eventos.past.nrp.name": "Night Run Party",
+  "eventos.past.nrp.recap": "A noite em que a tribo encheu a Rua do BFA. Corrida, energia e atitude do início ao fim. Obrigado a todos os que marcaram presença."},
   en: {
     "atitudes.cta.btn": "Join the Club",
     "atitudes.cta.label": "Be part of the movement",
@@ -1675,7 +1682,14 @@ const DEFAULT_TEXTS = {
     "footer.addr3": "Luanda, Angola",
     "footer.email": "attituderunclub@gmail.com",
     "footer.instagram": "Instagram",
-    "footer.whatsapp": "WhatsApp: 932 826 818"}
+    "footer.whatsapp": "WhatsApp: 932 826 818",
+  "eventos.gallery.eyebrow": "30 October 2025",
+  "eventos.gallery.sub": "Moments from the night the tribe ran together. Energy, lights and attitude on Rua do BFA.",
+  "eventos.gallery.title": "Night Run Party · Gallery",
+  "eventos.past.nrp.date": "30 October 2025 · Luanda",
+  "eventos.past.nrp.meta": "Attituders Let's Go · 7pm–12am · Wakanda Training",
+  "eventos.past.nrp.name": "Night Run Party",
+  "eventos.past.nrp.recap": "The night the tribe filled Rua do BFA. Running, energy and attitude from start to finish. Thank you to everyone who showed up."}
 };
 
 /** Grouped keys for Admin → Textos UI */
@@ -1888,7 +1902,14 @@ const TEXT_GROUPS = [
       { k: "eventos.formats.label", label: "eventos.formats.label" },
       { k: "eventos.formats.title", label: "eventos.formats.title" },
       { k: "eventos.label", label: "eventos.label" },
-      { k: "eventos.past.1.date", label: "eventos.past.1.date" },
+            { k: "eventos.gallery.eyebrow", label: "eventos.gallery.eyebrow" },
+      { k: "eventos.gallery.title", label: "eventos.gallery.title" },
+      { k: "eventos.gallery.sub", label: "eventos.gallery.sub" },
+      { k: "eventos.past.nrp.date", label: "eventos.past.nrp.date" },
+      { k: "eventos.past.nrp.name", label: "eventos.past.nrp.name" },
+      { k: "eventos.past.nrp.meta", label: "eventos.past.nrp.meta" },
+      { k: "eventos.past.nrp.recap", label: "eventos.past.nrp.recap" },
+{ k: "eventos.past.1.date", label: "eventos.past.1.date" },
       { k: "eventos.past.1.meta", label: "eventos.past.1.meta" },
       { k: "eventos.past.1.name", label: "eventos.past.1.name" },
       { k: "eventos.past.1.recap", label: "eventos.past.1.recap" },
@@ -2312,9 +2333,19 @@ const DEFAULT_SITE_IMAGES = {
  "cta-corredores": "images/cta-run.jpg",
  "attituders-hero": "images/community-01.jpg",
  "cta-attituders": "images/cta-community.jpg",
-};
+ "event-past-nrp": "images/night-run-party-megaphone.jpg"};
 
 /** Slot definitions for admin UI */
+/** Night Run Party photo gallery (max 50). Managed in Admin → Imagens. */
+const DEFAULT_EVENT_GALLERY = [
+ "images/night-run-party-runners.jpg",
+ "images/night-run-party-megaphone.jpg",
+ "images/night-run-party-collage.jpg",
+ "images/event-lets-go.jpg",
+ "images/cta-run.jpg",
+ "images/group.jpg"
+];
+
 const SITE_IMAGE_SLOTS = [
  { key: "logo", label: "Logo", hint: "Header (todas as páginas)", group: "Geral" },
  { key: "hero", label: "Hero", hint: "Fundo do hero", group: "Home" },
@@ -2336,6 +2367,7 @@ const SITE_IMAGE_SLOTS = [
  { key: "planos-hero", label: "Hero", hint: "", group: "Planos" },
  { key: "cta-planos", label: "CTA", hint: "", group: "Planos" },
  { key: "eventos-hero", label: "Hero", hint: "", group: "Eventos" },
+ { key: "event-past-nrp", label: "Eventos · Night Run Party (card)", hint: "Cartaz / foto do card passado", group: "Eventos" },
  { key: "event-past-1", label: "Passado 1", hint: "Cartaz / foto", group: "Eventos" },
  { key: "event-past-2", label: "Passado 2", hint: "", group: "Eventos" },
  { key: "event-past-3", label: "Passado 3", hint: "", group: "Eventos" },
@@ -2441,8 +2473,7 @@ const SUPP_CATEGORY_LABELS = {
  pre: { pt: "Pré-treino", en: "Pre-workout" },
  electro: { pt: "Hidratação", en: "Hydration" },
  vitamin: { pt: "Vitaminas", en: "Vitamins" },
- outros: { pt: "Outros", en: "Other" },
-};
+ outros: { pt: "Outros", en: "Other" }};
 
 /**
  * People on Corredores / Attituders pages.
@@ -2478,6 +2509,7 @@ if (typeof window !== 'undefined') {
  window.DEFAULT_ZONES = DEFAULT_ZONES;
  window.DEFAULT_TEXTS = DEFAULT_TEXTS;
  window.DEFAULT_SITE_IMAGES = DEFAULT_SITE_IMAGES;
+ window.DEFAULT_EVENT_GALLERY = DEFAULT_EVENT_GALLERY;
  window.SITE_IMAGE_SLOTS = SITE_IMAGE_SLOTS;
  window.TEXT_GROUPS = TEXT_GROUPS;
  window.DEFAULT_SUPPLEMENTS = DEFAULT_SUPPLEMENTS;

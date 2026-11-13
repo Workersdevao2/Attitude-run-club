@@ -20,6 +20,7 @@
  zones: 'arc_zones_override',
  texts: 'arc_texts_override',
  images: 'arc_images_override',
+ eventGallery: 'arc_event_gallery_override',
  media: 'arc_media_library',
  };
 
@@ -31,6 +32,7 @@
  let zones = [];
  let texts = { pt: {}, en: {} };
  let images = {};
+ let eventGallery = [];
  let media = [];
  let inboxItems = [];
  let inboxFilter = 'all';
@@ -38,7 +40,7 @@
  let editingSuppId = null;
  let editingPersonId = null;
  let editingPersonGroup = 'corredores'; // 'corredores' | 'attituders'
- let pickerTarget = null; // { type: 'product'|'slot'|'supplement'|'person', id/key }
+ let pickerTarget = null; // { type: 'product'|'slot'|'supplement'|'person'|'eventGallery', id/key }
 
  function adminPassword() {
  return localStorage.getItem('arc_admin_pw') || DEFAULT_ADMIN_PASSWORD;
@@ -321,6 +323,15 @@
  loadJSON(LS.images, null) ||
  (remote && remote.images ? structuredClone(remote.images) : null) ||
  structuredClone(defI);
+ eventGallery =
+ loadJSON(LS.eventGallery, null) ||
+ (remote && Array.isArray(remote.eventGallery) ? structuredClone(remote.eventGallery) : null) ||
+ structuredClone(window.DEFAULT_EVENT_GALLERY || []);
+ if (!Array.isArray(eventGallery)) eventGallery = [];
+ eventGallery = eventGallery
+ .map((u) => (typeof u === 'string' ? u : u && u.url ? u.url : ''))
+ .filter(Boolean)
+ .slice(0, 50);
  media = loadJSON(LS.media, []) || [];
 
  // Seed missing brand keys / image slots from defaults (never overwrite staff values)
@@ -366,6 +377,7 @@
  zones: loadJSON(LS.zones, null),
  texts: loadJSON(LS.texts, null),
  images: loadJSON(LS.images, null),
+ eventGallery: loadJSON(LS.eventGallery, null),
  at: Date.now(),
  };
  } catch (_) {
@@ -378,6 +390,7 @@
  saveJSON(LS.zones, zones);
  saveJSON(LS.texts, texts);
  saveJSON(LS.images, images);
+ saveJSON(LS.eventGallery, eventGallery);
  saveJSON(LS.media, media);
  if (!silent) toast('Cópia local guardada', 'ok');
  updatePublishStrip();
@@ -398,6 +411,7 @@
  if (undoSnapshot.zones) zones = undoSnapshot.zones;
  if (undoSnapshot.texts) texts = undoSnapshot.texts;
  if (undoSnapshot.images) images = undoSnapshot.images;
+ if (undoSnapshot.eventGallery) eventGallery = undoSnapshot.eventGallery;
  saveJSON(LS.products, products);
  saveJSON(LS.supplements, supplements);
  saveJSON(LS.corredores, corredores);
@@ -2072,6 +2086,77 @@
  });
  }
 
+
+ const EVENT_GALLERY_MAX = 50;
+
+ function renderEventGalleryAdmin() {
+ const el = $('#eventGalleryAdmin');
+ const countEl = $('#eventGalleryCount');
+ if (countEl) countEl.textContent = (eventGallery.length || 0) + ' / ' + EVENT_GALLERY_MAX;
+ if (!el) return;
+ if (!eventGallery.length) {
+ el.innerHTML = '<p class="hint" style="grid-column:1/-1">Ainda sem fotos. Carrega ou escolhe da média (máx. ' + EVENT_GALLERY_MAX + ').</p>';
+ return;
+ }
+ el.innerHTML = eventGallery
+ .map((url, i) => {
+ return (
+ '<div class="event-gal-item" data-i="' +
+ i +
+ '">' +
+ '<img src="' +
+ esc(resolveImg(url)) +
+ '" alt="" loading="lazy" onerror="this.src=\'images/logo.jpg\'">' +
+ '<div class="event-gal-actions">' +
+ '<button type="button" class="btn btn-ghost btn-xs" data-eg-up="' +
+ i +
+ '" title="Subir"' +
+ (i === 0 ? ' disabled' : '') +
+ '>↑</button>' +
+ '<button type="button" class="btn btn-ghost btn-xs" data-eg-down="' +
+ i +
+ '" title="Descer"' +
+ (i >= eventGallery.length - 1 ? ' disabled' : '') +
+ '>↓</button>' +
+ '<button type="button" class="btn btn-danger btn-xs" data-eg-rm="' +
+ i +
+ '" title="Remover">✕</button>' +
+ '</div></div>'
+ );
+ })
+ .join('');
+
+ el.querySelectorAll('[data-eg-rm]').forEach((b) => {
+ b.addEventListener('click', () => {
+ eventGallery.splice(parseInt(b.dataset.egRm, 10), 1);
+ renderEventGalleryAdmin();
+ saveAndPublish('Foto removida da galeria');
+ });
+ });
+ el.querySelectorAll('[data-eg-up]').forEach((b) => {
+ b.addEventListener('click', () => {
+ const i = parseInt(b.dataset.egUp, 10);
+ if (i <= 0) return;
+ const tmp = eventGallery[i - 1];
+ eventGallery[i - 1] = eventGallery[i];
+ eventGallery[i] = tmp;
+ renderEventGalleryAdmin();
+ saveJSON(LS.eventGallery, eventGallery);
+ });
+ });
+ el.querySelectorAll('[data-eg-down]').forEach((b) => {
+ b.addEventListener('click', () => {
+ const i = parseInt(b.dataset.egDown, 10);
+ if (i >= eventGallery.length - 1) return;
+ const tmp = eventGallery[i + 1];
+ eventGallery[i + 1] = eventGallery[i];
+ eventGallery[i] = tmp;
+ renderEventGalleryAdmin();
+ saveJSON(LS.eventGallery, eventGallery);
+ });
+ });
+ }
+
  // ── Media library ───────────────────────────────────────────────────────
  function renderMedia() {
  const el = $('#mediaGrid');
@@ -2159,15 +2244,46 @@
  prev.src = url;
  prev.style.display = 'block';
  }
+ } else if (pickerTarget?.type === 'eventGallery') {
+ if (eventGallery.length >= 50) {
+ toast('Máximo de 50 imagens na galeria', 'error');
+ } else {
+ eventGallery.push(url);
+ }
  } else if (pickerTarget?.type === 'slot' && pickerTarget.key) {
  images[pickerTarget.key] = url;
  renderSlots();
  saveAndPublish('Imagem do site publicada');
- }
+ pickerTarget = null;
+ continue;
+ } else {
  pickerTarget = null;
  }
+ }
+ if (pickerTarget?.type === 'eventGallery') {
+ renderEventGalleryAdmin();
+ saveAndPublish('Galeria atualizada');
+ }
+ pickerTarget = null;
  renderMedia();
  if (files.length) toast('Upload concluído', 'ok');
+ });
+
+
+ $('#btnEventGalleryUpload')?.addEventListener('click', () => {
+ if (eventGallery.length >= EVENT_GALLERY_MAX) {
+ toast('Máximo de ' + EVENT_GALLERY_MAX + ' imagens', 'error');
+ return;
+ }
+ pickerTarget = { type: 'eventGallery' };
+ $('#mediaFileInput')?.click();
+ });
+ $('#btnEventGalleryPick')?.addEventListener('click', () => {
+ if (eventGallery.length >= EVENT_GALLERY_MAX) {
+ toast('Máximo de ' + EVENT_GALLERY_MAX + ' imagens', 'error');
+ return;
+ }
+ openMediaPicker('eventGallery');
  });
 
  const uploadZone = $('#uploadZone');
@@ -2194,6 +2310,7 @@
  if (type === 'slot') pickerTarget = { type: 'slot', key };
  else if (type === 'supplement') pickerTarget = { type: 'supplement' };
  else if (type === 'person') pickerTarget = { type: 'person' };
+ else if (type === 'eventGallery') pickerTarget = { type: 'eventGallery' };
  else pickerTarget = { type: 'product' };
  const grid = $('#pickerGrid');
  if (grid) {
@@ -2223,6 +2340,19 @@
  prev.src = url;
  prev.style.display = 'block';
  }
+ } else if (pickerTarget?.type === 'eventGallery') {
+ if (eventGallery.length >= 50) {
+ toast('Máximo de 50 imagens na galeria', 'error');
+ closeModal('pickerModal');
+ pickerTarget = null;
+ return;
+ }
+ eventGallery.push(url);
+ renderEventGalleryAdmin();
+ closeModal('pickerModal');
+ pickerTarget = null;
+ saveAndPublish('Foto adicionada à galeria');
+ return;
  } else if (pickerTarget?.type === 'slot' && pickerTarget.key) {
  images[pickerTarget.key] = url;
  renderSlots();
@@ -2260,6 +2390,7 @@
  zones,
  texts,
  images,
+ eventGallery: (eventGallery || []).filter(Boolean).slice(0, 50),
  };
  }
 
@@ -2595,6 +2726,7 @@
  renderZones();
  renderTexts();
  renderSlots();
+ renderEventGalleryAdmin();
  renderMedia();
  // Local stats first (no zero flash), inbox shows loading until fetch returns
  updateStats({ inboxLoading: true });

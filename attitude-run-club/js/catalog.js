@@ -13,6 +13,7 @@
  zones: 'arc_zones_override',
  texts: 'arc_texts_override',
  images: 'arc_images_override',
+ eventGallery: 'arc_event_gallery_override',
  published: 'arc_catalog_published',
  };
 
@@ -138,6 +139,7 @@
  zones: global.DEFAULT_ZONES || [],
  texts: global.DEFAULT_TEXTS || { pt: {}, en: {} },
  images: global.DEFAULT_SITE_IMAGES || {},
+ eventGallery: global.DEFAULT_EVENT_GALLERY || [],
  };
 
  const draftProducts = readLS(LS.products);
@@ -147,6 +149,7 @@
  const draftZones = readLS(LS.zones);
  const draftTexts = readLS(LS.texts);
  const draftImages = readLS(LS.images);
+ const draftEventGallery = readLS(LS.eventGallery);
  const publishedLocal = readLS(LS.published);
 
  let remote = null;
@@ -226,6 +229,18 @@
  draftImages && typeof draftImages === 'object'
  ? draftImages
  : base.images || defaults.images,
+ eventGallery: (function () {
+ const max = 50;
+ const draft = Array.isArray(draftEventGallery) ? draftEventGallery : null;
+ const remote = Array.isArray(base.eventGallery) ? base.eventGallery : null;
+ const list = (draft && draft.length ? draft : remote && remote.length ? remote : defaults.eventGallery) || [];
+ return list
+ .map(function (u) {
+ return typeof u === 'string' ? u : u && u.url ? u.url : '';
+ })
+ .filter(Boolean)
+ .slice(0, max);
+ })(),
  source: useDraftProducts
  ? 'draft'
  : remote
@@ -456,9 +471,39 @@
  }
  }
 
+
+ function renderEventGallery(urls, container) {
+ if (!container) return;
+ const list = (urls || []).filter(Boolean).slice(0, 50);
+ if (!list.length) {
+ container.innerHTML = '';
+ container.hidden = true;
+ return;
+ }
+ container.hidden = false;
+ const patterns = ['tall', '', '', 'wide', '', ''];
+ container.innerHTML = list
+ .map(function (url, i) {
+ const src = resolveSiteUrl(url);
+ const cls = patterns[i % patterns.length];
+ const delay = i % 4 === 0 ? '' : ' reveal-delay-' + (i % 3 + 1);
+ return (
+ '<div class="gallery-item' +
+ (cls ? ' ' + cls : '') +
+ ' reveal' +
+ delay +
+ '"><img src="' +
+ esc(src) +
+ '" alt="Night Run Party" loading="lazy"></div>'
+ );
+ })
+ .join('');
+ }
+
  global.ARCCatalog = {
  loadCatalog,
  applySiteImages,
+ renderEventGallery,
  applyTexts,
  renderProductGrid,
  renderSupplementsGrid,

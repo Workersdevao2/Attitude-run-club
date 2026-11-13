@@ -117,13 +117,13 @@ const translations = {
  'marquee.pertencimento': 'Pertencimento',
  'marquee.nightruns': 'Night Runs',
  'marquee.comunidade': 'Comunidade',
- 'promo.eyebrow': 'Próximo evento',
+ 'promo.eyebrow': 'Evento passado',
  'promo.title': 'Night Run<br>Party',
- 'promo.meta': 'Sexta · 30 Outubro · 19h–00h',
+ 'promo.meta': 'Sexta · 30 Outubro 2025 · 19h–00h',
  'promo.loc': 'Rua do BFA · Wakanda Training · Luanda',
- 'promo.desc': 'Energia, corrida e atitude. O grande encontro da tribo — ingressos já disponíveis.',
- 'promo.btn1': 'Comprar ingresso',
- 'promo.btn2': 'Ver detalhes',
+ 'promo.desc': 'A tribo encheu a noite. Corrida, luzes e atitude — obrigado a todos os que marcaram presença.',
+ 'promo.btn1': 'Ver galeria',
+ 'promo.btn2': 'Todos os eventos',
 
  // Pillars section
  'pillars.label': 'Os Cinco Pilares',
@@ -364,8 +364,8 @@ const translations = {
 
  // Eventos page
  'eventos.label': 'Eventos',
- 'eventos.title': 'Histórico<br>& próximos.',
- 'eventos.sub': 'O que já vivemos e o que vem a seguir. Cada corrida deixa marca · e a próxima já está marcada.',
+ 'eventos.title': 'History<br>& moments.',
+ 'eventos.sub': 'What we\'ve lived together. Every run leaves a mark — revisit Night Run Party and the rest of the tribe in motion.',
  'eventos.past.title': 'Eventos passados',
  'eventos.upcoming.title': 'Próximos eventos',
  'eventos.past.1.date': 'Agosto 2025 · Luanda',
@@ -404,8 +404,8 @@ const translations = {
  'event.5.desc': 'O treino mais bonito da semana. Pace social, vista, música e tribo.',
  'event.6.name': 'Prova Interna',
  'event.6.desc': 'Ranking oficial · Medalhas · Badges de milestone · 100km Club',
- 'eventos.cta.eyebrow': 'Não percas o próximo',
- 'eventos.cta.title': 'Junta-te<br>à tribo.',
+ 'eventos.cta.eyebrow': 'Next stop',
+ 'eventos.cta.title': 'The tribe keeps<br>running.',
  'eventos.cta.btn': 'Quero Participar',
 
  // Roadmap page
@@ -572,7 +572,14 @@ const translations = {
   "footer.addr3": "Luanda, Angola",
   "footer.email": "attituderunclub@gmail.com",
   "footer.instagram": "Instagram",
-  "footer.whatsapp": "WhatsApp: 932 826 818"},
+  "footer.whatsapp": "WhatsApp: 932 826 818",
+  "eventos.gallery.eyebrow": "30 Outubro 2025",
+  "eventos.gallery.sub": "Momentos da noite em que a tribo correu junta. Energia, luzes e atitude na Rua do BFA.",
+  "eventos.gallery.title": "Night Run Party · Galeria",
+  "eventos.past.nrp.date": "30 Outubro 2025 · Luanda",
+  "eventos.past.nrp.meta": "Attituders Let's Go · 19h–00h · Wakanda Training",
+  "eventos.past.nrp.name": "Night Run Party",
+  "eventos.past.nrp.recap": "A noite em que a tribo encheu a Rua do BFA. Corrida, energia e atitude do início ao fim. Obrigado a todos os que marcaram presença."},
 
  en: {
  // Nav
@@ -608,13 +615,13 @@ const translations = {
  'marquee.pertencimento': 'Belonging',
  'marquee.nightruns': 'Night Runs',
  'marquee.comunidade': 'Community',
- 'promo.eyebrow': 'Next event',
+ 'promo.eyebrow': 'Past event',
  'promo.title': 'Night Run<br>Party',
- 'promo.meta': 'Friday · 30 October · 7pm–12am',
+ 'promo.meta': 'Friday · 30 October 2025 · 7pm–12am',
  'promo.loc': 'Rua do BFA · Wakanda Training · Luanda',
- 'promo.desc': 'Energy, running and attitude. The tribe’s big meet-up — tickets available now.',
- 'promo.btn1': 'Buy ticket',
- 'promo.btn2': 'See details',
+ 'promo.desc': 'The tribe filled the night. Running, lights and attitude — thank you to everyone who showed up.',
+ 'promo.btn1': 'View gallery',
+ 'promo.btn2': 'All events',
 
  // Pillars
  'pillars.label': 'The Five Pillars',
@@ -855,7 +862,7 @@ const translations = {
 
  // Eventos
  'eventos.label': 'Events',
- 'eventos.title': 'History<br>& upcoming.',
+ 'eventos.title': 'History<br>& moments.',
  'eventos.sub': 'What we\'ve already lived and what\'s coming next. Every run leaves a mark · and the next one is already set.',
  'eventos.past.title': 'Past events',
  'eventos.upcoming.title': 'Upcoming events',
@@ -1063,7 +1070,14 @@ const translations = {
   "footer.addr3": "Luanda, Angola",
   "footer.email": "attituderunclub@gmail.com",
   "footer.instagram": "Instagram",
-  "footer.whatsapp": "WhatsApp: 932 826 818"}
+  "footer.whatsapp": "WhatsApp: 932 826 818",
+  "eventos.gallery.eyebrow": "30 October 2025",
+  "eventos.gallery.sub": "Moments from the night the tribe ran together. Energy, lights and attitude on Rua do BFA.",
+  "eventos.gallery.title": "Night Run Party · Gallery",
+  "eventos.past.nrp.date": "30 October 2025 · Luanda",
+  "eventos.past.nrp.meta": "Attituders Let's Go · 7pm–12am · Wakanda Training",
+  "eventos.past.nrp.name": "Night Run Party",
+  "eventos.past.nrp.recap": "The night the tribe filled Rua do BFA. Running, energy and attitude from start to finish. Thank you to everyone who showed up."}
 };
 
 let currentLang = localStorage.getItem('arc-lang') || 'pt';

@@ -3880,3 +3880,28 @@ body.qv-open { overflow: hidden; }
   .ext-layout { grid-template-columns: 1fr; gap: 32px; }
   .form-row-2 { grid-template-columns: 1fr; }
 }
+
+
+/* Eventos — Night Run Party gallery */
+.event-gallery-wrap {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 24px 48px;
+}
+.event-gallery-header {
+  margin-bottom: 28px;
+  max-width: 640px;
+}
+.event-gallery-header .events-col-title {
+  margin-bottom: 8px;
+}
+.event-gallery-sub {
+  color: var(--muted, #999);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+.event-gallery-grid {
+  margin-top: 8px;
+}
