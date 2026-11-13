@@ -224,7 +224,19 @@
  corredores: sortPeople(rawCorredores),
  attituders: sortPeople(rawAttituders),
  zones: useDraftZones ? draftZones : base.zones || defaults.zones,
- texts: draftTexts && typeof draftTexts === 'object' ? draftTexts : base.texts || defaults.texts,
+ texts: (function () {
+ const baseTexts = base.texts || defaults.texts || { pt: {}, en: {} };
+ const draft = draftTexts && typeof draftTexts === 'object' ? draftTexts : null;
+ const merged = { pt: {}, en: {} };
+ ['pt', 'en'].forEach(function (lang) {
+ const def = (defaults.texts && defaults.texts[lang]) || {};
+ const fromBase = (baseTexts && baseTexts[lang]) || {};
+ const fromDraft = (draft && draft[lang]) || {};
+ // defaults → published/remote → local admin draft (draft wins)
+ merged[lang] = Object.assign({}, def, fromBase, fromDraft);
+ });
+ return merged;
+ })(),
  images:
  draftImages && typeof draftImages === 'object'
  ? draftImages
