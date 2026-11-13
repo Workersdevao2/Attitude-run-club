@@ -364,8 +364,8 @@ const translations = {
 
  // Eventos page
  'eventos.label': 'Eventos',
- 'eventos.title': 'History<br>& moments.',
- 'eventos.sub': 'What we\'ve lived together. Every run leaves a mark — revisit Night Run Party and the rest of the tribe in motion.',
+ 'eventos.title': 'Histórico<br>& momentos.',
+ 'eventos.sub': 'O que já vivemos juntos. Cada corrida deixa marca — revê a Night Run Party e o resto da tribo em movimento.',
  'eventos.past.title': 'Eventos passados',
  'eventos.upcoming.title': 'Próximos eventos',
  'eventos.past.1.date': 'Agosto 2025 · Luanda',
@@ -404,8 +404,8 @@ const translations = {
  'event.5.desc': 'O treino mais bonito da semana. Pace social, vista, música e tribo.',
  'event.6.name': 'Prova Interna',
  'event.6.desc': 'Ranking oficial · Medalhas · Badges de milestone · 100km Club',
- 'eventos.cta.eyebrow': 'Next stop',
- 'eventos.cta.title': 'The tribe keeps<br>running.',
+ 'eventos.cta.eyebrow': 'Próxima paragem',
+ 'eventos.cta.title': 'A tribo continua<br>a correr.',
  'eventos.cta.btn': 'Quero Participar',
 
  // Roadmap page
@@ -1082,9 +1082,14 @@ const translations = {
 
 let currentLang = localStorage.getItem('arc-lang') || 'pt';
 
+// Expose for catalog.js applyTexts / page scripts (const is not on window)
+window.translations = translations;
+window.currentLang = currentLang;
+
 function setLanguage(lang) {
  if (!translations[lang]) return;
  currentLang = lang;
+ window.currentLang = lang;
  localStorage.setItem('arc-lang', lang);
  document.documentElement.lang = lang;
 
