@@ -1,6 +1,7 @@
 /**
  * Attitude Run Club · Live catalog loader
- * Merge order: localStorage drafts → remote catalog.json → DEFAULT_* fallbacks
+ * Merge order (public): remote catalog.json → local published backup → DEFAULT_*
+ * Drafts (Admin localStorage) only with ?preview=1
  */
 (function (global) {
  'use strict';
@@ -129,6 +130,10 @@
  /**
  * Resolve final catalog for the public site.
  * @returns {Promise<{products, zones, texts, images, source}>}
+ *
+ * Public pages always prefer the live Cloudinary catalog.
+ * localStorage drafts (from Admin) only apply with ?preview=1 — otherwise a
+ * normal browser that once opened Admin keeps showing old images/products.
  */
  async function loadCatalog() {
  const defaults = {
@@ -142,14 +147,19 @@
  eventGallery: global.DEFAULT_EVENT_GALLERY || [],
  };
 
- const draftProducts = readLS(LS.products);
- const draftSupplements = readLS(LS.supplements);
- const draftCorredores = readLS(LS.corredores);
- const draftAttituders = readLS(LS.attituders);
- const draftZones = readLS(LS.zones);
- const draftTexts = readLS(LS.texts);
- const draftImages = readLS(LS.images);
- const draftEventGallery = readLS(LS.eventGallery);
+ // Admin same-browser preview only (URL flag). Never on normal visits.
+ const useDrafts =
+ /(?:\?|&)preview=1(?:&|$)/.test(location.search || '') ||
+ (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('arc_admin_preview') === '1');
+
+ const draftProducts = useDrafts ? readLS(LS.products) : null;
+ const draftSupplements = useDrafts ? readLS(LS.supplements) : null;
+ const draftCorredores = useDrafts ? readLS(LS.corredores) : null;
+ const draftAttituders = useDrafts ? readLS(LS.attituders) : null;
+ const draftZones = useDrafts ? readLS(LS.zones) : null;
+ const draftTexts = useDrafts ? readLS(LS.texts) : null;
+ const draftImages = useDrafts ? readLS(LS.images) : null;
+ const draftEventGallery = useDrafts ? readLS(LS.eventGallery) : null;
  const publishedLocal = readLS(LS.published);
 
  let remote = null;
@@ -166,9 +176,9 @@
  }
 
  const base = remote || publishedLocal || defaults;
- const useDraftProducts = Array.isArray(draftProducts) && draftProducts.length > 0;
- const useDraftSupplements = Array.isArray(draftSupplements) && draftSupplements.length > 0;
- const useDraftZones = Array.isArray(draftZones) && draftZones.length > 0;
+ const useDraftProducts = useDrafts && Array.isArray(draftProducts) && draftProducts.length > 0;
+ const useDraftSupplements = useDrafts && Array.isArray(draftSupplements) && draftSupplements.length > 0;
+ const useDraftZones = useDrafts && Array.isArray(draftZones) && draftZones.length > 0;
 
  const defById = Object.fromEntries((defaults.products || []).map((p) => [p.id, p]));
  function enrich(list) {
