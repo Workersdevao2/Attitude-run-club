@@ -1315,13 +1315,13 @@ if (hamburger && mobileMenu) {
  const WA_NUMBER = '244932826818';
  const MAX_QTY = 99; // max units per product line
  const PRODUCT_IMAGES = {
- tank: '../images/product-tank.jpg',
- socks: '../images/product-socks.jpg',
- 'shorts-black': '../images/product-shorts-black.jpg',
- 'shorts-white': '../images/product-shorts-white.jpg',
- visor: '../images/product-visor.jpg',
- jacket: '../images/product-jacket.jpg',
- 'shorts-2in1': '../images/product-shorts-2in1.jpg'
+ tank: 'images/product-tank.jpg',
+ socks: 'images/product-socks.jpg',
+ 'shorts-black': 'images/product-shorts-black.jpg',
+ 'shorts-white': 'images/product-shorts-white.jpg',
+ visor: 'images/product-visor.jpg',
+ jacket: 'images/product-jacket.jpg',
+ 'shorts-2in1': 'images/product-shorts-2in1.jpg'
  };
  const grid = document.getElementById('productsGrid');
  const isShop = !!grid;
@@ -1431,7 +1431,7 @@ if (hamburger && mobileMenu) {
  function itemImage(item) {
  if (item.image) return item.image;
  if (item.id && PRODUCT_IMAGES[item.id]) return PRODUCT_IMAGES[item.id];
- return '../images/logo.jpg';
+ return 'images/logo.jpg';
  }
 
  function saveCart(cart) {
@@ -1941,7 +1941,7 @@ if (hamburger && mobileMenu) {
 
  const PAGE_SIZE = 12;
  let allProducts = [];
- let pathPrefix = '../';
+ let pathPrefix = '';
  let filtered = [];
  let visibleCount = PAGE_SIZE;
  let state = { q: '', cat: 'all', sort: 'order' };
@@ -2205,7 +2205,7 @@ if (hamburger && mobileMenu) {
  ...p,
  category: p.category || (ARCCatalog && ARCCatalog.inferCategory(p)) || 'outros',
  }));
- pathPrefix = prefix != null ? prefix : '../';
+ pathPrefix = prefix != null ? prefix : '';
  visibleCount = PAGE_SIZE;
  state = { q: '', cat: 'all', sort: 'order' };
 

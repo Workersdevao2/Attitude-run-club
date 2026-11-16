@@ -21,10 +21,10 @@ Adapted from the Naravazz Diversos pattern for **Attitude Run Club**.
 attitude-run-club/
 ├── index.html
 ├── admin.html                 # Staff panel (password-gated)
-├── pages/
-│   ├── loja.html              # Shop (renders from catalog)
-│   ├── checkout.html
-│   └── …
+├── loja.html                  # Shop (renders from catalog)
+├── checkout.html
+├── solidariedade.html         # Campaign landing (form always open)
+├── …                          # other public pages at site root
 ├── css/
 │   ├── style.css              # Public site
 │   └── admin.css              # Admin UI

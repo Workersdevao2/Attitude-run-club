@@ -277,10 +277,6 @@
  if (!url || typeof url !== 'string') return url;
  const u = url.trim();
  if (!u || /^https?:\/\//i.test(u) || u.startsWith('data:') || u.startsWith('/')) return u;
- // Root-relative assets (images/…) from pages/* need ../
- if (location.pathname.includes('/pages/') && (u.startsWith('images/') || u.startsWith('./images/'))) {
- return '../' + u.replace(/^\.\//, '');
- }
  return u;
  }
 
@@ -356,7 +352,7 @@
  }
 
  function productCardHTML(p, pathPrefix, lang) {
- const prefix = pathPrefix != null ? pathPrefix : location.pathname.includes('/pages/') ? '../' : '';
+ const prefix = pathPrefix != null ? pathPrefix : '';
  const name = lang === 'en' ? p.name_en || p.name_pt : p.name_pt || p.name_en;
  const desc = lang === 'en' ? p.desc_en || p.desc_pt : p.desc_pt || p.desc_en;
  const img = resolveImage(p, prefix);

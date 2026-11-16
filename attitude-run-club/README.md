@@ -17,13 +17,14 @@ Official multi-page website for **Attitude Run Club**.
 attitude-run-club/
 ├── index.html              → Home
 ├── admin.html              → Staff panel (password)
-├── pages/
-│   ├── planos.html         → Membership plans
-│   ├── eventos.html        → Events
-│   ├── roadmap.html        → 90-day roadmap
-│   ├── contacto.html       → Contact (form → Worker inbox)
-│   ├── loja.html           → Shop (Attitude Sportwear)
-│   └── checkout.html       → Checkout (inbox + WhatsApp)
+├── planos.html             → Membership plans
+├── eventos.html            → Events
+├── roadmap.html            → 90-day roadmap
+├── contacto.html           → Contact (form → Worker inbox)
+├── solidariedade.html      → Campanha Natal 2026 (form always open)
+├── loja.html               → Shop (Attitude Sportwear)
+├── checkout.html           → Checkout (inbox + WhatsApp)
+├── (+ other public pages at root)
 ├── css/
 │   ├── style.css           → Public site
 │   └── admin.css           → Admin UI
