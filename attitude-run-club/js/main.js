@@ -2348,13 +2348,18 @@ if (hamburger && mobileMenu) {
   openBtn.addEventListener('click', () => setOpen(panel.hidden));
   if (closeBtn) closeBtn.addEventListener('click', () => setOpen(false));
 
+  function selectedTypes() {
+    return Array.from(form.querySelectorAll('input[name="donationType"]:checked')).map(
+      (el) => el.value
+    );
+  }
+
   function syncConditional() {
-    const checked = form.querySelector('input[name="donationType"]:checked');
-    const type = checked ? checked.value : '';
-    if (amountGroup) amountGroup.hidden = type !== 'dinheiro';
-    if (goodsGroup) goodsGroup.hidden = type !== 'bens';
-    if (otherGroup) otherGroup.hidden = type !== 'outro';
-    if (comprasHint) comprasHint.hidden = type !== 'compras';
+    const types = selectedTypes();
+    if (amountGroup) amountGroup.hidden = !types.includes('dinheiro');
+    if (goodsGroup) goodsGroup.hidden = !types.includes('bens');
+    if (otherGroup) otherGroup.hidden = !types.includes('outro');
+    if (comprasHint) comprasHint.hidden = !types.includes('compras');
   }
 
   form.querySelectorAll('input[name="donationType"]').forEach((el) => {
@@ -2368,35 +2373,35 @@ if (hamburger && mobileMenu) {
     const phone = (document.getElementById('solPhone') || {}).value || '';
     const email = (document.getElementById('solEmail') || {}).value || '';
     const address = (document.getElementById('solAddress') || {}).value || '';
-    const typeEl = form.querySelector('input[name="donationType"]:checked');
-    const type = typeEl ? typeEl.value : '';
+    const types = selectedTypes();
     const amount = (document.getElementById('solAmount') || {}).value || '';
     const goods = (document.getElementById('solGoods') || {}).value || '';
     const other = (document.getElementById('solOther') || {}).value || '';
 
-    if (!name.trim() || !phone.trim() || !email.trim() || !type) {
+    if (!name.trim() || !phone.trim() || !email.trim() || !types.length) {
       if (statusEl) {
         statusEl.style.color = '#e74c3c';
-        statusEl.textContent = 'Preenche nome, telefone, e-mail e tipo de doação.';
+        statusEl.textContent = 'Preenche nome, telefone, e-mail e pelo menos um tipo de doação.';
       }
       return;
     }
 
-    const typeLabel = {
+    const typeLabels = {
       dinheiro: 'Dinheiro',
       bens: 'Bens',
       compras: 'Compras no site',
       outro: 'Outro',
-    }[type] || type;
+    };
+    const labels = types.map((t) => typeLabels[t] || t);
 
     const lines = [
       'Campanha solidária Natal 2026',
-      'Tipo: ' + typeLabel,
+      'Tipo: ' + labels.join(' + '),
     ];
-    if (type === 'dinheiro' && amount) lines.push('Quantia: ' + amount + ' Kz');
-    if (type === 'bens' && goods.trim()) lines.push('Bens: ' + goods.trim());
-    if (type === 'outro' && other.trim()) lines.push('Mensagem: ' + other.trim());
-    if (type === 'compras') lines.push('Nota: compra em attitudesportwear.com (parte doada)');
+    if (types.includes('dinheiro') && amount) lines.push('Quantia: ' + amount + ' Kz');
+    if (types.includes('bens') && goods.trim()) lines.push('Bens: ' + goods.trim());
+    if (types.includes('outro') && other.trim()) lines.push('Mensagem: ' + other.trim());
+    if (types.includes('compras')) lines.push('Nota: compra em attitudesportwear.com (parte doada)');
     if (address.trim()) lines.push('Morada: ' + address.trim());
 
     if (submitBtn) submitBtn.disabled = true;
@@ -2424,8 +2429,9 @@ if (hamburger && mobileMenu) {
 
       if (statusEl) {
         statusEl.style.color = '#2ecc71';
-        statusEl.textContent =
-          'Obrigado! Registo recebido. Receberás o IBAN e os próximos passos por WhatsApp ou e-mail.';
+        statusEl.textContent = types.includes('dinheiro')
+          ? 'Obrigado! Registo recebido. Receberás o IBAN e os próximos passos por WhatsApp ou e-mail.'
+          : 'Obrigado! Registo recebido.';
       }
       form.reset();
       syncConditional();

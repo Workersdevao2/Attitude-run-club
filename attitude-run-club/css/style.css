@@ -747,6 +747,13 @@ nav.scrolled {
   display: block;
   margin-bottom: 10px;
 }
+.solidarity-type-hint {
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: rgba(245,245,245,0.45);
+  font-size: 11px;
+}
 .solidarity-types {
   display: flex;
   flex-wrap: wrap;
