@@ -612,8 +612,13 @@ nav.scrolled {
     grid-template-columns: 1fr;
   }
   .event-promo-visual {
-    min-height: 280px;
-    aspect-ratio: 16 / 10;
+    min-height: unset;
+    aspect-ratio: auto;
+  }
+  .event-promo-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
   }
   .event-promo-body {
     padding: 32px 24px 36px;
