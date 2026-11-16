@@ -172,6 +172,26 @@
  <div class="carousel-dots" id="pastDots"></div>
  </div>
 
+ <!-- FEATURED UPCOMING — BIC Color Festival (between past & Night Run gallery) -->
+ <section class="event-promo" data-featured-promo style="margin-top: 48px;">
+ <div class="event-promo-inner">
+ <div class="event-promo-visual">
+ <img src="../images/bic-color-festival.jpg" data-site-img="event-up-1" alt="BIC Color Festival" class="event-promo-img">
+ </div>
+ <div class="event-promo-body">
+ <p class="event-promo-eyebrow" data-i18n="promo.eyebrow">Próximo evento · 2º lote</p>
+ <h2 class="event-promo-title" data-i18n="promo.title">BIC Color<br>Festival</h2>
+ <p class="event-promo-meta" data-i18n="promo.meta">Sáb 21 Nov · 07h–00h</p>
+ <p class="event-promo-loc" data-i18n="promo.loc">Espaço Taliana · Talatona · Luanda</p>
+ <p class="event-promo-desc" data-i18n="promo.desc">Color Run, feira, espaço kids e Color Sunset. Camisola branca na corrida. Bilhetes a partir de 22.000 Kz — garante o teu lugar com a tribo Attitude.</p>
+ <div class="event-promo-actions">
+ <a href="https://web.uzeka.app/events/bic-color-festival-2026-7a71f" class="btn-primary" data-promo-primary data-href-up="https://web.uzeka.app/events/bic-color-festival-2026-7a71f" data-href-past="eventos.html" target="_blank" rel="noopener" data-i18n="promo.btn1">Garantir bilhete · 22.000 Kz</a>
+ <a href="https://wa.me/244924398145" class="btn-secondary" data-promo-secondary data-href-up="https://wa.me/244924398145" data-href-past="contacto.html" target="_blank" rel="noopener" data-i18n="promo.btn2">Mais info</a>
+ </div>
+ </div>
+ </div>
+ </section>
+
  <!-- NIGHT RUN PARTY · 30 OCT — PHOTO GALLERY -->
  <!-- no .reveal on wrap: IntersectionObserver often never marks this block visible (opacity stayed 0) -->
  <div class="event-gallery-wrap" style="margin-top: 64px;">
@@ -263,6 +283,7 @@
  if (typeof setLanguage === 'function') {
  setLanguage(typeof currentLang !== 'undefined' ? currentLang : (localStorage.getItem('arc-lang') || 'pt'));
  }
+ if (typeof applyFeaturedPromo === 'function') applyFeaturedPromo();
  })();
  </script>
 </body>

@@ -117,13 +117,20 @@ const translations = {
  'marquee.pertencimento': 'Pertencimento',
  'marquee.nightruns': 'Night Runs',
  'marquee.comunidade': 'Comunidade',
- 'promo.eyebrow': 'Evento passado',
- 'promo.title': 'Night Run<br>Party',
- 'promo.meta': 'Sexta · 30 Outubro 2026 · 19h–00h',
- 'promo.loc': 'Rua do BFA · Wakanda Training · Luanda',
- 'promo.desc': 'A tribo encheu a noite. Corrida, luzes e atitude — obrigado a todos os que marcaram presença.',
- 'promo.btn1': 'Ver galeria',
- 'promo.btn2': 'Todos os eventos',
+ 'promo.eyebrow': 'Próximo evento · 2º lote',
+ 'promo.title': 'BIC Color<br>Festival',
+ 'promo.meta': 'Sáb 21 Nov · 07h–00h',
+ 'promo.loc': 'Espaço Taliana · Talatona · Luanda',
+ 'promo.desc': 'Color Run, feira, espaço kids e Color Sunset. Camisola branca na corrida. Bilhetes a partir de 22.000 Kz — garante o teu lugar com a tribo Attitude.',
+ 'promo.btn1': 'Garantir bilhete · 22.000 Kz',
+ 'promo.btn2': 'Mais info',
+ 'promo.past.eyebrow': 'Evento passado',
+ 'promo.past.title': 'BIC Color<br>Festival',
+ 'promo.past.meta': 'Sáb 21 Nov 2026 · Talatona',
+ 'promo.past.loc': 'Espaço Taliana · Talatona · Luanda',
+ 'promo.past.desc': 'Color Run, feira, kids e sunset com a tribo. Obrigado a todos os que pintaram Talatona de atitude.',
+ 'promo.past.btn1': 'Ver eventos',
+ 'promo.past.btn2': 'Contacto',
 
  // Pillars section
  'pillars.label': 'Os Cinco Pilares',
@@ -615,13 +622,20 @@ const translations = {
  'marquee.pertencimento': 'Belonging',
  'marquee.nightruns': 'Night Runs',
  'marquee.comunidade': 'Community',
- 'promo.eyebrow': 'Past event',
- 'promo.title': 'Night Run<br>Party',
- 'promo.meta': 'Friday · 30 October 2026 · 7pm–12am',
- 'promo.loc': 'Rua do BFA · Wakanda Training · Luanda',
- 'promo.desc': 'The tribe filled the night. Running, lights and attitude — thank you to everyone who showed up.',
- 'promo.btn1': 'View gallery',
- 'promo.btn2': 'All events',
+ 'promo.eyebrow': 'Next event · 2nd batch',
+ 'promo.title': 'BIC Color<br>Festival',
+ 'promo.meta': 'Sat 21 Nov · 7am–12am',
+ 'promo.loc': 'Espaço Taliana · Talatona · Luanda',
+ 'promo.desc': 'Color Run, fair, kids zone and Color Sunset. White shirt required for the run. Tickets from 22,000 Kz — secure your spot with the Attitude tribe.',
+ 'promo.btn1': 'Get ticket · 22,000 Kz',
+ 'promo.btn2': 'More info',
+ 'promo.past.eyebrow': 'Past event',
+ 'promo.past.title': 'BIC Color<br>Festival',
+ 'promo.past.meta': 'Sat 21 Nov 2026 · Talatona',
+ 'promo.past.loc': 'Espaço Taliana · Talatona · Luanda',
+ 'promo.past.desc': 'Color Run, fair, kids and sunset with the tribe. Thank you to everyone who painted Talatona with attitude.',
+ 'promo.past.btn1': 'See events',
+ 'promo.past.btn2': 'Contact',
 
  // Pillars
  'pillars.label': 'The Five Pillars',
@@ -1113,10 +1127,52 @@ function setLanguage(lang) {
 }
 
 document.querySelectorAll('.lang-toggle button').forEach(btn => {
- btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+ btn.addEventListener('click', () => {
+ setLanguage(btn.dataset.lang);
+ applyFeaturedPromo();
+ });
 });
 
 setLanguage(currentLang);
+
+/** BIC Color Festival ends end-of-day 21 Nov 2026 WAT → past mode from 22 Nov 00:00 +01 */
+function isFeaturedEventPast() {
+ return Date.now() >= new Date('2026-11-22T00:00:00+01:00').getTime();
+}
+
+function applyFeaturedPromo() {
+ const past = isFeaturedEventPast();
+ const lang = currentLang || 'pt';
+ const t = translations[lang] || {};
+ document.querySelectorAll('[data-featured-promo]').forEach(function (root) {
+ root.setAttribute('data-mode', past ? 'past' : 'upcoming');
+ root.querySelectorAll('[data-i18n]').forEach(function (el) {
+ const key = el.getAttribute('data-i18n');
+ if (!key || key.indexOf('promo.') !== 0) return;
+ const pastKey = key.replace('promo.', 'promo.past.');
+ const val = past && t[pastKey] !== undefined ? t[pastKey] : t[key];
+ if (val !== undefined) el.innerHTML = val;
+ });
+ const primary = root.querySelector('[data-promo-primary]');
+ const secondary = root.querySelector('[data-promo-secondary]');
+ if (primary) {
+ primary.href = past
+ ? primary.getAttribute('data-href-past') || primary.href
+ : primary.getAttribute('data-href-up') || primary.href;
+ if (past) primary.removeAttribute('target');
+ else primary.setAttribute('target', '_blank');
+ }
+ if (secondary) {
+ secondary.href = past
+ ? secondary.getAttribute('data-href-past') || secondary.href
+ : secondary.getAttribute('data-href-up') || secondary.href;
+ if (past) secondary.removeAttribute('target');
+ else secondary.setAttribute('target', '_blank');
+ }
+ });
+}
+applyFeaturedPromo();
+window.applyFeaturedPromo = applyFeaturedPromo;
 
 // Days until Attituders Let's Go (30 Oct 2026, 19:00 WAT)
 (function updateDaysToEvent() {
