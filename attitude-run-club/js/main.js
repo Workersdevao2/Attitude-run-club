@@ -2316,3 +2316,126 @@ if (hamburger && mobileMenu) {
  clearFilters,
  };
 })(typeof window !== 'undefined' ? window : globalThis);
+
+// ─── SOLIDARIEDADE NATAL — registration form on Home ───────────────────────
+(function () {
+  const API = 'https://attitude-run-club-publish.workersdevao.workers.dev';
+  const openBtn = document.getElementById('solidarityOpenBtn');
+  const closeBtn = document.getElementById('solidarityCloseBtn');
+  const panel = document.getElementById('solidarityFormPanel');
+  const form = document.getElementById('solidarityForm');
+  if (!openBtn || !panel || !form) return;
+
+  const statusEl = document.getElementById('solStatus');
+  const submitBtn = document.getElementById('solSubmit');
+  const amountGroup = document.getElementById('solAmountGroup');
+  const goodsGroup = document.getElementById('solGoodsGroup');
+  const otherGroup = document.getElementById('solOtherGroup');
+  const comprasHint = document.getElementById('solComprasHint');
+
+  function setOpen(open) {
+    panel.hidden = !open;
+    openBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) {
+      const first = form.querySelector('input, textarea, select, button');
+      if (first) first.focus({ preventScroll: true });
+    } else if (statusEl) {
+      statusEl.textContent = '';
+      statusEl.style.color = '';
+    }
+  }
+
+  openBtn.addEventListener('click', () => setOpen(panel.hidden));
+  if (closeBtn) closeBtn.addEventListener('click', () => setOpen(false));
+
+  function syncConditional() {
+    const checked = form.querySelector('input[name="donationType"]:checked');
+    const type = checked ? checked.value : '';
+    if (amountGroup) amountGroup.hidden = type !== 'dinheiro';
+    if (goodsGroup) goodsGroup.hidden = type !== 'bens';
+    if (otherGroup) otherGroup.hidden = type !== 'outro';
+    if (comprasHint) comprasHint.hidden = type !== 'compras';
+  }
+
+  form.querySelectorAll('input[name="donationType"]').forEach((el) => {
+    el.addEventListener('change', syncConditional);
+  });
+  syncConditional();
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = (document.getElementById('solName') || {}).value || '';
+    const phone = (document.getElementById('solPhone') || {}).value || '';
+    const email = (document.getElementById('solEmail') || {}).value || '';
+    const address = (document.getElementById('solAddress') || {}).value || '';
+    const typeEl = form.querySelector('input[name="donationType"]:checked');
+    const type = typeEl ? typeEl.value : '';
+    const amount = (document.getElementById('solAmount') || {}).value || '';
+    const goods = (document.getElementById('solGoods') || {}).value || '';
+    const other = (document.getElementById('solOther') || {}).value || '';
+
+    if (!name.trim() || !phone.trim() || !email.trim() || !type) {
+      if (statusEl) {
+        statusEl.style.color = '#e74c3c';
+        statusEl.textContent = 'Preenche nome, telefone, e-mail e tipo de doação.';
+      }
+      return;
+    }
+
+    const typeLabel = {
+      dinheiro: 'Dinheiro',
+      bens: 'Bens',
+      compras: 'Compras no site',
+      outro: 'Outro',
+    }[type] || type;
+
+    const lines = [
+      'Campanha solidária Natal 2026',
+      'Tipo: ' + typeLabel,
+    ];
+    if (type === 'dinheiro' && amount) lines.push('Quantia: ' + amount + ' Kz');
+    if (type === 'bens' && goods.trim()) lines.push('Bens: ' + goods.trim());
+    if (type === 'outro' && other.trim()) lines.push('Mensagem: ' + other.trim());
+    if (type === 'compras') lines.push('Nota: compra em attitudesportwear.com (parte doada)');
+    if (address.trim()) lines.push('Morada: ' + address.trim());
+
+    if (submitBtn) submitBtn.disabled = true;
+    if (statusEl) {
+      statusEl.style.color = 'var(--muted, #9a9a9a)';
+      statusEl.textContent = 'A enviar…';
+    }
+
+    try {
+      const res = await fetch(API + '/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'contact',
+          source: 'solidariedade',
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          city: address.trim(),
+          message: lines.join('\n'),
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || 'fail');
+
+      if (statusEl) {
+        statusEl.style.color = '#2ecc71';
+        statusEl.textContent =
+          'Obrigado! Registo recebido. Receberás o IBAN e os próximos passos por WhatsApp ou e-mail.';
+      }
+      form.reset();
+      syncConditional();
+    } catch (_) {
+      if (statusEl) {
+        statusEl.style.color = '#e74c3c';
+        statusEl.textContent =
+          'Não foi possível enviar. Tenta de novo ou contacta-nos no WhatsApp.';
+      }
+    }
+    if (submitBtn) submitBtn.disabled = false;
+  });
+})();

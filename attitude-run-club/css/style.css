@@ -625,6 +625,211 @@ nav.scrolled {
   }
 }
 
+/* SOLIDARIEDADE NATAL */
+.solidarity-promo {
+  padding: 0 48px 80px;
+  background: var(--black);
+}
+.solidarity-promo-inner {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--grey);
+  border: 1px solid var(--grey-mid);
+  overflow: hidden;
+}
+.solidarity-promo-visual {
+  position: relative;
+  overflow: hidden;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.solidarity-promo-img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+.solidarity-promo-body {
+  padding: 40px 36px 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.solidarity-promo-eyebrow {
+  font-family: var(--font-cond);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+  margin-bottom: 14px;
+}
+.solidarity-promo-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.solidarity-dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.solidarity-date {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 14px;
+  border: 1px solid var(--grey-mid);
+  background: rgba(0,0,0,0.25);
+  min-width: 140px;
+}
+.solidarity-date-label {
+  font-family: var(--font-cond);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.solidarity-date-value {
+  font-family: var(--font-cond);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+.solidarity-promo-desc {
+  font-size: 15px;
+  font-weight: 300;
+  color: rgba(245,245,245,0.75);
+  line-height: 1.65;
+  margin-bottom: 24px;
+  max-width: 380px;
+}
+.solidarity-promo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.solidarity-form-panel {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--grey-mid);
+}
+.solidarity-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.solidarity-form .form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.solidarity-type-label {
+  font-family: var(--font-cond);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 10px;
+}
+.solidarity-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.solidarity-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid var(--grey-mid);
+  background: rgba(0,0,0,0.2);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--white);
+  transition: border-color 0.15s, background 0.15s;
+}
+.solidarity-type:hover {
+  border-color: rgba(255,255,255,0.35);
+}
+.solidarity-type:has(input:checked) {
+  border-color: var(--white);
+  background: rgba(255,255,255,0.08);
+}
+.solidarity-type input {
+  accent-color: var(--white);
+  cursor: pointer;
+}
+.solidarity-hint {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.solidarity-hint a {
+  color: var(--white);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.solidarity-status {
+  font-size: 14px;
+  min-height: 1.2em;
+  color: var(--muted);
+}
+.solidarity-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+.solidarity-form-actions .btn-primary,
+.solidarity-form-actions .btn-secondary {
+  cursor: pointer;
+}
+.solidarity-form-actions .btn-primary:disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .solidarity-promo {
+    padding: 0 24px 48px;
+  }
+  .solidarity-promo-inner {
+    grid-template-columns: 1fr;
+  }
+  .solidarity-promo-visual {
+    min-height: unset;
+  }
+  .solidarity-promo-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+  .solidarity-promo-body {
+    padding: 28px 22px 32px;
+  }
+  .solidarity-form .form-row-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* SECTIONS */
 section { padding: 120px 48px; }
 .section-label {
