@@ -106,7 +106,8 @@ nav.scrolled {
 }
 .nav-logo span { color: var(--accent); }
 .nav-links {
-  display: flex;
+  /* Always-on hamburger: horizontal links hidden at all widths */
+  display: none !important;
   gap: clamp(8px, 1.1vw, 22px);
   list-style: none;
   align-items: center;
@@ -171,9 +172,9 @@ nav.scrolled {
 }
 .nav-cta:hover { background: var(--accent-soft); color: var(--black); }
 
-/* HAMBURGER — large touch target for phones (Honor / Android) */
+/* HAMBURGER — always visible (desktop + mobile); large touch target */
 .hamburger {
-  display: none;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -210,9 +211,9 @@ nav.scrolled {
   transform: translateY(-8px) rotate(-45deg);
 }
 
-/* MOBILE MENU */
+/* DRAWER MENU (hamburger) — available at all breakpoints; hidden until .open */
 .mobile-menu {
-  display: none;
+  display: flex;
   position: fixed;
   inset: 0;
   background: rgba(8,8,8,0.98);
@@ -1958,8 +1959,7 @@ footer {
   .nav-logo img {
     height: 28px;
   }
-  .nav-links { display: none !important; }
-  .nav-cta { display: none !important; }
+  /* nav-links hidden globally; hamburger always on — keep PT/EN + Juntar ao Clube */
   .hamburger {
     display: flex !important;
     visibility: visible !important;
