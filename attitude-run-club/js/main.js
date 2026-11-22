@@ -129,7 +129,7 @@ const translations = {
  'promo.past.title': 'BIC Color<br>Festival',
  'promo.past.meta': 'Sáb 21 Nov 2026 · Talatona',
  'promo.past.loc': 'Espaço Taliana · Talatona · Luanda',
- 'promo.past.desc': 'Color Run, feira, kids e sunset com a tribo. Obrigado a todos os que pintaram Talatona de atitude.',
+ 'promo.past.desc': 'Attitude Run Club marcou presença no BIC Color Festival. A Attitude Run Club participou no BIC Color Festival, um evento que reuniu famílias, amigos e amantes da actividade física num ambiente de convívio, música e muita cor. A participação foi uma oportunidade para levar o espírito do clube para além da corrida: incentivar o movimento, partilhar energia positiva e celebrar uma vida mais activa em comunidade. Foi um dia de boa disposição e conexão. Obrigado à organização e a todos os participantes que fizeram parte desta experiência. 🌈',
  'promo.past.btn1': 'Ver eventos',
  'promo.past.btn2': 'Contacto',
 
@@ -587,7 +587,11 @@ const translations = {
   "eventos.past.nrp.date": "30 Outubro 2026 · Luanda",
   "eventos.past.nrp.meta": "Attituders Let's Go · 19h–00h · Wakanda Training",
   "eventos.past.nrp.name": "Night Run Party",
-  "eventos.past.nrp.recap": "A noite em que a tribo encheu a Rua do BFA. Corrida, energia e atitude do início ao fim. Obrigado a todos os que marcaram presença."},
+  "eventos.past.nrp.recap": "A noite em que a tribo encheu a Rua do BFA. Corrida, energia e atitude do início ao fim. Obrigado a todos os que marcaram presença.",
+  "eventos.past.bic.date": "Sáb 21 Nov 2026 · Talatona",
+  "eventos.past.bic.name": "BIC Color Festival",
+  "eventos.past.bic.meta": "Color Run · Feira · Kids · Color Sunset",
+  "eventos.past.bic.recap": "Attitude Run Club marcou presença no BIC Color Festival. A Attitude Run Club participou no BIC Color Festival, um evento que reuniu famílias, amigos e amantes da actividade física num ambiente de convívio, música e muita cor. A participação foi uma oportunidade para levar o espírito do clube para além da corrida: incentivar o movimento, partilhar energia positiva e celebrar uma vida mais activa em comunidade. Foi um dia de boa disposição e conexão. Obrigado à organização e a todos os participantes que fizeram parte desta experiência. 🌈"},
 
  en: {
  // Nav
@@ -635,7 +639,7 @@ const translations = {
  'promo.past.title': 'BIC Color<br>Festival',
  'promo.past.meta': 'Sat 21 Nov 2026 · Talatona',
  'promo.past.loc': 'Espaço Taliana · Talatona · Luanda',
- 'promo.past.desc': 'Color Run, fair, kids and sunset with the tribe. Thank you to everyone who painted Talatona with attitude.',
+ 'promo.past.desc': 'Attitude Run Club was present at the BIC Color Festival. Attitude Run Club took part in the BIC Color Festival, an event that brought together families, friends and lovers of physical activity in an atmosphere of fellowship, music and lots of colour. Taking part was a chance to take the club spirit beyond running: encouraging movement, sharing positive energy and celebrating a more active life in community. It was a day of good vibes and connection. Thank you to the organisers and to everyone who was part of this experience. 🌈',
  'promo.past.btn1': 'See events',
  'promo.past.btn2': 'Contact',
 
@@ -1093,7 +1097,11 @@ const translations = {
   "eventos.past.nrp.date": "30 October 2026 · Luanda",
   "eventos.past.nrp.meta": "Attituders Let's Go · 7pm–12am · Wakanda Training",
   "eventos.past.nrp.name": "Night Run Party",
-  "eventos.past.nrp.recap": "The night the tribe filled Rua do BFA. Running, energy and attitude from start to finish. Thank you to everyone who showed up."}
+  "eventos.past.nrp.recap": "The night the tribe filled Rua do BFA. Running, energy and attitude from start to finish. Thank you to everyone who showed up.",
+  "eventos.past.bic.date": "Sat 21 Nov 2026 · Talatona",
+  "eventos.past.bic.name": "BIC Color Festival",
+  "eventos.past.bic.meta": "Color Run · Fair · Kids · Color Sunset",
+  "eventos.past.bic.recap": "Attitude Run Club was present at the BIC Color Festival. Attitude Run Club took part in the BIC Color Festival, an event that brought together families, friends and lovers of physical activity in an atmosphere of fellowship, music and lots of colour. Taking part was a chance to take the club spirit beyond running: encouraging movement, sharing positive energy and celebrating a more active life in community. It was a day of good vibes and connection. Thank you to the organisers and to everyone who was part of this experience. 🌈"}
 };
 
 let currentLang = localStorage.getItem('arc-lang') || 'pt';
