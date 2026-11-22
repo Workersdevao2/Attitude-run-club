@@ -105,6 +105,7 @@
  <h3 class="calendar-name" data-i18n="eventos.past.bic.name">BIC Color Festival</h3>
  <p class="calendar-meta" data-i18n="eventos.past.bic.meta">Color Run · Feira · Kids · Color Sunset</p>
  <p class="calendar-recap" data-i18n="eventos.past.bic.recap">Attitude Run Club marcou presença no BIC Color Festival. A Attitude Run Club participou no BIC Color Festival, um evento que reuniu famílias, amigos e amantes da actividade física num ambiente de convívio, música e muita cor. A participação foi uma oportunidade para levar o espírito do clube para além da corrida: incentivar o movimento, partilhar energia positiva e celebrar uma vida mais activa em comunidade. Foi um dia de boa disposição e conexão. Obrigado à organização e a todos os participantes que fizeram parte desta experiência. 🌈</p>
+ <a href="eventos-bic.html" class="past-slide-gallery-link" data-i18n="eventos.past.photos">Ver fotos</a>
  </div>
  </article>
 
@@ -117,6 +118,7 @@
  <h3 class="calendar-name" data-i18n="eventos.past.nrp.name">Night Run Party</h3>
  <p class="calendar-meta" data-i18n="eventos.past.nrp.meta">Attituders Let's Go · 19h–00h · Wakanda Training</p>
  <p class="calendar-recap" data-i18n="eventos.past.nrp.recap">A noite em que a tribo encheu a Rua do BFA. Corrida, energia e atitude do início ao fim. Obrigado a todos os que marcaram presença.</p>
+ <a href="eventos-nrp.html" class="past-slide-gallery-link" data-i18n="eventos.past.photos">Ver fotos</a>
  </div>
  </article>
 
@@ -307,17 +309,6 @@
  </div>
  </section>
 
- <!-- NIGHT RUN PARTY · 30 OCT — PHOTO GALLERY -->
- <!-- no .reveal on wrap: IntersectionObserver often never marks this block visible (opacity stayed 0) -->
- <div class="event-gallery-wrap" style="margin-top: 64px;">
- <div class="event-gallery-header">
- <p class="section-label" data-i18n="eventos.gallery.eyebrow">30 Outubro 2026</p>
- <h2 class="events-col-title" data-i18n="eventos.gallery.title">Night Run Party · Galeria</h2>
- <p class="event-gallery-sub" data-i18n="eventos.gallery.sub">Momentos da noite em que a tribo correu junta. Energia, luzes e atitude na Rua do BFA.</p>
- </div>
- <div class="gallery-grid event-gallery-grid" id="eventGalleryGrid"></div>
- </div>
-
  </section>
 
  <section class="cta-section has-bg" data-site-img-bg="cta-eventos" style="min-height:50vh; background-image: url('images/cta-community.jpg');">
@@ -394,7 +385,6 @@
  const cat = await ARCCatalog.loadCatalog();
  ARCCatalog.applyTexts(cat.texts);
  ARCCatalog.applySiteImages(cat.images);
- ARCCatalog.renderEventGallery(cat.eventGallery, document.getElementById('eventGalleryGrid'));
  if (typeof setLanguage === 'function') {
  setLanguage(typeof currentLang !== 'undefined' ? currentLang : (localStorage.getItem('arc-lang') || 'pt'));
  }

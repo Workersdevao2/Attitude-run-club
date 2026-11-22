@@ -4137,3 +4137,112 @@ body.qv-open { overflow: hidden; }
 .event-gallery-grid {
   margin-top: 8px;
 }
+
+/* Past event card — gallery link */
+.past-slide-gallery-link {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent, #e8ff47);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s, opacity 0.2s;
+}
+.past-slide-gallery-link:hover {
+  border-bottom-color: currentColor;
+  opacity: 0.9;
+}
+
+.event-gallery-empty {
+  grid-column: 1 / -1;
+  color: var(--muted, #999);
+  font-size: 0.95rem;
+  padding: 2rem 0;
+  margin: 0;
+}
+
+/* Custom lightbox */
+.arc-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 56px;
+}
+.arc-lightbox[hidden] {
+  display: none !important;
+}
+.arc-lightbox-img {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 4px;
+  user-select: none;
+}
+.arc-lightbox-close,
+.arc-lightbox-prev,
+.arc-lightbox-next {
+  position: absolute;
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 2rem;
+  line-height: 1;
+  padding: 8px 12px;
+  opacity: 0.85;
+  transition: opacity 0.15s;
+}
+.arc-lightbox-close:hover,
+.arc-lightbox-prev:hover,
+.arc-lightbox-next:hover {
+  opacity: 1;
+}
+.arc-lightbox-close {
+  top: 16px;
+  right: 20px;
+  font-size: 2.4rem;
+}
+.arc-lightbox-prev {
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.arc-lightbox-next {
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.arc-lightbox-counter {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.85rem;
+  margin: 0;
+}
+.gallery-item {
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  background: transparent;
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+@media (max-width: 600px) {
+  .arc-lightbox {
+    padding: 40px 12px;
+  }
+  .arc-lightbox-prev,
+  .arc-lightbox-next {
+    font-size: 1.5rem;
+  }
+}

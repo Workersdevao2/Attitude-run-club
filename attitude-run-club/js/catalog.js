@@ -15,6 +15,7 @@
  texts: 'arc_texts_override',
  images: 'arc_images_override',
  eventGallery: 'arc_event_gallery_override',
+ eventGalleryBic: 'arc_event_gallery_bic_override',
  published: 'arc_catalog_published',
  };
 
@@ -145,6 +146,7 @@
  texts: global.DEFAULT_TEXTS || { pt: {}, en: {} },
  images: global.DEFAULT_SITE_IMAGES || {},
  eventGallery: global.DEFAULT_EVENT_GALLERY || [],
+ eventGalleryBic: [],
  };
 
  // Admin same-browser preview only (URL flag). Never on normal visits.
@@ -160,6 +162,7 @@
  const draftTexts = useDrafts ? readLS(LS.texts) : null;
  const draftImages = useDrafts ? readLS(LS.images) : null;
  const draftEventGallery = useDrafts ? readLS(LS.eventGallery) : null;
+ const draftEventGalleryBic = useDrafts ? readLS(LS.eventGalleryBic) : null;
  const publishedLocal = readLS(LS.published);
 
  let remote = null;
@@ -252,10 +255,22 @@
  ? draftImages
  : base.images || defaults.images,
  eventGallery: (function () {
- const max = 50;
+ const max = 100;
  const draft = Array.isArray(draftEventGallery) ? draftEventGallery : null;
  const remote = Array.isArray(base.eventGallery) ? base.eventGallery : null;
  const list = (draft && draft.length ? draft : remote && remote.length ? remote : defaults.eventGallery) || [];
+ return list
+ .map(function (u) {
+ return typeof u === 'string' ? u : u && u.url ? u.url : '';
+ })
+ .filter(Boolean)
+ .slice(0, max);
+ })(),
+ eventGalleryBic: (function () {
+ const max = 100;
+ const draft = Array.isArray(draftEventGalleryBic) ? draftEventGalleryBic : null;
+ const remote = Array.isArray(base.eventGalleryBic) ? base.eventGalleryBic : null;
+ const list = (draft && draft.length ? draft : remote && remote.length ? remote : defaults.eventGalleryBic) || [];
  return list
  .map(function (u) {
  return typeof u === 'string' ? u : u && u.url ? u.url : '';
@@ -490,36 +505,111 @@
  }
 
 
- function renderEventGallery(urls, container) {
+ function ensureLightbox() {
+ let lb = document.getElementById('arcLightbox');
+ if (lb) return lb;
+ lb = document.createElement('div');
+ lb.id = 'arcLightbox';
+ lb.className = 'arc-lightbox';
+ lb.setAttribute('hidden', '');
+ lb.innerHTML =
+ '<button type="button" class="arc-lightbox-close" aria-label="Fechar">&times;</button>' +
+ '<button type="button" class="arc-lightbox-prev" aria-label="Anterior">&#10094;</button>' +
+ '<button type="button" class="arc-lightbox-next" aria-label="Seguinte">&#10095;</button>' +
+ '<img class="arc-lightbox-img" src="" alt="">' +
+ '<p class="arc-lightbox-counter"></p>';
+ document.body.appendChild(lb);
+ let urls = [];
+ let idx = 0;
+ function show(i) {
+ if (!urls.length) return;
+ idx = (i + urls.length) % urls.length;
+ const img = lb.querySelector('.arc-lightbox-img');
+ const counter = lb.querySelector('.arc-lightbox-counter');
+ img.src = urls[idx];
+ if (counter) counter.textContent = idx + 1 + ' / ' + urls.length;
+ }
+ function open(list, start) {
+ urls = list || [];
+ lb.removeAttribute('hidden');
+ document.body.style.overflow = 'hidden';
+ show(start || 0);
+ }
+ function close() {
+ lb.setAttribute('hidden', '');
+ document.body.style.overflow = '';
+ }
+ lb.querySelector('.arc-lightbox-close').addEventListener('click', close);
+ lb.querySelector('.arc-lightbox-prev').addEventListener('click', function () {
+ show(idx - 1);
+ });
+ lb.querySelector('.arc-lightbox-next').addEventListener('click', function () {
+ show(idx + 1);
+ });
+ lb.addEventListener('click', function (e) {
+ if (e.target === lb) close();
+ });
+ document.addEventListener('keydown', function (e) {
+ if (lb.hasAttribute('hidden')) return;
+ if (e.key === 'Escape') close();
+ if (e.key === 'ArrowLeft') show(idx - 1);
+ if (e.key === 'ArrowRight') show(idx + 1);
+ });
+ lb._open = open;
+ return lb;
+ }
+
+ function renderEventGallery(urls, container, opts) {
  if (!container) return;
- const list = (urls || []).filter(Boolean).slice(0, 50);
+ opts = opts || {};
+ const alt = opts.alt || 'Evento';
+ const list = (urls || []).filter(Boolean).slice(0, 100);
  if (!list.length) {
- // Fallback defaults if catalog has no gallery yet
+ if (opts.emptyMessage) {
+ container.hidden = false;
+ container.innerHTML =
+ '<p class="event-gallery-empty">' + esc(opts.emptyMessage) + '</p>';
+ return;
+ }
  const fallback = global.DEFAULT_EVENT_GALLERY || [];
- if (fallback.length) {
- return renderEventGallery(fallback, container);
+ if (fallback.length && !opts.noFallback) {
+ return renderEventGallery(fallback, container, opts);
  }
  container.innerHTML = '';
  container.hidden = true;
  return;
  }
  container.hidden = false;
+ const resolved = list.map(function (url) {
+ return resolveSiteUrl(url);
+ });
  const patterns = ['tall', '', '', 'wide', '', ''];
- // Use reveal + visible: items are injected after IntersectionObserver setup,
- // so without .visible they stay opacity:0 forever.
- container.innerHTML = list
- .map(function (url, i) {
- const src = resolveSiteUrl(url);
+ container.innerHTML = resolved
+ .map(function (src, i) {
  const cls = patterns[i % patterns.length];
  return (
- '<div class="gallery-item' +
+ '<button type="button" class="gallery-item' +
  (cls ? ' ' + cls : '') +
- ' reveal visible"><img src="' +
+ ' reveal visible" data-gallery-idx="' +
+ i +
+ '" aria-label="' +
+ esc(alt) +
+ ' ' +
+ (i + 1) +
+ '"><img src="' +
  esc(src) +
- '" alt="Night Run Party" loading="lazy" decoding="async"></div>'
+ '" alt="' +
+ esc(alt) +
+ '" loading="lazy" decoding="async"></button>'
  );
  })
  .join('');
+ const lb = ensureLightbox();
+ container.querySelectorAll('[data-gallery-idx]').forEach(function (btn) {
+ btn.addEventListener('click', function () {
+ lb._open(resolved, parseInt(btn.getAttribute('data-gallery-idx'), 10) || 0);
+ });
+ });
  }
 
  global.ARCCatalog = {

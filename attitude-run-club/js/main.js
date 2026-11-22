@@ -591,7 +591,13 @@ const translations = {
   "eventos.past.bic.date": "Sáb 21 Nov 2026 · Talatona",
   "eventos.past.bic.name": "BIC Color Festival",
   "eventos.past.bic.meta": "Color Run · Feira · Kids · Color Sunset",
-  "eventos.past.bic.recap": "Attitude Run Club marcou presença no BIC Color Festival. A Attitude Run Club participou no BIC Color Festival, um evento que reuniu famílias, amigos e amantes da actividade física num ambiente de convívio, música e muita cor. A participação foi uma oportunidade para levar o espírito do clube para além da corrida: incentivar o movimento, partilhar energia positiva e celebrar uma vida mais activa em comunidade. Foi um dia de boa disposição e conexão. Obrigado à organização e a todos os participantes que fizeram parte desta experiência. 🌈"},
+  "eventos.past.bic.recap": "Attitude Run Club marcou presença no BIC Color Festival. A Attitude Run Club participou no BIC Color Festival, um evento que reuniu famílias, amigos e amantes da actividade física num ambiente de convívio, música e muita cor. A participação foi uma oportunidade para levar o espírito do clube para além da corrida: incentivar o movimento, partilhar energia positiva e celebrar uma vida mais activa em comunidade. Foi um dia de boa disposição e conexão. Obrigado à organização e a todos os participantes que fizeram parte desta experiência. 🌈",
+  "eventos.past.photos": "Ver fotos",
+  "eventos.gallery.bic.title": "BIC Color Festival · Galeria",
+  "eventos.gallery.bic.sub": "Momentos do dia em que a tribo pintou Talatona de cor e atitude.",
+  "eventos.gallery.bic.empty": "Fotos em breve. A equipa está a carregar a galeria.",
+  "eventos.gallery.nrp.empty": "Fotos em breve. A equipa está a carregar a galeria.",
+  "eventos.gallery.back": "← Voltar a Eventos"},
 
  en: {
  // Nav
@@ -1101,7 +1107,13 @@ const translations = {
   "eventos.past.bic.date": "Sat 21 Nov 2026 · Talatona",
   "eventos.past.bic.name": "BIC Color Festival",
   "eventos.past.bic.meta": "Color Run · Fair · Kids · Color Sunset",
-  "eventos.past.bic.recap": "Attitude Run Club was present at the BIC Color Festival. Attitude Run Club took part in the BIC Color Festival, an event that brought together families, friends and lovers of physical activity in an atmosphere of fellowship, music and lots of colour. Taking part was a chance to take the club spirit beyond running: encouraging movement, sharing positive energy and celebrating a more active life in community. It was a day of good vibes and connection. Thank you to the organisers and to everyone who was part of this experience. 🌈"}
+  "eventos.past.bic.recap": "Attitude Run Club was present at the BIC Color Festival. Attitude Run Club took part in the BIC Color Festival, an event that brought together families, friends and lovers of physical activity in an atmosphere of fellowship, music and lots of colour. Taking part was a chance to take the club spirit beyond running: encouraging movement, sharing positive energy and celebrating a more active life in community. It was a day of good vibes and connection. Thank you to the organisers and to everyone who was part of this experience. 🌈",
+  "eventos.past.photos": "See images",
+  "eventos.gallery.bic.title": "BIC Color Festival · Gallery",
+  "eventos.gallery.bic.sub": "Moments from the day the tribe painted Talatona with colour and attitude.",
+  "eventos.gallery.bic.empty": "Photos coming soon. The team is uploading the gallery.",
+  "eventos.gallery.nrp.empty": "Photos coming soon. The team is uploading the gallery.",
+  "eventos.gallery.back": "← Back to Events"}
 };
 
 let currentLang = localStorage.getItem('arc-lang') || 'pt';

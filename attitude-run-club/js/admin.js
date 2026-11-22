@@ -11,6 +11,7 @@
  const PUBLISH_URL = API_BASE + '/publish';
  const INBOX_URL = API_BASE + '/inbox';
  const DEFAULT_ADMIN_PASSWORD = 'attitude2026'; // change after handoff
+ const EVENT_GALLERY_MAX = 100;
  const LS = {
  auth: 'arc_admin_auth',
  products: 'arc_products_override',
@@ -21,6 +22,7 @@
  texts: 'arc_texts_override',
  images: 'arc_images_override',
  eventGallery: 'arc_event_gallery_override',
+ eventGalleryBic: 'arc_event_gallery_bic_override',
  media: 'arc_media_library',
  };
 
@@ -33,6 +35,7 @@
  let texts = { pt: {}, en: {} };
  let images = {};
  let eventGallery = [];
+ let eventGalleryBic = [];
  let media = [];
  let inboxItems = [];
  let inboxFilter = 'all';
@@ -331,7 +334,16 @@
  eventGallery = eventGallery
  .map((u) => (typeof u === 'string' ? u : u && u.url ? u.url : ''))
  .filter(Boolean)
- .slice(0, 50);
+ .slice(0, EVENT_GALLERY_MAX);
+ eventGalleryBic =
+ loadJSON(LS.eventGalleryBic, null) ||
+ (remote && Array.isArray(remote.eventGalleryBic) ? structuredClone(remote.eventGalleryBic) : null) ||
+ [];
+ if (!Array.isArray(eventGalleryBic)) eventGalleryBic = [];
+ eventGalleryBic = eventGalleryBic
+ .map((u) => (typeof u === 'string' ? u : u && u.url ? u.url : ''))
+ .filter(Boolean)
+ .slice(0, EVENT_GALLERY_MAX);
  media = loadJSON(LS.media, []) || [];
 
  // Seed missing brand keys / image slots from defaults (never overwrite staff values)
@@ -378,6 +390,7 @@
  texts: loadJSON(LS.texts, null),
  images: loadJSON(LS.images, null),
  eventGallery: loadJSON(LS.eventGallery, null),
+ eventGalleryBic: loadJSON(LS.eventGalleryBic, null),
  at: Date.now(),
  };
  } catch (_) {
@@ -391,6 +404,7 @@
  saveJSON(LS.texts, texts);
  saveJSON(LS.images, images);
  saveJSON(LS.eventGallery, eventGallery);
+ saveJSON(LS.eventGalleryBic, eventGalleryBic);
  saveJSON(LS.media, media);
  if (!silent) toast('Cópia local guardada', 'ok');
  updatePublishStrip();
@@ -412,6 +426,7 @@
  if (undoSnapshot.texts) texts = undoSnapshot.texts;
  if (undoSnapshot.images) images = undoSnapshot.images;
  if (undoSnapshot.eventGallery) eventGallery = undoSnapshot.eventGallery;
+ if (undoSnapshot.eventGalleryBic) eventGalleryBic = undoSnapshot.eventGalleryBic;
  saveJSON(LS.products, products);
  saveJSON(LS.supplements, supplements);
  saveJSON(LS.corredores, corredores);
@@ -505,6 +520,7 @@
  const liveTexts = published && published.texts ? published.texts : { pt: {}, en: {} };
  const liveImages = published && published.images ? published.images : {};
  const liveGallery = published && Array.isArray(published.eventGallery) ? published.eventGallery : [];
+ const liveGalleryBic = published && Array.isArray(published.eventGalleryBic) ? published.eventGalleryBic : [];
  const liveZones = published && Array.isArray(published.zones) ? published.zones : [];
  const liveCor = published && Array.isArray(published.corredores) ? published.corredores : [];
  const liveAtt = published && Array.isArray(published.attituders) ? published.attituders : [];
@@ -512,7 +528,9 @@
  const dirtyProducts = catalogFingerprint(products) !== catalogFingerprint(liveProducts);
  const dirtyTexts = textsFingerprint(texts) !== textsFingerprint(liveTexts);
  const dirtyImages = imagesFingerprint(images) !== imagesFingerprint(liveImages);
- const dirtyGallery = galleryFingerprint(eventGallery) !== galleryFingerprint(liveGallery);
+ const dirtyGallery =
+ galleryFingerprint(eventGallery) !== galleryFingerprint(liveGallery) ||
+ galleryFingerprint(eventGalleryBic) !== galleryFingerprint(liveGalleryBic);
  const dirtyZones = zonesFingerprint(zones) !== zonesFingerprint(liveZones);
  const dirtyPeople =
  peopleFingerprint(corredores) !== peopleFingerprint(liveCor) ||
@@ -2119,18 +2137,31 @@
  }
 
 
- const EVENT_GALLERY_MAX = 50;
+ function getEventGalleryList(key) {
+ return key === 'bic' ? eventGalleryBic : eventGallery;
+ }
 
- function renderEventGalleryAdmin() {
- const el = $('#eventGalleryAdmin');
- const countEl = $('#eventGalleryCount');
- if (countEl) countEl.textContent = (eventGallery.length || 0) + ' / ' + EVENT_GALLERY_MAX;
+ function setEventGalleryList(key, list) {
+ if (key === 'bic') eventGalleryBic = list;
+ else eventGallery = list;
+ }
+
+ function eventGalleryLsKey(key) {
+ return key === 'bic' ? LS.eventGalleryBic : LS.eventGallery;
+ }
+
+ function renderEventGalleryAdmin(key) {
+ key = key || 'nrp';
+ const el = key === 'bic' ? $('#eventGalleryBicAdmin') : $('#eventGalleryAdmin');
+ const countEl = key === 'bic' ? $('#eventGalleryBicCount') : $('#eventGalleryCount');
+ const list = getEventGalleryList(key);
+ if (countEl) countEl.textContent = (list.length || 0) + ' / ' + EVENT_GALLERY_MAX;
  if (!el) return;
- if (!eventGallery.length) {
+ if (!list.length) {
  el.innerHTML = '<p class="hint" style="grid-column:1/-1">Ainda sem fotos. Carrega ou escolhe da média (máx. ' + EVENT_GALLERY_MAX + ').</p>';
  return;
  }
- el.innerHTML = eventGallery
+ el.innerHTML = list
  .map((url, i) => {
  return (
  '<div class="event-gal-item" data-i="' +
@@ -2140,17 +2171,23 @@
  esc(resolveImg(url)) +
  '" alt="" loading="lazy" onerror="this.src=\'images/logo.jpg\'">' +
  '<div class="event-gal-actions">' +
- '<button type="button" class="btn btn-ghost btn-xs" data-eg-up="' +
+ '<button type="button" class="btn btn-ghost btn-xs" data-eg-key="' +
+ key +
+ '" data-eg-up="' +
  i +
  '" title="Subir"' +
  (i === 0 ? ' disabled' : '') +
  '>↑</button>' +
- '<button type="button" class="btn btn-ghost btn-xs" data-eg-down="' +
+ '<button type="button" class="btn btn-ghost btn-xs" data-eg-key="' +
+ key +
+ '" data-eg-down="' +
  i +
  '" title="Descer"' +
- (i >= eventGallery.length - 1 ? ' disabled' : '') +
+ (i >= list.length - 1 ? ' disabled' : '') +
  '>↓</button>' +
- '<button type="button" class="btn btn-danger btn-xs" data-eg-rm="' +
+ '<button type="button" class="btn btn-danger btn-xs" data-eg-key="' +
+ key +
+ '" data-eg-rm="' +
  i +
  '" title="Remover">✕</button>' +
  '</div></div>'
@@ -2160,35 +2197,49 @@
 
  el.querySelectorAll('[data-eg-rm]').forEach((b) => {
  b.addEventListener('click', () => {
- eventGallery.splice(parseInt(b.dataset.egRm, 10), 1);
- renderEventGalleryAdmin();
+ const k = b.dataset.egKey || 'nrp';
+ const arr = getEventGalleryList(k);
+ arr.splice(parseInt(b.dataset.egRm, 10), 1);
+ setEventGalleryList(k, arr);
+ renderEventGalleryAdmin(k);
  saveAndPublish('Foto removida da galeria');
  });
  });
  el.querySelectorAll('[data-eg-up]').forEach((b) => {
  b.addEventListener('click', () => {
+ const k = b.dataset.egKey || 'nrp';
+ const arr = getEventGalleryList(k);
  const i = parseInt(b.dataset.egUp, 10);
  if (i <= 0) return;
- const tmp = eventGallery[i - 1];
- eventGallery[i - 1] = eventGallery[i];
- eventGallery[i] = tmp;
- renderEventGalleryAdmin();
- saveJSON(LS.eventGallery, eventGallery);
+ const tmp = arr[i - 1];
+ arr[i - 1] = arr[i];
+ arr[i] = tmp;
+ setEventGalleryList(k, arr);
+ renderEventGalleryAdmin(k);
+ saveJSON(eventGalleryLsKey(k), arr);
  updatePublishStrip();
  });
  });
  el.querySelectorAll('[data-eg-down]').forEach((b) => {
  b.addEventListener('click', () => {
+ const k = b.dataset.egKey || 'nrp';
+ const arr = getEventGalleryList(k);
  const i = parseInt(b.dataset.egDown, 10);
- if (i >= eventGallery.length - 1) return;
- const tmp = eventGallery[i + 1];
- eventGallery[i + 1] = eventGallery[i];
- eventGallery[i] = tmp;
- renderEventGalleryAdmin();
- saveJSON(LS.eventGallery, eventGallery);
+ if (i >= arr.length - 1) return;
+ const tmp = arr[i + 1];
+ arr[i + 1] = arr[i];
+ arr[i] = tmp;
+ setEventGalleryList(k, arr);
+ renderEventGalleryAdmin(k);
+ saveJSON(eventGalleryLsKey(k), arr);
  updatePublishStrip();
  });
  });
+ }
+
+ function renderAllEventGalleriesAdmin() {
+ renderEventGalleryAdmin('nrp');
+ renderEventGalleryAdmin('bic');
  }
 
  // ── Media library ───────────────────────────────────────────────────────
@@ -2279,10 +2330,13 @@
  prev.style.display = 'block';
  }
  } else if (pickerTarget?.type === 'eventGallery') {
- if (eventGallery.length >= 50) {
- toast('Máximo de 50 imagens na galeria', 'error');
+ const k = pickerTarget.key || 'nrp';
+ const arr = getEventGalleryList(k);
+ if (arr.length >= EVENT_GALLERY_MAX) {
+ toast('Máximo de ' + EVENT_GALLERY_MAX + ' imagens na galeria', 'error');
  } else {
- eventGallery.push(url);
+ arr.push(url);
+ setEventGalleryList(k, arr);
  }
  } else if (pickerTarget?.type === 'slot' && pickerTarget.key) {
  images[pickerTarget.key] = url;
@@ -2295,7 +2349,8 @@
  }
  }
  if (pickerTarget?.type === 'eventGallery') {
- renderEventGalleryAdmin();
+ const k = pickerTarget.key || 'nrp';
+ renderEventGalleryAdmin(k);
  saveAndPublish('Galeria atualizada');
  }
  pickerTarget = null;
@@ -2304,21 +2359,27 @@
  });
 
 
- $('#btnEventGalleryUpload')?.addEventListener('click', () => {
- if (eventGallery.length >= EVENT_GALLERY_MAX) {
+ function bindEventGalleryUpload(btnUploadId, btnPickId, key) {
+ $('#' + btnUploadId)?.addEventListener('click', () => {
+ const arr = getEventGalleryList(key);
+ if (arr.length >= EVENT_GALLERY_MAX) {
  toast('Máximo de ' + EVENT_GALLERY_MAX + ' imagens', 'error');
  return;
  }
- pickerTarget = { type: 'eventGallery' };
+ pickerTarget = { type: 'eventGallery', key: key };
  $('#mediaFileInput')?.click();
  });
- $('#btnEventGalleryPick')?.addEventListener('click', () => {
- if (eventGallery.length >= EVENT_GALLERY_MAX) {
+ $('#' + btnPickId)?.addEventListener('click', () => {
+ const arr = getEventGalleryList(key);
+ if (arr.length >= EVENT_GALLERY_MAX) {
  toast('Máximo de ' + EVENT_GALLERY_MAX + ' imagens', 'error');
  return;
  }
- openMediaPicker('eventGallery');
+ openMediaPicker('eventGallery', key);
  });
+ }
+ bindEventGalleryUpload('btnEventGalleryUpload', 'btnEventGalleryPick', 'nrp');
+ bindEventGalleryUpload('btnEventGalleryBicUpload', 'btnEventGalleryBicPick', 'bic');
 
  const uploadZone = $('#uploadZone');
  if (uploadZone) {
@@ -2344,7 +2405,7 @@
  if (type === 'slot') pickerTarget = { type: 'slot', key };
  else if (type === 'supplement') pickerTarget = { type: 'supplement' };
  else if (type === 'person') pickerTarget = { type: 'person' };
- else if (type === 'eventGallery') pickerTarget = { type: 'eventGallery' };
+ else if (type === 'eventGallery') pickerTarget = { type: 'eventGallery', key: key || 'nrp' };
  else pickerTarget = { type: 'product' };
  const grid = $('#pickerGrid');
  if (grid) {
@@ -2375,14 +2436,17 @@
  prev.style.display = 'block';
  }
  } else if (pickerTarget?.type === 'eventGallery') {
- if (eventGallery.length >= 50) {
- toast('Máximo de 50 imagens na galeria', 'error');
+ const k = pickerTarget.key || 'nrp';
+ const arr = getEventGalleryList(k);
+ if (arr.length >= EVENT_GALLERY_MAX) {
+ toast('Máximo de ' + EVENT_GALLERY_MAX + ' imagens na galeria', 'error');
  closeModal('pickerModal');
  pickerTarget = null;
  return;
  }
- eventGallery.push(url);
- renderEventGalleryAdmin();
+ arr.push(url);
+ setEventGalleryList(k, arr);
+ renderEventGalleryAdmin(k);
  closeModal('pickerModal');
  pickerTarget = null;
  saveAndPublish('Foto adicionada à galeria');
@@ -2424,7 +2488,8 @@
  zones,
  texts,
  images,
- eventGallery: (eventGallery || []).filter(Boolean).slice(0, 50),
+ eventGallery: (eventGallery || []).filter(Boolean).slice(0, EVENT_GALLERY_MAX),
+ eventGalleryBic: (eventGalleryBic || []).filter(Boolean).slice(0, EVENT_GALLERY_MAX),
  };
  }
 
@@ -2455,6 +2520,7 @@
  saveJSON(LS.texts, texts);
  saveJSON(LS.images, images);
  saveJSON(LS.eventGallery, eventGallery);
+ saveJSON(LS.eventGalleryBic, eventGalleryBic);
  saveJSON(LS.media, media);
 
  if (publishInFlight) {
@@ -2762,7 +2828,7 @@
  renderZones();
  renderTexts();
  renderSlots();
- renderEventGalleryAdmin();
+ renderAllEventGalleriesAdmin();
  renderMedia();
  // Local stats first (no zero flash), inbox shows loading until fetch returns
  updateStats({ inboxLoading: true });
