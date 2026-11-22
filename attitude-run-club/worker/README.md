@@ -19,9 +19,9 @@ Live: `https://attitude-run-club-publish.workersdevao.workers.dev`
 
 ### Catalog payload (must include all of these)
 
-`products` · `supplements` · `corredores` · `attituders` · `zones` · `texts` · `images` · `eventGallery`
+`products` · `supplements` · `corredores` · `attituders` · `zones` · `texts` · `images` · `eventGallery` (NRP, max 100) · `eventGalleryBic` (BIC Color Festival, max 100)
 
-If the Worker is outdated and omits any of these (especially `eventGallery`), admin changes will not appear on the public site. Redeploy after pulling this repo.
+If the Worker is outdated and omits any of these (especially `eventGallery` / `eventGalleryBic`), admin gallery uploads will not appear on the public site. Redeploy after pulling this repo: `npx wrangler deploy`.
 
 ## Deploy
 

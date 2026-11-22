@@ -21,21 +21,24 @@ Adapted from the Naravazz Diversos pattern for **Attitude Run Club**.
 attitude-run-club/
 ├── index.html
 ├── admin.html                 # Staff panel (password-gated)
+├── eventos.html               # Events list + past carousel
+├── eventos-bic.html           # BIC Color Festival gallery page
+├── eventos-nrp.html           # Night Run Party gallery page
 ├── loja.html                  # Shop (renders from catalog)
 ├── checkout.html
 ├── solidariedade.html         # Campaign landing (form always open)
 ├── …                          # other public pages at site root
 ├── css/
-│   ├── style.css              # Public site
+│   ├── style.css              # Public site + lightbox
 │   └── admin.css              # Admin UI
 ├── js/
-│   ├── products.js            # DEFAULT_PRODUCTS, zones, texts, Cloudinary config
-│   ├── catalog.js             # loadCatalog / renderProductGrid / applySiteImages
+│   ├── products.js            # DEFAULT_*, slots, Cloudinary config
+│   ├── catalog.js             # loadCatalog, galleries, lightbox
 │   ├── main.js                # Cart, i18n, mobile menu, carousel
-│   └── admin.js               # CRUD, media, publish
+│   └── admin.js               # CRUD, media, galleries, publish
 ├── images/
 ├── worker/
-│   ├── src/index.js
+│   ├── src/index.js           # Must persist every catalog field used by admin
 │   ├── wrangler.toml
 │   └── README.md
 ├── BLUEPRINT.md
@@ -48,7 +51,7 @@ Published file: `catalog.json` on Cloudinary (`{folder}/catalog`).
 
 ```json
 {
-  "updatedAt": "2026-10-18T17:00:00.000Z",
+  "updatedAt": "2026-11-22T10:00:00.000Z",
   "products": [
     {
       "id": "tank",
@@ -65,9 +68,24 @@ Published file: `catalog.json` on Cloudinary (`{folder}/catalog`).
   ],
   "zones": [{ "id": "talatona", "name": "Talatona", "price": 0 }],
   "texts": { "pt": { "hero.title1": "Corre Com" }, "en": {} },
-  "images": { "hero": "https://…", "logo": "https://…" }
+  "images": {
+    "hero": "https://…",
+    "logo": "https://…",
+    "eventos-bic-hero": "https://…",
+    "eventos-nrp-hero": "https://…"
+  },
+  "eventGallery": ["https://…/nrp-1.jpg"],
+  "eventGalleryBic": ["https://…/bic-1.jpg"]
 }
 ```
+
+| Field | Purpose | Max |
+|-------|---------|-----|
+| `eventGallery` | Night Run Party photos → `eventos-nrp.html` | 100 |
+| `eventGalleryBic` | BIC Color Festival photos → `eventos-bic.html` | 100 |
+| `images.*` | Fixed site slots (`data-site-img` / `data-site-img-bg`) | — |
+
+**Worker rule:** `/publish` must whitelist **every** catalog key the admin sends. Omitting a key (e.g. `eventGalleryBic`) silently drops staff uploads on the public site.
 
 Remote URL pattern:
 
@@ -80,24 +98,27 @@ https://res.cloudinary.com/{CLOUD_NAME}/raw/upload/attitude-run-club/catalog.jso
 1. Load `products.js` → defaults.
 2. `catalog.js` fetches remote `catalog.json` (cache-bust `?t=`).
 3. Apply in order:
-   * localStorage drafts (`arc_*_override`) — admin preview same browser
+   * localStorage drafts (`arc_*_override`) — admin preview same browser (`?preview=1`)
    * Remote catalog (everyone after publish)
    * Fall back to `DEFAULT_*`
-4. Cart: localStorage key `arc-cart`.
-5. Checkout → WhatsApp (`wa.me/244932826818`).
+4. Event galleries: `ARCCatalog.renderEventGallery(urls, grid, { alt, emptyMessage, noFallback })` + custom lightbox.
+5. Cart: localStorage key `arc-cart`.
+6. Checkout → WhatsApp (`wa.me/244932826818`) + inbox via Worker.
 
 ## Admin panel
 
-| Area            | localStorage draft       | Publish                          |
-|-----------------|--------------------------|----------------------------------|
-| Products        | `arc_products_override`  | `catalog.json` → products        |
-| Delivery zones  | `arc_zones_override`     | zones                            |
-| Site texts      | `arc_texts_override`     | texts                            |
-| Site images     | `arc_images_override`    | images                           |
-| Media library   | `arc_media_library`      | URLs used on products/slots only |
+| Area              | localStorage draft              | Publish                              |
+|-------------------|---------------------------------|--------------------------------------|
+| Products          | `arc_products_override`         | `catalog.json` → products            |
+| Delivery zones    | `arc_zones_override`            | zones                                |
+| Site texts        | `arc_texts_override`            | texts                                |
+| Site images       | `arc_images_override`           | images                               |
+| NRP gallery       | `arc_event_gallery_override`    | `eventGallery` (max 100)             |
+| BIC gallery       | `arc_event_gallery_bic_override`| `eventGalleryBic` (max 100)          |
+| Media library     | `arc_media_library`             | URLs used on products/slots/galleries|
 
 * **Guardar rascunho** — this browser only.
-* **Publicar na loja** — `POST { password, catalog }` → Worker → signed Cloudinary upload.
+* **Publicar alterações** — `POST { password, catalog }` → Worker → signed Cloudinary upload of full catalog.
 
 Default password: `attitude2026` (change after handoff via admin UI or `localStorage.arc_admin_pw`).
 
@@ -137,10 +158,12 @@ const CLOUDINARY_UPLOAD_PRESET = '<unsigned_preset>';
 
 1. Open `/admin.html` → password.
 2. Edit products / zones / texts / site images / upload media.
-3. Optional **Guardar rascunho** → preview loja in the same browser.
-4. **Publicar na loja** → all visitors get new catalog on next load.
+3. **Event photos:** Imagens → Night Run Party or BIC Color Festival gallery → Carregar fotos (or media library) → reorder → **Publicar alterações**.
+4. Optional **Guardar rascunho** → preview in the same browser (`?preview=1`).
+5. **Publicar alterações** → all visitors get new catalog on next load.
 
-No site redeploy for catalog or site-image changes (only for HTML/CSS/JS code).
+No site redeploy for catalog, site-image, or gallery changes (only for HTML/CSS/JS/Worker code).  
+After changing `worker/src/index.js`, run `cd worker && npx wrangler deploy` or new catalog fields will not persist.
 
 ## Security model
 

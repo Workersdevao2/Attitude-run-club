@@ -555,6 +555,40 @@
  if (e.key === 'ArrowLeft') show(idx - 1);
  if (e.key === 'ArrowRight') show(idx + 1);
  });
+
+ // Touch swipe (horizontal) for mobile gallery
+ let lbStartX = 0;
+ let lbStartY = 0;
+ let lbDragging = false;
+ let lbAxis = null;
+ lb.addEventListener('touchstart', function (e) {
+ if (lb.hasAttribute('hidden') || !e.touches[0]) return;
+ lbStartX = e.touches[0].clientX;
+ lbStartY = e.touches[0].clientY;
+ lbDragging = true;
+ lbAxis = null;
+ }, { passive: true });
+ lb.addEventListener('touchmove', function (e) {
+ if (!lbDragging || !e.touches[0]) return;
+ const dx = e.touches[0].clientX - lbStartX;
+ const dy = e.touches[0].clientY - lbStartY;
+ if (lbAxis === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+ lbAxis = Math.abs(dx) > Math.abs(dy) ? 'h' : 'v';
+ }
+ if (lbAxis === 'h' && e.cancelable) e.preventDefault();
+ }, { passive: false });
+ lb.addEventListener('touchend', function (e) {
+ if (!lbDragging) return;
+ lbDragging = false;
+ if (lbAxis !== 'h' || !e.changedTouches[0]) return;
+ const diff = lbStartX - e.changedTouches[0].clientX;
+ if (Math.abs(diff) > 40) {
+ if (diff > 0) show(idx + 1);
+ else show(idx - 1);
+ }
+ lbAxis = null;
+ }, { passive: true });
+
  lb._open = open;
  return lb;
  }

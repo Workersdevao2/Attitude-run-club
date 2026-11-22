@@ -18,7 +18,9 @@ attitude-run-club/
 ├── index.html              → Home
 ├── admin.html              → Staff panel (password)
 ├── planos.html             → Membership plans
-├── eventos.html            → Events
+├── eventos.html            → Events list (past carousel + promos)
+├── eventos-bic.html        → BIC Color Festival photo gallery
+├── eventos-nrp.html        → Night Run Party photo gallery
 ├── roadmap.html            → 90-day roadmap
 ├── contacto.html           → Contact (form → Worker inbox)
 ├── solidariedade.html      → Campanha Natal 2026 (form always open)
@@ -26,13 +28,13 @@ attitude-run-club/
 ├── checkout.html           → Checkout (inbox + WhatsApp)
 ├── (+ other public pages at root)
 ├── css/
-│   ├── style.css           → Public site
+│   ├── style.css           → Public site (+ lightbox)
 │   └── admin.css           → Admin UI
 ├── js/
 │   ├── main.js             → i18n, menu, cart, checkout submit
-│   ├── products.js         → Defaults + Cloudinary config
-│   ├── catalog.js          → Load live catalog
-│   └── admin.js            → CRUD, media, publish, Pedidos inbox
+│   ├── products.js         → Defaults + Cloudinary config + image slots
+│   ├── catalog.js          → Load live catalog, event galleries, lightbox
+│   └── admin.js            → CRUD, media, galleries, publish, Pedidos
 ├── worker/                 → Cloudflare Worker API
 │   ├── src/index.js        → /publish · /submit · /inbox
 │   ├── wrangler.toml       → KV INBOX + deploy config
@@ -43,11 +45,44 @@ attitude-run-club/
 ```
 
 **API:** `https://attitude-run-club-publish.workersdevao.workers.dev`  
-**Admin:** `/admin.html` → tab **Pedidos** (contacts + orders)
+**Admin:** `/admin.html` → tabs **Pedidos**, **Imagens** (site slots + event galleries)
 
 ---
 
 ## Important Changes Log
+
+### 2026-11-22 — Event galleries (BIC + NRP) + past BIC card
+
+**Request:** Turn BIC Color Festival into a past event with full recap; dedicated photo galleries (up to 100 images each) managed in admin; “Ver fotos” only from past-event cards.
+
+**Public:**
+- `eventos.html` — BIC first in past carousel with recap + **Ver fotos** / **See images**; NRP card also links to its gallery
+- `eventos-bic.html` / `eventos-nrp.html` — standalone galleries (masonry grid + custom lightbox); empty state until staff publish photos
+- Inline NRP gallery removed from `eventos.html`
+
+**Catalog (`catalog.json`):**
+- `eventGallery` — Night Run Party URLs (max 100)
+- `eventGalleryBic` — BIC Color Festival URLs (max 100)
+- Site image slots: `eventos-bic-hero`, `eventos-nrp-hero`, `event-past-bic`
+
+**Admin → Imagens:**
+- Two gallery blocks (NRP + BIC): upload, pick from media, reorder, remove
+- Hero slots for both gallery pages
+
+**Worker (must redeploy):**
+- `handlePublish` now persists `eventGalleryBic` and allows 100 images per gallery
+- Without Worker redeploy, BIC photos never appear on the public site
+
+**Files:**
+- `eventos.html`, `eventos-bic.html`, `eventos-nrp.html`
+- `js/admin.js`, `js/catalog.js`, `js/main.js`, `js/products.js`
+- `css/style.css` — gallery link + lightbox
+- `admin.html` — BIC gallery block
+- `worker/src/index.js` — publish payload
+
+**Staff flow after code + Worker deploy:** Admin → Imagens → load BIC photos → **Publicar alterações** → hard-refresh `eventos-bic.html`.
+
+---
 
 ### 2026-10-19 — Contact + orders inbox in admin
 

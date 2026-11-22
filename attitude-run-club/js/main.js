@@ -53,7 +53,7 @@ function observeReveals(root) {
 observeReveals(document);
 window.observeReveals = observeReveals;
 
-// Nav scroll effect + pin to visual viewport (stops mobile address-bar gap/jump)
+// Nav scroll effect — keep fixed at top:0 (no visualViewport translate; that caused header to slide down on mobile)
 const nav = document.querySelector('nav');
 if (nav) {
  const updateNavScroll = () => {
@@ -65,20 +65,6 @@ if (nav) {
  };
  window.addEventListener('scroll', updateNavScroll, { passive: true });
  updateNavScroll();
-
- // Keep fixed header aligned with the *visible* top when mobile browser chrome moves.
- // Uses transform (not top) so it does not fight CSS top:0 / safe-area.
- const pinNavToVisualViewport = () => {
- const vv = window.visualViewport;
- if (!vv) return;
- const y = vv.offsetTop || 0;
- nav.style.transform = y ? `translateY(${y}px) translateZ(0)` : 'translateZ(0)';
- };
- if (window.visualViewport) {
- window.visualViewport.addEventListener('resize', pinNavToVisualViewport, { passive: true });
- window.visualViewport.addEventListener('scroll', pinNavToVisualViewport, { passive: true });
- pinNavToVisualViewport();
- }
 }
 
 // ─── FULL PT / EN TRANSLATIONS ───────────────────────────────────────────────
@@ -1304,21 +1290,39 @@ if (hamburger && mobileMenu) {
  });
  }
 
- // Touch / swipe
+ // Touch / swipe (horizontal only; lock axis after ~8px so vertical scroll still works)
+ let startY = 0;
+ let axisLocked = null; // 'h' | 'v' | null
  track.addEventListener('touchstart', (e) => {
  startX = e.touches[0].clientX;
+ startY = e.touches[0].clientY;
  isDragging = true;
+ axisLocked = null;
  }, { passive: true });
+
+ track.addEventListener('touchmove', (e) => {
+ if (!isDragging || !e.touches[0]) return;
+ const dx = e.touches[0].clientX - startX;
+ const dy = e.touches[0].clientY - startY;
+ if (axisLocked === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+ axisLocked = Math.abs(dx) > Math.abs(dy) ? 'h' : 'v';
+ }
+ if (axisLocked === 'h' && e.cancelable) {
+ e.preventDefault();
+ }
+ }, { passive: false });
 
  track.addEventListener('touchend', (e) => {
  if (!isDragging) return;
  isDragging = false;
+ if (axisLocked !== 'h') return;
  const diff = startX - e.changedTouches[0].clientX;
- if (Math.abs(diff) > 40) {
+ if (Math.abs(diff) > 30) {
  if (diff > 0) index = Math.min(maxIndex(), index + 1);
  else index = Math.max(0, index - 1);
  update();
  }
+ axisLocked = null;
  }, { passive: true });
 
  window.addEventListener('resize', () => {
