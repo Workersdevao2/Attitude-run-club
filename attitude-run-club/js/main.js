@@ -119,6 +119,20 @@ const translations = {
  'promo.past.btn1': 'Ver eventos',
  'promo.past.btn2': 'Contacto',
 
+ // Degrau a Degrau (atividade solidária)
+ 'degrau.eyebrow': 'Atividade solidária',
+ 'degrau.title': 'Degrau a<br>Degrau',
+ 'degrau.meta': 'Sáb 28 Nov · 07h00',
+ 'degrau.loc': 'Escadas da Fortaleza · Recolha de donativos',
+ 'degrau.desc': 'Atividade gratuita. Sobe degrau a degrau com a tribo e traz o teu donativo. Juntos fazemos a diferença.',
+ 'degrau.btn1': 'Participar · WhatsApp',
+ 'degrau.past.eyebrow': 'Atividade passada',
+ 'degrau.past.title': 'Degrau a<br>Degrau',
+ 'degrau.past.meta': 'Sáb 28 Nov 2026 · Escadas da Fortaleza',
+ 'degrau.past.loc': 'Escadas da Fortaleza · Recolha de donativos',
+ 'degrau.past.desc': 'A tribo subiu degrau a degrau e trouxe donativos. Obrigado a todos os que participaram nesta atividade solidária. A Attitude continua a fazer a diferença em comunidade.',
+ 'degrau.past.btn1': 'Ver solidariedade',
+
  // Pillars section
  'pillars.label': 'Os Cinco Pilares',
  'pillars.title': 'O clube<br>é mais que<br>a corrida.',
@@ -635,6 +649,20 @@ const translations = {
  'promo.past.btn1': 'See events',
  'promo.past.btn2': 'Contact',
 
+ // Degrau a Degrau (solidarity activity)
+ 'degrau.eyebrow': 'Solidarity activity',
+ 'degrau.title': 'Degrau a<br>Degrau',
+ 'degrau.meta': 'Sat 28 Nov · 07:00',
+ 'degrau.loc': 'Escadas da Fortaleza · Donation collection',
+ 'degrau.desc': 'Free activity. Climb step by step with the tribe and bring your donation. Together we make a difference.',
+ 'degrau.btn1': 'Join · WhatsApp',
+ 'degrau.past.eyebrow': 'Past activity',
+ 'degrau.past.title': 'Degrau a<br>Degrau',
+ 'degrau.past.meta': 'Sat 28 Nov 2026 · Escadas da Fortaleza',
+ 'degrau.past.loc': 'Escadas da Fortaleza · Donation collection',
+ 'degrau.past.desc': 'The tribe climbed step by step and brought donations. Thank you to everyone who took part in this solidarity activity. Attitude continues to make a difference in community.',
+ 'degrau.past.btn1': 'See solidarity',
+
  // Pillars
  'pillars.label': 'The Five Pillars',
  'pillars.title': 'The club<br>is more than<br>running.',
@@ -1138,6 +1166,7 @@ document.querySelectorAll('.lang-toggle button').forEach(btn => {
  btn.addEventListener('click', () => {
  setLanguage(btn.dataset.lang);
  applyFeaturedPromo();
+ applyDegrauPromo();
  });
 });
 
@@ -1181,6 +1210,37 @@ function applyFeaturedPromo() {
 }
 applyFeaturedPromo();
 window.applyFeaturedPromo = applyFeaturedPromo;
+
+/** Degrau a Degrau ends end-of-day 28 Nov 2026 WAT → past mode from 29 Nov 00:00 +01 */
+function isDegrauPast() {
+ return Date.now() >= new Date('2026-11-29T00:00:00+01:00').getTime();
+}
+
+function applyDegrauPromo() {
+ const past = isDegrauPast();
+ const lang = currentLang || 'pt';
+ const t = translations[lang] || {};
+ document.querySelectorAll('[data-degrau-promo]').forEach(function (root) {
+ root.setAttribute('data-mode', past ? 'past' : 'upcoming');
+ root.querySelectorAll('[data-i18n]').forEach(function (el) {
+ const key = el.getAttribute('data-i18n');
+ if (!key || key.indexOf('degrau.') !== 0) return;
+ const pastKey = key.replace('degrau.', 'degrau.past.');
+ const val = past && t[pastKey] !== undefined ? t[pastKey] : t[key];
+ if (val !== undefined) el.innerHTML = val;
+ });
+ const primary = root.querySelector('[data-degrau-primary]');
+ if (primary) {
+ primary.href = past
+ ? primary.getAttribute('data-href-past') || primary.href
+ : primary.getAttribute('data-href-up') || primary.href;
+ if (past) primary.removeAttribute('target');
+ else primary.setAttribute('target', '_blank');
+ }
+ });
+}
+applyDegrauPromo();
+window.applyDegrauPromo = applyDegrauPromo;
 
 // Days until Attituders Let's Go (30 Oct 2026, 19:00 WAT)
 (function updateDaysToEvent() {
